@@ -17,3 +17,4 @@ journal/*
 STOP
 SKIP
 .runner.lock
+.results-worktree/

@@ -19,6 +19,7 @@ import logging
 import os
 import shutil
 import signal
+import subprocess
 import sys
 import threading
 import time
@@ -178,6 +179,51 @@ def _write_digest(cfg: Config, log: logging.Logger) -> None:
         log.exception("!!! journal digest generation failed !!!")
 
 
+def _publish_results(cfg: Config, log: logging.Logger) -> None:
+    """Commit+push research outputs to the results branch after each project.
+
+    Uses the dedicated .results-worktree so the harness's own working tree is
+    never touched. Copies exclude experiment venvs. Any failure (offline, auth,
+    missing worktree) is logged loudly and the loop continues — publishing is
+    best-effort, never load-bearing."""
+    if not cfg.results.publish:
+        return
+    wt = cfg.root / ".results-worktree"
+    if not (wt / ".git").exists():
+        log.warning("results.publish enabled but %s missing; "
+                    "run scripts/setup_results_branch.sh", wt)
+        return
+    try:
+        ignore = shutil.ignore_patterns(".venv", "venv", "__pycache__", ".git", "node_modules")
+        for name in ("projects", "journal", "digests"):
+            src = cfg.root / name
+            if src.exists():
+                shutil.copytree(src, wt / name, dirs_exist_ok=True, ignore=ignore)
+
+        def _git(*args: str) -> subprocess.CompletedProcess:
+            return subprocess.run(
+                ["git", "-C", str(wt), *args],
+                capture_output=True, text=True, timeout=180,
+            )
+
+        _git("add", "-A")
+        if _git("diff", "--cached", "--quiet").returncode == 0:
+            return  # nothing new
+        stamp = dt.datetime.now().isoformat(timespec="seconds")
+        commit = _git("commit", "-m", f"results: {stamp}")
+        if commit.returncode != 0:
+            log.error("results commit failed: %s", commit.stderr.strip()[:400])
+            return
+        push = _git("push", "origin", cfg.results.branch)
+        if push.returncode != 0:
+            log.error("!!! results push failed (will retry after next project): %s !!!",
+                      push.stderr.strip()[:400])
+        else:
+            log.info("results published to origin/%s", cfg.results.branch)
+    except Exception:
+        log.exception("!!! results publishing failed !!!")
+
+
 def _run_one_unit_of_work(
     cfg: Config, log: logging.Logger, allow_auto_topics: bool = True,
 ) -> bool:
@@ -196,6 +242,7 @@ def _run_one_unit_of_work(
             pipeline.run_project(cfg, resume_slug=resume_target.slug)
         finally:
             _write_digest(cfg, log)
+            _publish_results(cfg, log)
         return True
 
     queue_file = _pop_queue_file(cfg)
@@ -206,6 +253,7 @@ def _run_one_unit_of_work(
             state = pipeline.run_project(cfg, topic=topic)
         finally:
             _write_digest(cfg, log)
+            _publish_results(cfg, log)
         _ack_queue_file(cfg, queue_file, state, log)
         return True
 
@@ -217,6 +265,7 @@ def _run_one_unit_of_work(
             pipeline.run_project(cfg, topic=topic)
         finally:
             _write_digest(cfg, log)
+            _publish_results(cfg, log)
         return True
 
     log.info("queue empty%s; idling",

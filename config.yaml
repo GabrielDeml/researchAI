@@ -42,3 +42,7 @@ dashboard:
   host: "127.0.0.1"
   port: 8780
   auth_token: ""                  # empty = no auth (localhost only)
+
+results:
+  publish: true                   # after each project: commit+push outputs to the results branch
+  branch: "results"               # orphan branch in .results-worktree/ (see scripts/setup_results_branch.sh)

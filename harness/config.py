@@ -49,6 +49,11 @@ class DashboardCfg(BaseModel):
     auth_token: str = ""
 
 
+class ResultsCfg(BaseModel):
+    publish: bool = False
+    branch: str = "results"
+
+
 class Config(BaseModel):
     model_config = {"arbitrary_types_allowed": True, "ignored_types": (cached_property,)}
 
@@ -57,6 +62,7 @@ class Config(BaseModel):
     limits: LimitsCfg = LimitsCfg()
     supervisor: SupervisorCfg = SupervisorCfg()
     dashboard: DashboardCfg = DashboardCfg()
+    results: ResultsCfg = ResultsCfg()
     root: Path
 
     # --- canonical layout; all components must use these, never hardcode paths ---
