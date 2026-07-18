@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.gdeml.researchai.dashboard</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/gdeml/.local/bin/uv</string>
+        <string>run</string>
+        <string>python</string>
+        <string>-m</string>
+        <string>harness</string>
+        <string>serve</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/gdeml/git/researchAI</string>
+
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>StandardOutPath</key>
+    <string>/Users/gdeml/git/researchAI/logs/dashboard.stdout.log</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/gdeml/git/researchAI/logs/dashboard.stderr.log</string>
+</dict>
+</plist>
