@@ -33,8 +33,14 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "run":
         from .config import load_config
+        from .lockfile import RunnerActive, acquire_runner_lock
         from . import pipeline
         cfg = load_config()
+        try:
+            runner_lock = acquire_runner_lock(cfg.root)  # noqa: F841 — held for process lifetime
+        except RunnerActive as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 1
         if args.resume:
             pipeline.run_project(cfg, resume_slug=args.resume)
         else:

@@ -16,3 +16,4 @@ journal/*
 !journal/.gitkeep
 STOP
 SKIP
+.runner.lock

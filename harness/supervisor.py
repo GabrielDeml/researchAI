@@ -236,6 +236,13 @@ def main(max_cycles: int | None = None, drain: bool = False) -> None:
     cfg = load_config()
     log = _setup_logging(cfg)
 
+    from .lockfile import RunnerActive, acquire_runner_lock
+    try:
+        runner_lock = acquire_runner_lock(cfg.root)  # noqa: F841 — held for process lifetime
+    except RunnerActive as e:
+        log.error("%s", e)
+        return
+
     if max_cycles is None:
         env_val = os.environ.get("RESEARCHAI_MAX_CYCLES")
         max_cycles = int(env_val) if env_val else None
