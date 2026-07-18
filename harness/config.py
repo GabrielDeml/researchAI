@@ -91,8 +91,35 @@ def find_root() -> Path:
     return Path(__file__).resolve().parent.parent
 
 
+CLIPROXY_CONF = Path("/opt/homebrew/etc/cliproxyapi.conf")
+
+
+def _default_api_key() -> str:
+    """Resolve the proxy API key without it ever living in this repo:
+    RESEARCHAI_API_KEY env var first, else the first entry of the `api-keys:`
+    list in CLIProxyAPI's own config."""
+    env = os.environ.get("RESEARCHAI_API_KEY")
+    if env:
+        return env
+    if CLIPROXY_CONF.exists():
+        in_keys = False
+        for line in CLIPROXY_CONF.read_text().splitlines():
+            s = line.strip()
+            if s.startswith("api-keys:"):
+                in_keys = True
+                continue
+            if in_keys:
+                if s.startswith("- "):
+                    return s[2:].strip().strip('"')
+                if s and not s.startswith("#"):
+                    break
+    return ""
+
+
 def load_config(root: Path | None = None) -> Config:
     root = root or find_root()
     data = yaml.safe_load((root / "config.yaml").read_text())
     data["root"] = root
+    if not data.get("proxy", {}).get("api_key"):
+        data.setdefault("proxy", {})["api_key"] = _default_api_key()
     return Config.model_validate(data)

@@ -3,7 +3,7 @@
 
 proxy:
   base_url: "http://127.0.0.1:8317/v1"
-  api_key: "REDACTED"  # localhost-only CLIProxyAPI key
+  api_key: ""  # empty = resolved from $RESEARCHAI_API_KEY or CLIProxyAPI's own config (never commit a key here)
 
 models:
   # Hard allowlist — harness.llm rejects anything else.
