@@ -1,0 +1,251 @@
+{
+  "slug": "genetic-algorithms",
+  "topic": "Genetic algorithms",
+  "created_at": "2026-07-18T22:03:39+00:00",
+  "updated_at": "2026-07-18T22:16:05+00:00",
+  "stage": "writeup",
+  "status": "running",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Variations of Genetic Algorithms",
+      "authors": [
+        "Alison Jenkins",
+        "Vinika Gupta",
+        "Alexis Myrick",
+        "Mary Lenoir"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1911.00490v1",
+      "source": "arXiv:1911.00490v1"
+    },
+    {
+      "title": "Analysis Of Genetic Algorithm, Particle Swarm Optimization and Simulated Annealing On Benchmark Functions",
+      "authors": [
+        "Mayank Joshi",
+        "M. Gyanchandani",
+        "Dr. Rajesh Wadhvani"
+      ],
+      "year": 2021,
+      "url": "https://www.semanticscholar.org/paper/d9f9bedcd97912bafd5c541a200c3f6319cf7e2b",
+      "source": "S2:d9f9bedcd97912bafd5c541a200c3f6319cf7e2b"
+    },
+    {
+      "title": "Efficient Parallel Genetic Algorithm for Perturbed Substructure Optimization in Complex Network",
+      "authors": [
+        "Shanqing Yu",
+        "Meng Zhou",
+        "Jintao Zhou",
+        "Minghao Zhao",
+        "Yidan Song",
+        "Yao Lu",
+        "Zeyu Wang",
+        "Qi Xuan"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2412.20980v1",
+      "source": "arXiv:2412.20980v1"
+    },
+    {
+      "title": "Runtime Analysis of a Heavy-Tailed (1+(λ, λ)) Genetic Algorithm on Jump Functions",
+      "authors": [
+        "D. Antipov",
+        "Benjamin Doerr"
+      ],
+      "year": 2020,
+      "url": "https://www.semanticscholar.org/paper/c80656f5021823d90738417269e06e2c2fae3d43",
+      "source": "S2:c80656f5021823d90738417269e06e2c2fae3d43"
+    },
+    {
+      "title": "Cheating for Problem Solving: A Genetic Algorithm with Social Interactions",
+      "authors": [
+        "Rafeal Lahoz-Beltra",
+        "Gabriela Ochoa",
+        "Uwe Aickelin"
+      ],
+      "year": 2010,
+      "url": "http://arxiv.org/abs/1001.1889v1",
+      "source": "arXiv:1001.1889v1"
+    },
+    {
+      "title": "Evolution of Digital Logic Functionality via a Genetic Algorithm",
+      "authors": [
+        "Christopher M. Frenz",
+        "Steve Peters",
+        "Wilson Julien"
+      ],
+      "year": 2009,
+      "url": "http://arxiv.org/abs/0907.4426v1",
+      "source": "arXiv:0907.4426v1"
+    },
+    {
+      "title": "Genetic Algorithm for SU(2) Gauge Theory on a 2-dimensional Lattice",
+      "authors": [
+        "A. Yamaguchi"
+      ],
+      "year": 1998,
+      "url": "http://arxiv.org/abs/hep-lat/9809068v1",
+      "source": "arXiv:hep-lat/9809068v1"
+    },
+    {
+      "title": "Phase-Only Planar Antenna Array Synthesis with Fuzzy Genetic Algorithms",
+      "authors": [
+        "Boufeldja Kadri",
+        "Miloud Boussahla",
+        "Fethi Tarik Bendimerad"
+      ],
+      "year": 2010,
+      "url": "http://arxiv.org/abs/1002.1176v1",
+      "source": "arXiv:1002.1176v1"
+    },
+    {
+      "title": "Optimization of the Matching Network for using Genetic Algorithm",
+      "authors": [
+        "Jalil Rasekhi",
+        "Jalil Rashed Mohasel"
+      ],
+      "year": 2015,
+      "url": "http://arxiv.org/abs/1509.00949v1",
+      "source": "arXiv:1509.00949v1"
+    },
+    {
+      "title": "TinyverseGP: Towards a Modular Cross-domain Benchmarking Framework for Genetic Programming",
+      "authors": [
+        "Roman Kalkreuth",
+        "Fabricio Olivetti de França",
+        "Julian Dierkes",
+        "Marie Anastacio",
+        "Anja Jankovic",
+        "Zdenek Vasicek",
+        "Holger Hoos"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2504.10253v1",
+      "source": "arXiv:2504.10253v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "On a 100-bit concatenated deceptive trap-5 benchmark with population 100 and 20,000 fitness evaluations, a mutation controller that raises the bit-mutation rate from 1/L to 4/L whenever normalized mean pairwise Hamming diversity falls below 0.15 will increase optimum-reaching success over 30 deterministic seeds by at least 20 percentage points for elitist (mu+mu) replacement, but by no more than 10 percentage points for full generational replacement.",
+      "rationale": "This directly tests the survey's unresolved interaction between replacement strategy and diversity-aware parameter control. Elitist replacement should benefit more because its preservation of high-fitness genotypes creates stronger diversity loss and premature convergence than generational replacement [1,8].",
+      "novelty": 8.4,
+      "feasibility": 9.2,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For a 512-bit OneMax problem with population 256 and an equal budget of 100,000 evaluations, a vectorized generational GA will have at least twofold lower median wall-clock time than a one-offspring steady-state (mu+1) GA implemented with the same NumPy data structures, while the steady-state GA will attain a median final best fitness at least one bit higher across seeds 0 through 29.",
+      "rationale": "The survey notes that generational and steady-state methods differ in offspring volume and evaluation timing, but does not jointly compare wall-clock and search quality under a common evaluation budget. This hypothesis tests whether batching creates a speed-quality trade-off that evaluation counts alone conceal [1,3].",
+      "novelty": 8.0,
+      "feasibility": 9.5,
+      "info_gain": 8.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "On the 100-bit concatenated trap-5 benchmark with population 100 and 50,000 evaluations, batched steady-state replacement with batch size 16, where all parents are selected from the same pre-batch population snapshot, will reduce optimum-reaching success by at least 15 percentage points relative to serial batch-size-1 replacement, while reducing median wall-clock time by at least 40% across 30 deterministic seeds.",
+      "rationale": "Parallel execution can change algorithmic behavior when several offspring are generated from stale population states, rather than merely accelerating an equivalent search. The literature reports parallel speedups [3], but the survey gap identifies no controlled test of whether conclusions remain stable after parallelization.",
+      "novelty": 9.0,
+      "feasibility": 9.1,
+      "info_gain": 9.4,
+      "chosen": true,
+      "outcome": "refuted"
+    },
+    {
+      "id": 4,
+      "statement": "Across runs of fixed-parameter generational, (mu+1), and (mu+mu) GAs on 128-bit Royal Road and concatenated trap-8 benchmarks, normalized mean per-locus genotype entropy measured after 25% of a 40,000-evaluation budget will predict eventual failure with pooled AUROC of at least 0.75 and an AUROC at least 0.10 higher than that obtained from the population fitness coefficient of variation.",
+      "rationale": "Adaptive GAs have used both fitness and diversity measurements [8], but the retrieved literature does not establish which signal is more informative. Comparing their early predictive power isolates measurement quality before introducing the additional confound of a particular controller.",
+      "novelty": 8.8,
+      "feasibility": 9.3,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "On a 100-bit concatenated trap-5 benchmark under a 50,000-evaluation budget, four islands of 25 individuals with ring migration of one elite every 10 generations will achieve an optimum-reaching success rate at least 15 percentage points higher than a panmictic population of 100, and will retain at least 25% greater normalized Hamming diversity at half-budget, across seeds 0 through 29.",
+      "rationale": "The survey links diversity preservation and distributed acceleration but does not test whether a parallel population structure improves search rather than only throughput. Equal total population size and evaluations make this a controlled test of architectural diversity preservation related to the gap and to GAPA's distributed emphasis [3].",
+      "novelty": 8.3,
+      "feasibility": 9.4,
+      "info_gain": 8.9,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "For 40-bit Jump functions with jump sizes 4, 6, and 8, mutation that samples an exact number of flipped bits K with probability proportional to K^-1.5 will produce an aggregate optimum-reaching success rate at least 20 percentage points higher than standard independent bit mutation at rate 1/L within 100,000 evaluations, while requiring no more than 1.5 times the median evaluations of standard mutation on OneMax.",
+      "rationale": "Heavy-tailed parameter choices are theoretically motivated as a way to avoid tuning to a known jump size [4]. This hypothesis tests a simple, implementation-independent heavy-tailed mutation mechanism for robustness across several unknown gap sizes while explicitly measuring its cost on an easy landscape.",
+      "novelty": 8.1,
+      "feasibility": 8.8,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "In a generational GA with population 100 and 40,000 evaluations on a 100-bit concatenated trap-5 problem, one-point crossover will exceed uniform crossover's optimum-reaching success rate by at least 20 percentage points when each five-bit trap block is contiguous, but by no more than 5 percentage points after a fixed random permutation disperses the bits of every block, across 30 deterministic seeds.",
+      "rationale": "The survey emphasizes that representation and crossover can substantially alter GA behavior, while [1] compares crossover operators without a controlled manipulation of linkage alignment. Permuting the same objective's encoding isolates whether one-point crossover succeeds because representation preserves building blocks.",
+      "novelty": 8.5,
+      "feasibility": 9.5,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "On 100-bit OneMax observed through additive Gaussian fitness noise with standard deviation 4, an elitist (mu+mu) GA that caches noisy scores will finish at least three true-fitness points below a non-elitist (mu,mu) GA after an equal budget of 50,000 noisy evaluations; replacing cached elite scores with the mean of three fresh evaluations, counted against the same budget, will remove at least half of that deficit across seeds 0 through 29.",
+      "rationale": "Elitist replacement preserves the apparently fittest candidates [1], but under noise it can preserve upward measurement errors rather than genuinely superior genotypes. This test probes an unaddressed limitation of replacement-policy comparisons and determines whether modest reevaluation can recover elitism's intended benefit.",
+      "novelty": 8.7,
+      "feasibility": 9.2,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Compare serial and 16-offspring batched steady-state genetic algorithms on a deterministic 100-bit concatenated trap-5 benchmark over 30 paired seeds, measuring optimum-reaching success and wall-clock time.",
+    "protocol": "1. Use Python 3.11 or newer with only NumPy and Matplotlib; before importing NumPy, set OMP_NUM_THREADS=1, OPENBLAS_NUM_THREADS=1, MKL_NUM_THREADS=1, and VECLIB_MAXIMUM_THREADS=1. Record Python, NumPy, operating-system, and processor versions in a text file.\n2. Implement the synthetic 100-bit concatenated trap-5 objective. Partition each binary vector into 20 consecutive nonoverlapping blocks of 5 bits. For a block containing u one-bits, assign block fitness 5 if u=5 and otherwise 4-u. Sum all 20 block scores. The unique global optimum is the all-ones vector with fitness 100.\n3. Use exactly 30 seeds: integers 0 through 29. For each seed, create numpy.random.SeedSequence(seed), spawn two child seed sequences, and initialize two numpy.random.Generator instances using PCG64: one for the initial population and one for all variation randomness.\n4. For each seed, generate one shared initial population of 100 independently sampled 100-bit vectors, with every bit sampled uniformly from {0,1}. Use this identical initial population for both algorithms.\n5. Pre-generate one shared operator schedule for all 49,900 post-initialization evaluations. For each offspring index, generate: (a) four population indices sampled uniformly with replacement from 0 through 99, interpreted as two ordered size-2 parent tournaments; (b) 20 independent Bernoulli(0.5) block-crossover choices; and (c) 100 independent Bernoulli(0.01) mutation indicators. Pre-generation is outside timed regions and the same arrays must be supplied to both algorithms.\n6. Select each parent by comparing the fitnesses of the two indexed tournament contestants in the relevant population snapshot; choose the higher-fitness contestant, and choose the first listed contestant on a tie. Construct one child by independently choosing each complete 5-bit block from parent 1 or parent 2 according to its pre-generated block-crossover choice, then flip every bit whose mutation indicator is true.\n7. Use population size 100 and exactly 50,000 objective evaluations per run, including the 100 initial-population evaluations. Do not terminate early after finding the optimum; record the first evaluation at which fitness 100 appears and continue to the full budget.\n8. Define environmental selection identically for both algorithms. Given the current 100 individuals and a newly completed batch, concatenate incumbents first and offspring second. Rank candidates by descending fitness, breaking ties by lower concatenated-array index so incumbents beat equal-fitness offspring. Retain the first 100 candidates and store the new population in that ranked order.\n9. Implement the serial baseline with batch size 1. For offspring indices 0 through 49,899, select both parents from the current population, generate and evaluate that child, immediately perform environmental selection with that single child, and then proceed to the next offspring.\n10. Implement the batched comparison with nominal batch size 16. At the start of each batch, copy the current population and fitness array as the pre-batch snapshot. Generate every child in that batch using parent tournaments evaluated only against this same snapshot. Evaluate the children using NumPy array operations, then perform environmental selection once using all children in the batch. Use 16 children for each full batch and 12 children in the final partial batch, because 49,900 mod 16 equals 12.\n11. The implementation must vectorize crossover, mutation, and fitness evaluation across the 16 children in each full batched run. The serial algorithm must execute the same operations one child at a time. Do not use multiprocessing, threads, GPU libraries, JIT compilation, or different fitness formulas between conditions.\n12. For each run, define success as fitness 100 appearing in the initial population or among any generated offspring by evaluation 50,000, regardless of whether that individual survives environmental selection. Also record first-hit evaluation, assigning 50,001 when no optimum is found.\n13. Before measurement, execute one untimed warm-up of each method using a separate seed 10000 and a reduced budget of 1,100 total evaluations. For each experimental seed and method, time three complete repetitions using time.perf_counter_ns. Pre-generated randomness and initial-population construction remain outside the timed region; copying the initial population, evaluating it, running all 49,900 offspring evaluations, and maintaining the population are inside the timed region. Run garbage collection immediately before each timing and disable garbage collection during the timed region. Alternate method order: serial first on even seeds and batched first on odd seeds; reverse this order for the second repetition and use the original order for the third. Verify that all three repetitions produce identical success, first-hit evaluation, and final best fitness. Use the median of the three elapsed times as that seed-method's runtime.\n14. Write a CSV with one row per seed and columns seed, serial_success, batch16_success, serial_first_hit, batch16_first_hit, serial_final_best, batch16_final_best, serial_runtime_seconds, and batch16_runtime_seconds.\n15. Compute serial success proportion as the number of successful serial seeds divided by 30, batch-16 success proportion analogously, and the success loss in percentage points as 100 times (serial success proportion minus batch-16 success proportion). Also report the paired outcome counts: serial-only success, batch-only success, both successful, and neither successful.\n16. Compute median runtime separately across the 30 per-seed runtimes for each method. Compute relative time reduction as 100 times [1 - median(batch16 runtime)/median(serial runtime)]. Also compute each seed's runtime ratio batch16/serial and report its median and interquartile range.\n17. Save key_results.png with two panels. The left panel must show bars for the two success proportions, labeled with successful-seed counts out of 30 and with Wilson 95% binomial confidence intervals. The right panel must show paired per-seed runtime points connected by light lines, overlaid with each method's median, and annotate the relative median time reduction. Use a fixed figure size and 150 DPI or higher.\n18. The hypothesis is supported if and only if both primary thresholds hold: the serial success proportion minus the batch-16 success proportion is at least 0.15, and 1 - median(batch16 runtime)/median(serial runtime) is at least 0.40. Because 30 seeds make success proportions discrete, the first condition requires a raw success-rate difference of at least 5/30, or 16.67 percentage points. If either condition fails, classify the hypothesis as refuted. Print this classification and all primary metrics to stdout and save them in results.json.",
+    "metrics": [
+      "Serial optimum-reaching success proportion: number of the 30 serial runs that ever evaluate fitness 100 divided by 30.",
+      "Batch-16 optimum-reaching success proportion: number of the 30 batch-16 runs that ever evaluate fitness 100 divided by 30.",
+      "Success loss: 100 times the serial success proportion minus the batch-16 success proportion, in percentage points; the required threshold is at least 15 points, operationally at least 5/30 or 16.67 points.",
+      "Paired success outcomes: counts of serial-only success, batch-only success, both success, and neither success across matching seeds.",
+      "First-hit evaluation: first objective-evaluation index at which fitness 100 appears, with 50,001 assigned to unsuccessful runs.",
+      "Median wall-clock runtime: median of the 30 per-seed runtimes for each method, where each per-seed runtime is the median of three timed repetitions.",
+      "Relative median time reduction: 100 times [1 - median batch-16 runtime divided by median serial runtime]; the required threshold is at least 40%.",
+      "Paired runtime ratio: batch-16 runtime divided by serial runtime for each seed, summarized by its median and interquartile range.",
+      "Final best fitness: maximum population fitness after exactly 50,000 evaluations, used as a secondary search-quality metric and determinism check."
+    ],
+    "time_budget_minutes": 30,
+    "expected_if_true": "At least 5 more of the 30 seeds succeed under serial replacement than under batch-16 replacement, giving a success loss of at least 16.67 percentage points, and the batch-16 median runtime is no more than 60% of the serial median runtime, giving at least a 40% reduction; both conditions must occur for support.",
+    "expected_if_false": "The hypothesis is refuted if the serial-minus-batch success difference is fewer than 5 successful seeds, or if the batch-16 median runtime exceeds 60% of the serial median runtime; reversal of the success difference or no material speedup also refutes it."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-18T22:07:44+00:00",
+      "finished_at": "2026-07-18T22:16:02+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "refuted",
+      "notes": "Serial and batch-16 each reached the optimum in 0 of 30 seeds, so the serial-minus-batch success difference was 0 seeds (0 percentage points), far below the required 5 seeds (16.67 percentage points). Batch-16 did meet the runtime condition, with a median of 0.0680 s versus 0.5242 s for serial, an 87.02% reduction, but the hypothesis required both conditions."
+    }
+  ],
+  "verdict": "refuted",
+  "report_path": "",
+  "review_path": "",
+  "reviewer_score": null,
+  "error": ""
+}

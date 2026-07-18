@@ -1,0 +1,133 @@
+{
+  "slug": "when-does-vectorized-numpy-actually-lose-to-plai",
+  "topic": "When does vectorized NumPy actually lose to plain Python loops? Characterize the array-size crossover point for common elementwise operations on Apple Silicon, and test whether the crossover is operation-dependent.",
+  "created_at": "2026-07-18T21:24:23+00:00",
+  "updated_at": "2026-07-18T22:04:18+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "For contiguous float64 arrays, the stable crossover size for np.exp versus a Python loop using math.exp will be at least one power-of-two size bin smaller than the crossover for np.add versus the corresponding Python addition loop.",
+      "rationale": "Transcendental evaluation adds substantial per-element work to the Python baseline, whereas NumPy performs it inside compiled ufunc loops. This predicts an operation-complexity-dependent crossover, an architecture-specific relationship not established because the survey retrieved no external sources. Define the stable crossover as the smallest tested N after which NumPy remains faster at every larger power-of-two N.",
+      "novelty": 7.2,
+      "feasibility": 9.8,
+      "info_gain": 8.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For positive int64 inputs, np.remainder will reach its stable crossover against an indexed Python modulo loop at a smaller array size than np.add reaches against an indexed Python addition loop.",
+      "rationale": "Python integer modulo has a larger per-element cost than integer addition, so compiled execution may recover NumPy's fixed dispatch cost sooner. Testing identical shapes and storage while changing only the operation directly probes whether crossover ordering extends beyond floating-point operations.",
+      "novelty": 7.5,
+      "feasibility": 9.7,
+      "info_gain": 8.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "For contiguous float64 addition, using np.add(a, b, out=y) with a reused output array will reduce the stable crossover size by at least one power-of-two size bin relative to evaluating y = a + b, against the same preallocated-output Python loop.",
+      "rationale": "At small N, output allocation can be comparable to or larger than elementwise computation. Separating allocation from ufunc dispatch tests whether reported crossover points are intrinsic to vectorization or are substantially determined by memory-management overhead.",
+      "novelty": 7.8,
+      "feasibility": 9.8,
+      "info_gain": 8.9,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "For contiguous float64 inputs, the unfused NumPy expression x*x + 2*x + 1 will have a stable crossover at least one power-of-two size bin larger than a single np.add operation, when each is compared with a Python loop computing the same result into a preallocated output array.",
+      "rationale": "The chained expression invokes multiple ufuncs and creates temporaries, potentially multiplying fixed overhead even though it performs more arithmetic per element. A positive result would show that expression structure, not merely mathematical complexity, controls the small-array crossover.",
+      "novelty": 8.1,
+      "feasibility": 9.5,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "For elementwise multiplication on the tested Apple Silicon system, float16 arrays will have a stable NumPy-versus-Python-loop crossover at least two power-of-two size bins larger than float32 arrays of the same logical length.",
+      "rationale": "Float16 arithmetic may require conversion or use less favorable CPU execution paths despite moving fewer bytes, while float32 is more likely to benefit from native vector execution. The survey's lack of external sources leaves this Apple-Silicon-specific dtype effect uncharacterized.",
+      "novelty": 8.5,
+      "feasibility": 9.4,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "For float64 addition, a stride-16 one-dimensional view will have a stable NumPy-versus-indexed-Python-loop crossover at least two power-of-two size bins larger than a contiguous array with the same logical element count.",
+      "rationale": "Large strides weaken contiguous SIMD and cache-line utilization in NumPy, while Python interpreter overhead may mask part of the same memory-layout penalty in the loop baseline. This tests whether crossover size depends materially on layout rather than only on operation and N.",
+      "novelty": 8.3,
+      "feasibility": 9.2,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "For selecting between two precomputed float64 arrays, np.where(mask, a, b) will reach its stable crossover against a Python if/else loop at least one power-of-two size bin earlier with a deterministic 50% pseudorandom mask than with an all-true mask.",
+      "rationale": "NumPy's selection loop should be comparatively insensitive to mask predictability, whereas the Python baseline should benefit from a perfectly predictable branch. Seeded masks make the prediction deterministic and isolate data-dependent control flow as a source of operation-specific crossover variation.",
+      "novelty": 8.8,
+      "feasibility": 9.5,
+      "info_gain": 9.2,
+      "chosen": true,
+      "outcome": "refuted"
+    },
+    {
+      "id": 8,
+      "statement": "For arrays containing Python integers with dtype=object, np.add will fail to achieve a stable speed advantage over an equivalent list-comprehension addition at every tested power-of-two size from 1 through 131072.",
+      "rationale": "Object-dtype ufuncs must invoke Python-level numeric operations and manage object references per element, removing much of the compiled numeric-loop advantage associated with vectorization. This tests a clear boundary case in which increasing array size may never produce the usual NumPy crossover.",
+      "novelty": 8.6,
+      "feasibility": 9.6,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Benchmark np.where against an output-equivalent plain Python if/else loop over power-of-two float64 array sizes, comparing deterministic exactly-50%-true pseudorandom masks with all-true masks to estimate and statistically compare their stable crossover bins on native Apple Silicon.",
+    "protocol": "1. Use a native arm64 installation of CPython 3.11 or 3.12 on an Apple-Silicon Mac. Install exactly numpy==2.1.3 and matplotlib==3.9.2. Before importing NumPy, set OMP_NUM_THREADS=1, OPENBLAS_NUM_THREADS=1, MKL_NUM_THREADS=1, and VECLIB_MAXIMUM_THREADS=1. Verify platform.machine() == 'arm64'; otherwise stop and report that the required platform was not used. Record Python, NumPy, macOS, and CPU-model information in environment.json.\n2. Define sizes n_k = 2**k for every integer k from 1 through 20 inclusive. For each k, initialize data_rng = np.random.default_rng(20000 + k), generate a and b independently with data_rng.standard_normal(n_k, dtype=np.float64), and make both arrays C-contiguous. Retain the arrays for the complete benchmark.\n3. For each size, create an all-true mask with np.ones(n_k, dtype=np.bool_). Create the pseudorandom mask by allocating n_k false values, setting exactly its first n_k/2 entries to true, and shuffling it in place with np.random.default_rng(10000 + k).shuffle(mask). Thus every pseudorandom mask has exactly 50% true entries and is deterministic.\n4. Implement the NumPy comparison exactly as def numpy_select(mask, a, b): return np.where(mask, a, b). Implement the plain-Python baseline exactly as def python_select(mask, a, b): out = np.empty_like(a); for i in range(a.size): if mask[i]: out[i] = a[i]; else: out[i] = b[i]; return out. Do not use comprehensions, vectorized assignments, np.copyto, Numba, Cython, multiprocessing, or any other compiled helper in the baseline. Both implementations must allocate and return one float64 ndarray on every call.\n5. Before timing, run both implementations once for every size and mask type and assert np.array_equal(numpy_result, python_result). Abort on any mismatch. Then make three additional untimed warm-up calls per implementation and condition.\n6. Use time.perf_counter_ns for timing. Disable Python garbage collection only during benchmark timing and restore it afterward. For each implementation-size-mask condition, obtain three one-call pilot timings and use their median t_pilot to set repetitions R = max(1, min(200000, ceil(20000000 / t_pilot))), targeting at least 20 ms per timed block when one call is shorter than 20 ms.\n7. Collect 15 timing rounds. In each round, visit all 40 size-mask conditions in an order produced by shuffling them with one persistent np.random.default_rng(314159). For each condition, use the same RNG to choose whether the NumPy or Python implementation is timed first. Time R consecutive calls to each implementation, assigning every return value to the same local variable named last. Immediately after stopping the timer, add float(last[0]) + float(last[-1]) to a numeric checksum outside the timed interval. Store elapsed_ns/R as nanoseconds per call. Do not retain output arrays other than last.\n8. Save one row per implementation, round, size, and mask type to results.csv, including k, n, mask_type, implementation, repetitions, elapsed_ns, and ns_per_call. Also save the final checksum. Treat each round's adjacent Python and NumPy measurements for a condition as a paired observation.\n9. For each size and mask type, calculate the 15 paired speedup ratios S_r(k,m) = python_ns_per_call / numpy_ns_per_call. Define the reported speedup S(k,m) as the median of these 15 ratios. Values above 1 favor NumPy; values at or above 1.05 constitute a practically meaningful NumPy win.\n10. Define the stable crossover bin C_m as the smallest measured k such that S(j,m) >= 1.05 for k and for every measured bin j from k through 20. If no such k exists, mark C_m as not observed; do not substitute an extrapolated value. Report both C_m and the corresponding array size 2**C_m separately for the pseudorandom and all-true masks.\n11. Quantify uncertainty with 10000 bootstrap replicates using np.random.default_rng(271828). In each replicate, sample 15 round indices with replacement and use those same sampled indices for every size and both masks, recompute each median speedup and stable crossover, and calculate D = C_all_true - C_random whenever both crossovers are observed. Report the 2.5th, 50th, and 97.5th percentiles of D over finite replicates and the fraction of replicates in which both crossovers are observed.\n12. Declare the hypothesis supported only if both observed crossovers are finite, the observed difference D is at least 1 bin, at least 95% of bootstrap replicates have both crossovers finite, and the bootstrap 2.5th percentile of D is at least 1. Declare it refuted otherwise.\n13. Create crossover_where.png at 200 DPI. Plot k (with secondary labels showing n = 2**k) on the horizontal axis and median speedup S(k,m) on a logarithmic vertical axis. Draw separate lines with markers for the pseudorandom and all-true masks, add 95% bootstrap percentile ribbons for each median speedup, horizontal reference lines at 1.00 and 1.05, and vertical dashed lines at each observed stable crossover. Include axis labels, legend, title, and a caption stating the observed crossover-bin difference and supported/refuted decision.\n14. Save summary.json containing both crossover bins and sizes, their difference D, the bootstrap interval and finite-replicate fraction, the decision, total runtime, environment metadata, and all fixed seeds. The complete run, including setup after package installation, must stop within 30 minutes.",
+    "metrics": [
+      "Median paired speedup S(k,m): for each power-of-two size k and mask type m, the median across 15 rounds of Python nanoseconds per call divided by np.where nanoseconds per call.",
+      "Stable crossover bin C_m: the smallest k for which median speedup is at least 1.05 at k and every larger measured bin through k=20.",
+      "Crossover-bin difference D = C_all_true - C_random; D >= 1 means the pseudorandom mask crosses at least one power-of-two bin earlier.",
+      "Bootstrap uncertainty for D: 2.5th, 50th, and 97.5th percentiles from 10000 round-resampling replicates, plus the fraction of replicates in which both crossovers are observed.",
+      "Binary decision: supported only when both crossovers are observed, observed D >= 1, at least 95% of bootstrap replicates yield both crossovers, and the 2.5th percentile of D is >= 1; otherwise refuted."
+    ],
+    "time_budget_minutes": 15,
+    "expected_if_true": "The deterministic 50% pseudorandom mask has a finite stable crossover C_random at least one bin below C_all_true, so D >= 1; this separation remains robust under resampling, with at least 95% finite bootstrap replicates and a 2.5th-percentile D of at least 1.",
+    "expected_if_false": "The two masks cross in the same bin, the pseudorandom mask crosses later, either crossover is not observed through n=2**20, or uncertainty allows a difference below one bin; operationally, any failure of the four support criteria refutes the hypothesis."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-18T21:54:44+00:00",
+      "finished_at": "2026-07-18T21:57:53+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "refuted",
+      "notes": "Both mask conditions reached the stable crossover in bin 2 at n=4, giving an observed difference D=0 rather than the required D>=1. All 10,000 bootstrap replicates had finite crossovers, and the bootstrap difference was exactly 0 at the 2.5th, 50th, and 97.5th percentiles, decisively ruling out the hypothesized one-bin advantage."
+    }
+  ],
+  "verdict": "refuted",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
+  "error": ""
+}
