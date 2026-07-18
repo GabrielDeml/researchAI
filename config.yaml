@@ -1,0 +1,40 @@
+# researchAI harness configuration.
+# The repo root is auto-detected (parent of harness/); override with RESEARCHAI_ROOT.
+
+proxy:
+  base_url: "http://127.0.0.1:8317/v1"
+  api_key: "REDACTED"  # localhost-only CLIProxyAPI key
+
+models:
+  # Hard allowlist — harness.llm rejects anything else.
+  allowed:
+    - gpt-5.6-sol
+    - gpt-5.6-terra
+    - gpt-5.6-luna
+  # Policy: anything involving logic/reasoning uses sol.
+  roles:
+    reasoning: gpt-5.6-sol      # ideation, design, analysis, review prompts
+    coding: gpt-5.6-sol         # passed to `codex exec --model`
+    reviewer: gpt-5.6-sol
+    polish: gpt-5.6-terra       # non-reasoning prose pass over sol's draft
+    utility: gpt-5.6-terra      # literature triage, log summarization
+    utility_alt: gpt-5.6-luna   # digests, journal compression
+
+limits:
+  max_iterations: 4               # design→implement→analyze cycles per project
+  experiment_timeout_minutes: 30  # wall clock per codex run
+  workspace_disk_quota_mb: 2048
+  review_score_threshold: 6       # /10; below this the report gets one revision pass
+  daily_max_requests: 0           # 0 = unlimited (defensive caps, disabled by default)
+  daily_max_tokens: 0
+  max_parallel_projects: 1
+
+supervisor:
+  auto_topics: true               # self-ideate a topic when queue/ is empty
+  idle_sleep_seconds: 300
+  heartbeat_seconds: 30
+
+dashboard:
+  host: "127.0.0.1"
+  port: 8780
+  auth_token: ""                  # empty = no auth (localhost only)
