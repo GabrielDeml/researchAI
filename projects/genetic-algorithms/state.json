@@ -2,16 +2,19 @@
   "slug": "genetic-algorithms",
   "topic": "Genetic algorithms",
   "created_at": "2026-07-18T22:03:39+00:00",
-  "updated_at": "2026-07-18T22:16:05+00:00",
-  "stage": "writeup",
-  "status": "running",
+  "updated_at": "2026-07-18T22:21:34+00:00",
+  "stage": "done",
+  "status": "done",
   "completed_stages": [
     "intake",
     "survey",
     "ideate",
     "design",
     "implement",
-    "analyze"
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
   ],
   "survey_path": "survey.md",
   "citations": [
@@ -244,8 +247,8 @@
     }
   ],
   "verdict": "refuted",
-  "report_path": "",
-  "review_path": "",
-  "reviewer_score": null,
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
   "error": ""
 }

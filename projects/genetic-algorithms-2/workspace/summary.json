@@ -1,0 +1,21 @@
+{
+  "A_attempt": 3565.5,
+  "A_miss": 5093.5,
+  "R_generational": 1.1189073460700478,
+  "R_muplus1": 1.2936863397955713,
+  "budget": 20000,
+  "condition_A_attempt_le_half_A_miss": false,
+  "condition_A_miss_gt_0": true,
+  "condition_R_generational_le_1_2": true,
+  "condition_R_muplus1_ge_1_8": false,
+  "decision": "refuted",
+  "generational_success_attempt_budget": 22,
+  "generational_success_miss_budget": 24,
+  "genotype_bits": 64,
+  "hypothesis_supported": false,
+  "mu": 64,
+  "muplus1_success_attempt_budget": 26,
+  "muplus1_success_miss_budget": 27,
+  "n_seeds": 30,
+  "target_fitness": 56
+}
