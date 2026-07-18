@@ -22,3 +22,11 @@
 - **Verdict:** refuted
 - **Key numbers:** A_attempt=3565.5; A_miss=5093.5; R_generational=1.1189073460700478; R_muplus1=1.2936863397955713; budget=20000; condition_A_attempt_le_half_A_miss=False; condition_A_miss_gt_0=True; condition_R_generational_le_1_2=True
 - **What I'd do differently:** Next time, run multiple independently seeded replicates and estimate the pooled and generational ratios with confidence intervals before judging whether the strict cache-miss and attempt-cost thresholds are robustly met.
+
+## 2026-07-18 — topic-can-a-raw-per-seed-file-be-released-contai
+
+- **Topic:** Topic Can a raw per-seed file be released containing initialization attempts and misses, offspring attempts and misses, target counters, failure indicators, both scores, and per-run duplicate ratios for both algorithms? _(auto-enqueued follow-up from genetic-algorithms-2)_
+- **Hypothesis:** When generational and steady-state GAs are run for seeds 0 through 29 on 64-bit OneMax, deriving an independent random-number substream from each (algorithm, seed) pair will produce byte-identical per-seed records when algorithm execution order is reversed, whereas using one shared global pseudorandom stream will change at least 80% of rows in one or more of initialization attempts, offspring attempts, duplicate ratio, or either score.
+- **Verdict:** supported
+- **Key numbers:** decision=supported; hypothesis_supported=True; independent_forward_generational_initialization_failed_count=0; independent_forward_generational_offspring_failed_count=0; independent_forward_sha256=b49d29ff1ff73164509c486ff7bd4f20d0c63a9e78f0f0699ec63526e76855e0; independent_forward_steady_state_initialization_failed_count=0; independent_forward_steady_state_offspring_failed_count=0; independent_generational_best_score_change_count=0
+- **What I'd do differently:** Next time, release raw per-seed traces and reverse execution order in both independent and shared modes, verifying byte-level equality and duplicate-ratio changes to distinguish true invariance from order-dependent behavior.

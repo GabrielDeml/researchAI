@@ -1,0 +1,127 @@
+{
+  "column_changes": {
+    "independent": {
+      "generational_best_score": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "generational_duplicate_ratio": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "generational_initialization_attempts": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "generational_offspring_attempts": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "steady_state_best_score": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "steady_state_duplicate_ratio": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "steady_state_initialization_attempts": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "steady_state_offspring_attempts": {
+        "count": 0,
+        "rate": 0.0
+      }
+    },
+    "shared": {
+      "generational_best_score": {
+        "count": 9,
+        "rate": 0.3
+      },
+      "generational_duplicate_ratio": {
+        "count": 29,
+        "rate": 0.9666666666666667
+      },
+      "generational_initialization_attempts": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "generational_offspring_attempts": {
+        "count": 29,
+        "rate": 0.9666666666666667
+      },
+      "steady_state_best_score": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "steady_state_duplicate_ratio": {
+        "count": 30,
+        "rate": 1.0
+      },
+      "steady_state_initialization_attempts": {
+        "count": 0,
+        "rate": 0.0
+      },
+      "steady_state_offspring_attempts": {
+        "count": 30,
+        "rate": 1.0
+      }
+    }
+  },
+  "comparison_hashes": {
+    "independent": {
+      "equal": true,
+      "forward_sha256": "b49d29ff1ff73164509c486ff7bd4f20d0c63a9e78f0f0699ec63526e76855e0",
+      "reverse_sha256": "b49d29ff1ff73164509c486ff7bd4f20d0c63a9e78f0f0699ec63526e76855e0"
+    },
+    "shared": {
+      "equal": false,
+      "forward_sha256": "a44bc9c00c9f09b30d731abafe9460f464d1f76c2bc49002766e06bf4bd0787e",
+      "reverse_sha256": "c4879ab96579e555b4d345fc96c4fd847728ca8a1638fa2ba56fb90aa1e4257e"
+    }
+  },
+  "decision": "supported",
+  "failure_counts": {
+    "independent_forward": {
+      "generational_initialization_failed": 0,
+      "generational_offspring_failed": 0,
+      "steady_state_initialization_failed": 0,
+      "steady_state_offspring_failed": 0
+    },
+    "independent_reverse": {
+      "generational_initialization_failed": 0,
+      "generational_offspring_failed": 0,
+      "steady_state_initialization_failed": 0,
+      "steady_state_offspring_failed": 0
+    },
+    "shared_forward": {
+      "generational_initialization_failed": 0,
+      "generational_offspring_failed": 0,
+      "steady_state_initialization_failed": 0,
+      "steady_state_offspring_failed": 0
+    },
+    "shared_reverse": {
+      "generational_initialization_failed": 0,
+      "generational_offspring_failed": 0,
+      "steady_state_initialization_failed": 0,
+      "steady_state_offspring_failed": 0
+    }
+  },
+  "independent_identical_line_count": 30,
+  "independent_total_line_count": 30,
+  "shared_max_column": "steady_state_offspring_attempts",
+  "shared_max_column_change_count": 30,
+  "shared_max_column_change_rate": 1.0,
+  "supported": true,
+  "union_changes": {
+    "independent": {
+      "count": 0,
+      "rate": 0.0
+    },
+    "shared": {
+      "count": 30,
+      "rate": 1.0
+    }
+  }
+}

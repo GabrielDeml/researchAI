@@ -1,0 +1,248 @@
+{
+  "slug": "topic-can-a-raw-per-seed-file-be-released-contai",
+  "topic": "Topic Can a raw per-seed file be released containing initialization attempts and misses, offspring attempts and misses, target counters, failure indicators, both scores, and per-run duplicate ratios for both algorithms? _(auto-enqueued follow-up from genetic-algorithms-2)_",
+  "created_at": "2026-07-18T22:38:26+00:00",
+  "updated_at": "2026-07-18T22:56:20+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Variations of Genetic Algorithms",
+      "authors": [
+        "Alison Jenkins",
+        "Vinika Gupta",
+        "Alexis Myrick",
+        "Mary Lenoir"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1911.00490v1",
+      "source": "arXiv:1911.00490v1"
+    },
+    {
+      "title": "Application of Improved Genetic Algorithm Based on Gene Duplication Rate in Flexible Job Shop Scheduling Problem",
+      "authors": [
+        "Bin Li"
+      ],
+      "year": 2025,
+      "url": "https://www.semanticscholar.org/paper/839cf01b47baa618ebf630790e8bc21dded5841f",
+      "source": "S2:839cf01b47baa618ebf630790e8bc21dded5841f"
+    },
+    {
+      "title": "Evolutionary Dynamic Optimization and Machine Learning",
+      "authors": [
+        "Abdennour Boulesnane"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2310.08748v3",
+      "source": "arXiv:2310.08748v3"
+    },
+    {
+      "title": "A novel crossover operator for genetic algorithm: Stas crossover",
+      "authors": [
+        "Ratchadakorn Poohoi",
+        "Kanate Puntusavase",
+        "S. Ohmori"
+      ],
+      "year": 2023,
+      "url": "https://www.semanticscholar.org/paper/ae33c7fae081f4435820e48f1d7ace1faf93a715",
+      "source": "S2:ae33c7fae081f4435820e48f1d7ace1faf93a715"
+    },
+    {
+      "title": "Cheating for Problem Solving: A Genetic Algorithm with Social Interactions",
+      "authors": [
+        "Rafeal Lahoz-Beltra",
+        "Gabriela Ochoa",
+        "Uwe Aickelin"
+      ],
+      "year": 2010,
+      "url": "http://arxiv.org/abs/1001.1889v1",
+      "source": "arXiv:1001.1889v1"
+    },
+    {
+      "title": "Efficient Parallel Genetic Algorithm for Perturbed Substructure Optimization in Complex Network",
+      "authors": [
+        "Shanqing Yu",
+        "Meng Zhou",
+        "Jintao Zhou",
+        "Minghao Zhao",
+        "Yidan Song",
+        "Yao Lu",
+        "Zeyu Wang",
+        "Qi Xuan"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2412.20980v1",
+      "source": "arXiv:2412.20980v1"
+    },
+    {
+      "title": "The Role of Morphological Variation in Evolutionary Robotics: Maximizing Performance and Robustness",
+      "authors": [
+        "Jonata Tyska Carvalho",
+        "Stefano Nolfi"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2208.02809v2",
+      "source": "arXiv:2208.02809v2"
+    },
+    {
+      "title": "Evolutionary Generation of Random Surreal Numbers for Benchmarking",
+      "authors": [
+        "Matthew Roughan"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2504.07152v1",
+      "source": "arXiv:2504.07152v1"
+    },
+    {
+      "title": "Reproducibility in Optimization: Theoretical Framework and Limits",
+      "authors": [
+        "Kwangjun Ahn",
+        "Prateek Jain",
+        "Ziwei Ji",
+        "Satyen Kale",
+        "Praneeth Netrapalli",
+        "G. Shamir"
+      ],
+      "year": 2022,
+      "url": "https://www.semanticscholar.org/paper/4e1027255b0eba4212c2a168c9ac0a9e85aeca0d",
+      "source": "S2:4e1027255b0eba4212c2a168c9ac0a9e85aeca0d"
+    },
+    {
+      "title": "Optimal Guarantees for Algorithmic Reproducibility and Gradient Complexity in Convex Optimization",
+      "authors": [
+        "Liang Zhang",
+        "Junchi Yang",
+        "Amin Karbasi",
+        "Niao He"
+      ],
+      "year": 2023,
+      "url": "https://www.semanticscholar.org/paper/5d141a9f0d3b1bb01c08ec3ef0aa0963dd473a8a",
+      "source": "S2:5d141a9f0d3b1bb01c08ec3ef0aa0963dd473a8a"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "On a 40-bit weighted exact-cardinality problem requiring exactly 20 one-bits, with population 50, an initialization cap of 400 candidate draws, and seeds 0 through 49, rejection-based Bernoulli initialization will fail to create a full population in at least 35 percentage points more runs than constructive sampling without replacement; among runs that initialize successfully, the algorithms' mean final-best score and best-so-far AUC after 10,000 evaluations will each differ by less than 1%.",
+      "rationale": "This directly tests the survey gap concerning retention of initialization attempts, misses, failures, and both scores. If conditional scores look equivalent while all-seed completion differs sharply, publishing only completed runs would materially change the interpretation.",
+      "novelty": 8.8,
+      "feasibility": 9.7,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "On an 80-bit weighted exact-cardinality problem requiring exactly 40 one-bits, with population 80 and 8,000 accepted-offspring evaluations per run, independent bit mutation at rate 1/80 followed by rejection and resampling will require at least 1.6 offspring attempts per accepted offspring and record misses on at least 35% of attempts, whereas a one-for-one swap mutation will require exactly one attempt and zero feasibility misses across seeds 0 through 29.",
+      "rationale": "Function-evaluation totals alone omit rejected candidates, as emphasized by the survey. Logging offspring attempts and misses would expose computational effort that is invisible when both algorithms receive the same accepted-evaluation budget.",
+      "novelty": 8.2,
+      "feasibility": 9.8,
+      "info_gain": 8.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "Across 30 fixed 64-bit NK landscapes with K=6, comparing tournament sizes 2 and 4 using identical initial populations and landscape seeds, the standard error of the paired per-seed difference in final normalized fitness will be at least 30% smaller than the median standard error obtained from 1,000 deterministic random permutations of the second algorithm's seed labels.",
+      "rationale": "The survey notes that seed-indexed rows enable matched comparisons but that no retrieved work tests the value of the complete matched record. This experiment quantifies how much inferential precision is lost when algorithm scores are released without preserved seed correspondence.",
+      "novelty": 8.5,
+      "feasibility": 9.5,
+      "info_gain": 8.9,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "For population-60 generational and elitist (μ+μ) GAs on a 60-bit concatenated trap-5 benchmark, using 12,000 evaluations and seeds 0 through 49, the half-budget fraction of duplicate individuals in the current population will predict failure to reach the optimum with pooled AUROC at least 0.75 and at least 0.10 higher than the AUROC of the duplicate ratio among all offspring attempts up to half-budget.",
+      "rationale": "The literature relates redundancy to diversity loss but does not determine which duplicate denominator is scientifically useful. Comparing population duplicates with attempted-offspring duplicates tests the survey's warning that these ratios measure different phenomena.",
+      "novelty": 8.7,
+      "feasibility": 9.3,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Across 20 fixed 80-bit NK landscapes with K=6 and a 20,000-evaluation budget, tournament-size-5 selection will exceed tournament-size-2 selection by at least 0.5 percentage points in mean normalized best-so-far AUC over the first half of the budget, while tournament-size-2 selection will exceed tournament-size-5 selection by at least 0.3 percentage points in mean final normalized fitness.",
+      "rationale": "This tests whether releasing both score measures changes the algorithm ranking: stronger selection may improve early progress while weaker selection preserves diversity and improves the terminal result. The survey identifies the lack of joint run-level analysis of two scores as an unresolved gap.",
+      "novelty": 8.1,
+      "feasibility": 9.2,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "On 60-bit OneMax with population 20, bit mutation rate 2/60, target fitness 56, 12,000 evaluations, and seeds 0 through 49, a non-elitist generational GA will have at least 20% of runs in which the target counter records one or more hits but the terminal-population best score is below 56; an otherwise matched elitist (μ+μ) GA will have zero such runs.",
+      "rationale": "A final score cannot show whether a target was reached and later lost. This experiment tests whether target counters and separate terminal and best-so-far scores reveal behavior that aggregate success labels or final scores conceal.",
+      "novelty": 8.6,
+      "feasibility": 9.6,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "For target-stopped population-50 generational and steady-state GAs on 32-bit OneMax, with target 32, a maximum of 15,000 evaluations, and seeds 0 through 99, the unweighted mean of per-run generated-candidate duplicate ratios will differ by at least 10% relative from the ratio reconstructed by pooling duplicate counts and attempt denominators for at least one algorithm.",
+      "rationale": "Variable run lengths make a mean of ratios scientifically different from a count-weighted pooled ratio. This tests the survey's recommendation to release duplicate counts and denominators rather than only rounded per-run ratios.",
+      "novelty": 9.0,
+      "feasibility": 9.7,
+      "info_gain": 8.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "When generational and steady-state GAs are run for seeds 0 through 29 on 64-bit OneMax, deriving an independent random-number substream from each (algorithm, seed) pair will produce byte-identical per-seed records when algorithm execution order is reversed, whereas using one shared global pseudorandom stream will change at least 80% of rows in one or more of initialization attempts, offspring attempts, duplicate ratio, or either score.",
+      "rationale": "The survey states that matched seed rows are reproducible only when seed handling and stream allocation are documented. This order-reversal test supplies a falsifiable audit of whether the proposed raw file is genuinely reproducible rather than merely seed-labeled.",
+      "novelty": 9.2,
+      "feasibility": 9.9,
+      "info_gain": 9.3,
+      "chosen": true,
+      "outcome": "supported"
+    }
+  ],
+  "design": {
+    "summary": "Run generational and steady-state genetic algorithms on synthetic 64-bit OneMax for seeds 0-29, then test whether reversing algorithm order preserves canonical per-seed records under pair-derived RNG streams but changes at least 24 of 30 rows in a shared-stream condition.",
+    "protocol": "1. Use Python 3.11 with numpy==1.26.4 and matplotlib==3.8.4; use only the standard library otherwise. Run single-threaded and do not parallelize algorithm executions.\n2. Define the synthetic objective OneMax on an unsigned 64-bit integer x as fitness(x) = int(x).bit_count(), with optimum 64. Set MASTER_SEED=20250308, MASK64=(1<<64)-1, population size N=64, initialization target=64 accepted unique genomes, initialization attempt cap=10000, offspring target=2048 accepted children, and offspring attempt cap=100000.\n3. Use numpy.random.Generator(numpy.random.PCG64(seed_sequence)) for every RNG. Generate a random genome as int(rng.bit_generator.random_raw()) & MASK64.\n4. Initialize a population by repeatedly generating genomes until 64 distinct genomes have been accepted or 10000 attempts have occurred. Count every generated genome as initialization_attempts; count an attempted genome already in the accepted population as initialization_misses. Record initialization_accepted, initialization_target=64, and initialization_failed=int(initialization_accepted<64). If initialization fails, do not generate offspring; set offspring_attempts=0, offspring_misses=0, offspring_accepted=0, offspring_failed=1, and score to the best initialized fitness, or 0 if none was accepted.\n5. Define tournament selection by independently drawing two population indices with rng.integers(0,len(population)); select the higher-fitness genome and select the first-drawn genome on a tie. To create one attempted child, select two parents using two such tournaments, draw a 64-bit crossover mask with random_raw(), and form child=(parent1 & mask) | (parent2 & ((~mask) & MASK64)). Draw k=int(rng.binomial(64,1/64)); if k>0, draw k distinct bit positions with rng.choice(64,size=k,replace=False) and flip those positions in the child. Mask the result with MASK64.\n6. Implement the generational GA as follows. Starting from the initialized population, build a new generation of 64 children. Each attempted child increments offspring_attempts. Reject it and increment offspring_misses if it equals any genome in the current population or any already accepted child in the new generation. Otherwise accept it, increment offspring_accepted, and update the best-ever score. Once 64 children have been accepted, replace the entire population with them and begin the next generation. Stop immediately when offspring_accepted reaches 2048 or offspring_attempts reaches 100000. Because 2048 is divisible by 64, a successful run ends at a generation boundary. Set offspring_failed=int(offspring_accepted<2048).\n7. Implement the steady-state GA with the same initialization, selection, crossover, and mutation. Each attempted child increments offspring_attempts. Reject it and increment offspring_misses if it is already in the current population. Otherwise accept it, increment offspring_accepted, append it to the population, update the best-ever score, find all indices having minimum fitness in the resulting 65-member population, select one of those indices uniformly with rng.integers(0,number_of_minima), and delete that individual. Stop when offspring_accepted reaches 2048 or offspring_attempts reaches 100000. Set offspring_failed=int(offspring_accepted<2048).\n8. For either algorithm, define best_score as the maximum fitness observed among all accepted initialization genomes and accepted offspring, including offspring later removed. Define duplicate_ratio=(initialization_misses+offspring_misses)/(initialization_attempts+offspring_attempts), with 0.0 if the denominator is zero.\n9. Evaluate seeds 0 through 29 under two RNG-allocation modes and two execution orders. In independent mode, give each run a fresh RNG based on SeedSequence([MASTER_SEED, seed, algorithm_id]), where algorithm_id=0 for generational and 1 for steady-state. In shared mode, for each seed create one RNG based on SeedSequence([MASTER_SEED, seed]) and pass that same mutable RNG object successively to both algorithms. Forward order is generational then steady-state; reverse order is steady-state then generational. Recreate all RNGs from their SeedSequences for each mode/order experiment.\n10. Produce four CSV files: independent_forward.csv, independent_reverse.csv, shared_forward.csv, and shared_reverse.csv. Each must have exactly 30 data rows sorted by seed regardless of execution order. Use UTF-8, comma delimiters, a single header, Unix newline '\\n', no index, no comments, no timestamps, and no platform-dependent metadata.\n11. Use this exact column order: seed, then for the generational prefix and then the steady_state prefix: initialization_target, initialization_accepted, initialization_attempts, initialization_misses, initialization_failed, offspring_target, offspring_accepted, offspring_attempts, offspring_misses, offspring_failed, best_score, duplicate_ratio. Thus, for example, generational_initialization_target precedes generational_initialization_accepted, and all 12 generational fields precede all 12 steady_state fields. Serialize counters and scores as base-10 integers, failure indicators as 0 or 1, and duplicate_ratio with exactly 12 digits after the decimal point using format(value,'.12f').\n12. Compare independent_forward.csv with independent_reverse.csv both as complete byte arrays using SHA-256 and line-by-line after the common header. Record the number of byte-identical per-seed lines; the required independent result is 30 of 30 and equal whole-file SHA-256 digests.\n13. For each mode, compare forward versus reverse using these eight audit columns: generational_initialization_attempts, steady_state_initialization_attempts, generational_offspring_attempts, steady_state_offspring_attempts, generational_duplicate_ratio, steady_state_duplicate_ratio, generational_best_score, and steady_state_best_score. For each column, compute the fraction of the 30 seeds whose serialized field differs. Also compute the union row-change rate: the fraction of seeds differing in at least one of the eight columns.\n14. Declare the hypothesis supported if and only if independent mode has 30/30 byte-identical lines and equal whole-file hashes, and the maximum shared-mode column-specific row-change rate is at least 0.80, meaning at least 24 of 30 seeds differ in at least one single audit column. Declare it refuted otherwise. The union row-change rate is descriptive and does not replace the column-specific 0.80 criterion.\n15. Save audit_metrics.json containing both SHA-256 hashes for each comparison, independent identical-line count, all eight column-specific change counts and rates for each mode, each mode's union change count and rate, and the supported/refuted decision.\n16. Create order_reversal_heatmap.png with two vertically stacked 30-by-8 binary heatmaps, independent mode above shared mode. Rows are seeds 0-29; columns are the eight audit columns in the order listed in step 13; a cell is 1 if forward and reverse serialized values differ and 0 otherwise. Use a fixed white-to-dark-red color scale with vmin=0 and vmax=1, label both axes, include a colorbar labeled 'order-induced change', use tight_layout(), and save at 160 DPI.",
+    "metrics": [
+      "Independent byte-identical row count: number of seeds whose complete canonical CSV line is identical between independent_forward.csv and independent_reverse.csv; required value is 30/30.",
+      "Independent whole-file equality: equality of SHA-256 digests for the two independent-mode CSV byte arrays; required value is true.",
+      "Column-specific order-change rate: for each of the eight audit columns, number of seeds with unequal serialized forward/reverse values divided by 30, computed separately for independent and shared modes.",
+      "Shared maximum column-change rate: maximum of the eight shared-mode column-specific rates; the hypothesis requires at least 0.80, equivalently at least 24 changed seeds in one column.",
+      "Union row-change rate: fraction of seeds that differ in at least one of the eight audit columns, reported separately for independent and shared modes as a descriptive robustness measure.",
+      "Failure counts: sums of initialization_failed and offspring_failed over the 30 seeds for each algorithm, mode, and order, included to expose capped or incomplete runs."
+    ],
+    "time_budget_minutes": 20,
+    "expected_if_true": "The independent forward and reverse files have equal SHA-256 digests and all 30 per-seed lines are byte-identical; every independent audit-column change rate is 0.00. In shared mode, at least one audit column, expected to be an offspring_attempts or duplicate_ratio column, differs for at least 24 of 30 seeds, so its change rate is at least 0.80; the shared heatmap consequently contains a dense changed column while the independent heatmap is entirely zero.",
+    "expected_if_false": "The hypothesis is refuted if even one independent per-seed line differs or the independent file hashes differ, or if every shared-mode audit column changes for at most 23 of 30 seeds, giving a maximum column-specific change rate below 0.80."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-18T22:42:23+00:00",
+      "finished_at": "2026-07-18T22:51:03+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "Independent mode exactly matched the predicted invariance: the forward and reverse SHA-256 digests were identical, all 30 of 30 lines were byte-identical, and every audited change rate was 0.00. Shared mode showed a strong order effect: steady-state offspring attempts and duplicate ratio changed for 30 of 30 seeds (1.00), generational offspring attempts and duplicate ratio changed for 29 of 30 seeds (0.967), and the files had different hashes; no failure indicators were triggered."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.0,
+  "error": ""
+}
