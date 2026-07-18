@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import re
 from pathlib import Path
 
 from .config import Config
@@ -36,9 +37,17 @@ def append_entry(
     key_numbers: str = "",
     lessons: str = "",
 ) -> Path:
-    """Append one compact section to journal/journal.md and return its path."""
+    """Append one compact section to journal/journal.md and return its path.
+
+    Idempotent per project: the archive stage can be replayed after a crash
+    (append happens before the stage-completion checkpoint), and a duplicate
+    entry would corrupt the memory injected into future ideation prompts."""
     cfg.journal_dir.mkdir(parents=True, exist_ok=True)
     path = cfg.journal_dir / "journal.md"
+    if path.exists() and re.search(
+        rf"^## .* — {re.escape(project)}$", path.read_text(encoding="utf-8"), flags=re.M
+    ):
+        return path
     today = dt.date.today().isoformat()
     section = (
         f"\n## {today} — {project}\n\n"
@@ -57,9 +66,14 @@ def append_entry(
 # ideas.jsonl — every hypothesis ever generated
 # --------------------------------------------------------------------------- #
 def append_ideas(cfg: Config, project: str, hypotheses: list) -> Path:
-    """Append every hypothesis (with its scores + outcome) to ideas.jsonl."""
+    """Append every hypothesis (with its scores + outcome) to ideas.jsonl.
+
+    Idempotent per project (see append_entry): if any record for this project
+    exists, the whole batch was already written — skip the replay."""
     cfg.journal_dir.mkdir(parents=True, exist_ok=True)
     path = cfg.journal_dir / "ideas.jsonl"
+    if any(rec.get("project") == project for rec in read_ideas(cfg)):
+        return path
     ts = now_iso()
     with path.open("a", encoding="utf-8") as f:
         for h in hypotheses:

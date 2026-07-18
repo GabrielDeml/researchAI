@@ -23,16 +23,20 @@ models:
 limits:
   max_iterations: 4               # design→implement→analyze cycles per project
   experiment_timeout_minutes: 30  # wall clock per codex run
-  workspace_disk_quota_mb: 2048
+  workspace_disk_quota_mb: 2048   # hard limit: experiment killed mid-run if exceeded
+  max_transcript_mb: 200          # hard limit: experiment killed if its log grows past this
+  min_free_disk_gb: 5             # fail closed: no experiments/new work below this free space
   review_score_threshold: 6       # /10; below this the report gets one revision pass
   daily_max_requests: 0           # 0 = unlimited (defensive caps, disabled by default)
   daily_max_tokens: 0
+  max_projects_per_day: 0         # 0 = unlimited
   max_parallel_projects: 1
 
 supervisor:
   auto_topics: true               # self-ideate a topic when queue/ is empty
   idle_sleep_seconds: 300
   heartbeat_seconds: 30
+  project_cooldown_seconds: 60    # breather between projects (machine pacing)
 
 dashboard:
   host: "127.0.0.1"

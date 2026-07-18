@@ -27,9 +27,12 @@ class LimitsCfg(BaseModel):
     max_iterations: int = 4
     experiment_timeout_minutes: int = 30
     workspace_disk_quota_mb: int = 2048
+    max_transcript_mb: int = 200
+    min_free_disk_gb: int = 5
     review_score_threshold: int = 6
     daily_max_requests: int = 0
     daily_max_tokens: int = 0
+    max_projects_per_day: int = 0
     max_parallel_projects: int = 1
 
 
@@ -37,6 +40,7 @@ class SupervisorCfg(BaseModel):
     auto_topics: bool = True
     idle_sleep_seconds: int = 300
     heartbeat_seconds: int = 30
+    project_cooldown_seconds: int = 60
 
 
 class DashboardCfg(BaseModel):

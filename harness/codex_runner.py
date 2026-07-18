@@ -17,11 +17,15 @@ import os
 import shutil
 import signal
 import subprocess
+import threading
 import time
 from pathlib import Path
 
 from .config import Config
 from .state import CodexResult
+
+# How often the resource monitor re-checks workspace/transcript/free-disk sizes.
+MONITOR_INTERVAL_SECONDS = 10
 
 CODEX_BIN = (
     os.environ.get("RESEARCHAI_CODEX_BIN")
@@ -82,20 +86,30 @@ def run_codex(
             stderr=subprocess.STDOUT,
             start_new_session=True,  # own process group -> killable as a unit
         )
+
+        monitor_stop = threading.Event()
+        kill_reason: list[str] = []
+        monitor = threading.Thread(
+            target=_resource_monitor,
+            args=(proc, workspace, log_path, cfg, log_f, monitor_stop, kill_reason),
+            daemon=True, name="codex-resource-monitor",
+        )
+        monitor.start()
         try:
             proc.wait(timeout=timeout_minutes * 60)
         except subprocess.TimeoutExpired:
             timed_out = True
             _kill_process_group(proc, log_f)
+        finally:
+            monitor_stop.set()
 
         exit_code = proc.returncode if proc.returncode is not None else -9
         duration_s = time.monotonic() - start
         log_f.write(
             f"\n===== codex exec end exit={exit_code} timed_out={timed_out} "
+            f"killed_for={kill_reason[0] if kill_reason else 'n/a'} "
             f"duration_s={duration_s:.1f} =====\n"
         )
-
-        _warn_if_over_quota(workspace, cfg, log_f)
 
     return CodexResult(
         exit_code=exit_code,
@@ -219,19 +233,38 @@ def _dir_size_mb(path: Path) -> float:
     return total / (1024 * 1024)
 
 
-def _warn_if_over_quota(workspace: Path, cfg: Config, log_f) -> None:
-    """Log a loud warning if the workspace exceeds its disk quota. Never deletes anything."""
+def _resource_monitor(
+    proc: subprocess.Popen,
+    workspace: Path,
+    log_path: Path,
+    cfg: Config,
+    log_f,
+    stop_event: threading.Event,
+    kill_reason: list[str],
+) -> None:
+    """Kill the experiment mid-run if it breaches hard resource limits.
+
+    Enforced while codex runs (the post-hoc check this replaced let one runaway
+    command fill the volume before the timeout fired): workspace disk quota,
+    transcript size cap, and a minimum-free-disk floor. Never deletes anything —
+    it only stops the producer and records why in the transcript."""
     quota_mb = cfg.limits.workspace_disk_quota_mb
-    if not quota_mb:
-        return
-    try:
-        size_mb = _dir_size_mb(workspace)
-    except OSError as e:
-        log_f.write(f"\n!!!!! WARNING: disk quota check failed: {e} !!!!!\n")
-        return
-    if size_mb > quota_mb:
-        log_f.write(
-            f"\n!!!!! WARNING: workspace {workspace} is {size_mb:.0f}MB, "
-            f"exceeding the {quota_mb}MB disk quota. Nothing deleted automatically; "
-            f"investigate manually. !!!!!\n"
-        )
+    transcript_cap = cfg.limits.max_transcript_mb * 1024 * 1024
+    min_free = cfg.limits.min_free_disk_gb * 1024 ** 3
+    while not stop_event.wait(MONITOR_INTERVAL_SECONDS):
+        reason = None
+        try:
+            if quota_mb and _dir_size_mb(workspace) > quota_mb:
+                reason = f"workspace exceeded {quota_mb}MB disk quota"
+            elif transcript_cap and log_path.exists() and log_path.stat().st_size > transcript_cap:
+                reason = f"transcript exceeded {cfg.limits.max_transcript_mb}MB"
+            elif min_free and shutil.disk_usage(workspace).free < min_free:
+                reason = f"host free disk below {cfg.limits.min_free_disk_gb}GB floor"
+        except OSError:
+            continue  # transient stat failure; re-check next interval
+        if reason:
+            kill_reason.append(reason)
+            log_f.write(f"\n!!!!! RESOURCE LIMIT: {reason}; killing experiment !!!!!\n")
+            log_f.flush()
+            _kill_process_group(proc, log_f)
+            return

@@ -24,6 +24,7 @@ from typing import Any
 
 import httpx
 import markdown as md_lib
+import nh3
 import uvicorn
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, StreamingResponse
@@ -51,7 +52,11 @@ def get_cfg() -> Config:
 # --- rendering helpers ------------------------------------------------------
 
 def render_markdown(text: str) -> str:
-    return md_lib.markdown(text, extensions=_MD_EXTENSIONS)
+    # Sanitize: every rendered document is model-generated and influenced by
+    # external literature, and the frontend injects this HTML via innerHTML on
+    # the same origin as the control API. nh3 strips scripts, event handlers,
+    # and javascript: URLs while keeping relative <img src> figure paths.
+    return nh3.clean(md_lib.markdown(text, extensions=_MD_EXTENSIONS))
 
 
 def render_file(path: Path) -> str | None:
@@ -172,6 +177,20 @@ def create_app(cfg: Config | None = None) -> FastAPI:
     _cfg = cfg or load_config()
 
     app = FastAPI(title="researchAI dashboard")
+
+    @app.middleware("http")
+    async def content_security_policy(request: Request, call_next):
+        # Defense-in-depth behind the nh3 sanitization: even if hostile markup
+        # slipped through, it cannot load external resources or exfiltrate
+        # (connect/img limited to self). unsafe-inline is required by the
+        # single-file UI's inline script/styles.
+        response = await call_next(request)
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'none'; script-src 'unsafe-inline'; "
+            "style-src 'unsafe-inline'; img-src 'self' data:; "
+            "connect-src 'self'; base-uri 'none'; form-action 'self'"
+        )
+        return response
 
     def require_auth(request: Request) -> None:
         c = get_cfg()

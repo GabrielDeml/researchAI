@@ -13,8 +13,11 @@ raised while doing work is caught, logged loudly, and the loop continues.
 """
 from __future__ import annotations
 
+import datetime as dt
+import json
 import logging
 import os
+import shutil
 import signal
 import sys
 import threading
@@ -24,7 +27,7 @@ from pathlib import Path
 import httpx
 
 from .config import Config, load_config
-from .state import PAUSED, RUNNING, ProjectState
+from .state import FAILED, PAUSED, RUNNING, ProjectState
 
 # Brief backoff after an unexpected exception in a cycle, distinct from the
 # configured idle_sleep_seconds used when there's genuinely no work to do.
@@ -90,6 +93,82 @@ def _pop_queue_file(cfg: Config) -> Path | None:
     return files[0] if files else None
 
 
+def _ack_queue_file(cfg: Config, queue_file: Path, state, log: logging.Logger) -> None:
+    """Acknowledge a queue item based on how its run actually ended.
+
+    done/skipped: work is finished, remove the file. paused: the project persists
+    in projects/ and resumes from state.json, so the file is also safe to remove.
+    failed: move to queue/failed/ (a dead-letter dir the queue scan ignores) so a
+    transient model/codex/filesystem error never silently discards the request —
+    move it back into queue/ to retry."""
+    try:
+        if getattr(state, "status", FAILED) == FAILED:
+            dead_dir = cfg.queue_dir / "failed"
+            dead_dir.mkdir(parents=True, exist_ok=True)
+            dest = dead_dir / queue_file.name
+            queue_file.rename(dest)
+            log.error(
+                "project %r FAILED (%s); queue item moved to %s for retry",
+                getattr(state, "slug", "?"), getattr(state, "error", ""), dest,
+            )
+        else:
+            queue_file.unlink()
+    except OSError:
+        log.exception("failed to acknowledge queue file %s", queue_file)
+
+
+def _disk_ok(cfg: Config, log: logging.Logger) -> bool:
+    """Fail closed when the volume is nearly full: no new work below the floor."""
+    min_free = cfg.limits.min_free_disk_gb * 1024 ** 3
+    if not min_free:
+        return True
+    try:
+        free = shutil.disk_usage(cfg.root).free
+    except OSError:
+        log.exception("free-disk check failed; failing closed")
+        return False
+    if free < min_free:
+        log.error(
+            "!!! free disk %.1fGB is below the %dGB floor; no new work will start !!!",
+            free / 1024 ** 3, cfg.limits.min_free_disk_gb,
+        )
+        return False
+    return True
+
+
+def _budget_blocked(cfg: Config) -> str | None:
+    """Return a reason string when a configured daily cap is exhausted.
+
+    All caps default to 0 = unlimited (per this project's model policy quota is
+    not rationed); when a cap is set, it is enforced here — before work starts."""
+    lim = cfg.limits
+    today = dt.date.today().isoformat()
+
+    if lim.max_projects_per_day:
+        started = sum(
+            1 for p in ProjectState.load_all(cfg.root) if p.created_at[:10] == today
+        )
+        if started >= lim.max_projects_per_day:
+            return f"max_projects_per_day={lim.max_projects_per_day} reached"
+
+    if lim.daily_max_requests or lim.daily_max_tokens:
+        requests = tokens = 0
+        if cfg.usage_log.exists():
+            for line in cfg.usage_log.read_text(encoding="utf-8").splitlines():
+                try:
+                    rec = json.loads(line)
+                except ValueError:
+                    continue
+                if str(rec.get("ts", ""))[:10] == today:
+                    requests += 1
+                    tokens += int(rec.get("total_tokens", 0) or 0)
+        if lim.daily_max_requests and requests >= lim.daily_max_requests:
+            return f"daily_max_requests={lim.daily_max_requests} reached ({requests})"
+        if lim.daily_max_tokens and tokens >= lim.daily_max_tokens:
+            return f"daily_max_tokens={lim.daily_max_tokens} reached ({tokens})"
+    return None
+
+
 def _write_digest(cfg: Config, log: logging.Logger) -> None:
     try:
         from . import journal
@@ -122,10 +201,10 @@ def _run_one_unit_of_work(cfg: Config, log: logging.Logger) -> bool:
         topic = queue_file.read_text()
         log.info("starting project from queue file %s", queue_file.name)
         try:
-            pipeline.run_project(cfg, topic=topic)
+            state = pipeline.run_project(cfg, topic=topic)
         finally:
             _write_digest(cfg, log)
-        queue_file.unlink()  # only reached if run_project returned without raising
+        _ack_queue_file(cfg, queue_file, state, log)
         return True
 
     if cfg.supervisor.auto_topics:
@@ -191,7 +270,13 @@ def main(max_cycles: int | None = None) -> None:
                     log.info("STOP file removed; resuming")
                     stop_logged = False
 
-                if not _check_health(cfg):
+                budget_reason = _budget_blocked(cfg)
+                if not _disk_ok(cfg, log):
+                    _sleep(cfg.supervisor.idle_sleep_seconds)
+                elif budget_reason is not None:
+                    log.warning("daily budget exhausted (%s); idling", budget_reason)
+                    _sleep(cfg.supervisor.idle_sleep_seconds)
+                elif not _check_health(cfg):
                     log.error(
                         "!!! proxy health check failed (%s/models unreachable or erroring) !!!",
                         cfg.proxy.base_url,
@@ -204,7 +289,9 @@ def main(max_cycles: int | None = None) -> None:
                         log.exception("!!! unhandled exception in supervisor cycle !!!")
                         _sleep(CYCLE_ERROR_BACKOFF_SECONDS)
                     else:
-                        if not did_work:
+                        if did_work:
+                            _sleep(cfg.supervisor.project_cooldown_seconds)
+                        else:
                             _sleep(cfg.supervisor.idle_sleep_seconds)
 
             if max_cycles is not None and cycle >= max_cycles:

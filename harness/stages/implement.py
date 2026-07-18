@@ -9,6 +9,9 @@ reused rather than duplicated.
 """
 from __future__ import annotations
 
+import shutil
+from pathlib import Path
+
 from ..config import Config
 from ..llm import LLM
 from ..state import Iteration, ProjectState, now_iso
@@ -46,6 +49,15 @@ def run(state: ProjectState, cfg: Config, llm: LLM) -> ProjectState:
     else:
         it = Iteration(index=len(state.iterations) + 1, started_at=now_iso())
         state.iterations.append(it)
+        # A fresh attempt must never inherit the previous attempt's artifacts:
+        # analyze reads workspace/results.json, so a timed-out or crashed rerun
+        # would otherwise be judged on stale data from the prior iteration.
+        _archive_previous_attempt(workspace, it.index - 1)
+
+    # Deliberate exception to "stages never save": checkpoint the iteration
+    # before the long blocking codex run so a crash mid-run resumes into this
+    # same iteration (and the dashboard can show it in progress).
+    state.save(cfg.root)
 
     log_path = logs_dir / f"codex_iter{it.index}.log"
     prompt = _build_prompt(state, cfg)
@@ -58,3 +70,19 @@ def run(state: ProjectState, cfg: Config, llm: LLM) -> ProjectState:
     it.codex_exit = result.exit_code
     it.timed_out = result.timed_out
     return state
+
+
+def _archive_previous_attempt(workspace: Path, prev_index: int) -> None:
+    """Move the previous iteration's results.json and figures/ out of the live
+    workspace into attempts/iter<N>/ so analyze and writeup only ever see
+    artifacts produced by the current attempt."""
+    if prev_index < 1:
+        return
+    stale = [workspace / "results.json", workspace / "figures"]
+    if not any(p.exists() for p in stale):
+        return
+    dest = workspace / "attempts" / f"iter{prev_index}"
+    dest.mkdir(parents=True, exist_ok=True)
+    for p in stale:
+        if p.exists():
+            shutil.move(str(p), str(dest / p.name))
