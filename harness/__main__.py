@@ -21,6 +21,7 @@ def build_parser() -> argparse.ArgumentParser:
     target.add_argument("--resume", metavar="SLUG", help="resume an existing project by slug")
 
     sub.add_parser("supervise", help="run the 24/7 supervisor loop (queue -> project -> digest)")
+    sub.add_parser("drain", help="work through the queue (and resume crashed projects), then exit")
     sub.add_parser("serve", help="run the monitoring dashboard")
 
     return parser
@@ -43,6 +44,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "supervise":
         from . import supervisor
         supervisor.main()
+        return 0
+
+    if args.command == "drain":
+        from . import supervisor
+        supervisor.main(drain=True)
         return 0
 
     if args.command == "serve":

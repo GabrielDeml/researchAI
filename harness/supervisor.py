@@ -178,7 +178,9 @@ def _write_digest(cfg: Config, log: logging.Logger) -> None:
         log.exception("!!! journal digest generation failed !!!")
 
 
-def _run_one_unit_of_work(cfg: Config, log: logging.Logger) -> bool:
+def _run_one_unit_of_work(
+    cfg: Config, log: logging.Logger, allow_auto_topics: bool = True,
+) -> bool:
     """Do at most one unit of work (resume a crashed project, pop the queue,
     or self-ideate). Returns True if a project ran, False if there was
     nothing to do (caller should idle-sleep)."""
@@ -207,7 +209,7 @@ def _run_one_unit_of_work(cfg: Config, log: logging.Logger) -> bool:
         _ack_queue_file(cfg, queue_file, state, log)
         return True
 
-    if cfg.supervisor.auto_topics:
+    if cfg.supervisor.auto_topics and allow_auto_topics:
         log.info("queue empty; self-ideating a topic")
         topic = pipeline.propose_topic(cfg)
         log.info("proposed topic: %s", topic)
@@ -217,13 +219,20 @@ def _run_one_unit_of_work(cfg: Config, log: logging.Logger) -> bool:
             _write_digest(cfg, log)
         return True
 
-    log.info("queue empty and auto_topics disabled; idling")
+    log.info("queue empty%s; idling",
+             "" if cfg.supervisor.auto_topics else " and auto_topics disabled")
     return False
 
 
-def main(max_cycles: int | None = None) -> None:
+def main(max_cycles: int | None = None, drain: bool = False) -> None:
     """Run the supervisor loop. `max_cycles` (or env RESEARCHAI_MAX_CYCLES)
-    caps the number of loop iterations -- for tests; unset means forever."""
+    caps the number of loop iterations -- for tests; unset means forever.
+
+    `drain=True` is the no-daemon mode (`python -m harness drain`): resume any
+    crashed projects, work through the queue, then exit instead of idling —
+    self-ideation is skipped so the process always terminates. Do not run it
+    while another `harness run`/`supervise` process is active: two runners
+    would both pick up the same in-flight project."""
     cfg = load_config()
     log = _setup_logging(cfg)
 
@@ -249,7 +258,7 @@ def main(max_cycles: int | None = None) -> None:
     )
     heartbeat_thread.start()
 
-    log.info("supervisor starting (root=%s)", cfg.root)
+    log.info("supervisor starting (root=%s, drain=%s)", cfg.root, drain)
 
     stop_logged = False
     cycle = 0
@@ -258,6 +267,9 @@ def main(max_cycles: int | None = None) -> None:
             cycle += 1
 
             if cfg.stop_file.exists():
+                if drain:
+                    log.warning("STOP file present; drain exiting (remove STOP and rerun)")
+                    break
                 if not stop_logged:
                     log.warning(
                         "STOP file present at %s; pausing, no new work will start",
@@ -272,25 +284,39 @@ def main(max_cycles: int | None = None) -> None:
 
                 budget_reason = _budget_blocked(cfg)
                 if not _disk_ok(cfg, log):
+                    if drain:
+                        log.error("drain exiting: below free-disk floor")
+                        break
                     _sleep(cfg.supervisor.idle_sleep_seconds)
                 elif budget_reason is not None:
-                    log.warning("daily budget exhausted (%s); idling", budget_reason)
+                    log.warning("daily budget exhausted (%s); %s",
+                                budget_reason, "drain exiting" if drain else "idling")
+                    if drain:
+                        break
                     _sleep(cfg.supervisor.idle_sleep_seconds)
                 elif not _check_health(cfg):
                     log.error(
                         "!!! proxy health check failed (%s/models unreachable or erroring) !!!",
                         cfg.proxy.base_url,
                     )
+                    if drain:
+                        log.error("drain exiting: proxy unhealthy")
+                        break
                     _sleep(cfg.supervisor.idle_sleep_seconds)
                 else:
                     try:
-                        did_work = _run_one_unit_of_work(cfg, log)
+                        did_work = _run_one_unit_of_work(
+                            cfg, log, allow_auto_topics=not drain,
+                        )
                     except Exception:
                         log.exception("!!! unhandled exception in supervisor cycle !!!")
                         _sleep(CYCLE_ERROR_BACKOFF_SECONDS)
                     else:
                         if did_work:
-                            _sleep(cfg.supervisor.project_cooldown_seconds)
+                            _sleep(0 if drain else cfg.supervisor.project_cooldown_seconds)
+                        elif drain:
+                            log.info("queue drained; exiting")
+                            break
                         else:
                             _sleep(cfg.supervisor.idle_sleep_seconds)
 
