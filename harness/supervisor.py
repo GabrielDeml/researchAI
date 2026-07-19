@@ -222,10 +222,16 @@ def _publish_results(cfg: Config, log: logging.Logger) -> None:
         def _git(*args: str) -> subprocess.CompletedProcess:
             return subprocess.run(
                 ["git", "-C", str(wt), *args],
-                capture_output=True, text=True, timeout=180,
+                capture_output=True, text=True, timeout=600,
             )
 
-        _git("add", "-A")
+        add = _git("add", "-A")
+        if add.returncode != 0:
+            time.sleep(5)  # transient index.lock from a concurrent git; retry once
+            add = _git("add", "-A")
+        if add.returncode != 0:
+            log.error("!!! results add failed: %s !!!", add.stderr.strip()[:400])
+            return
         if _git("diff", "--cached", "--quiet").returncode == 0:
             return  # nothing new
         stamp = dt.datetime.now().isoformat(timespec="seconds")
