@@ -20,7 +20,7 @@ import sys
 import traceback
 
 from .config import Config
-from .llm import LLM, Paused
+from .llm import LLM, LLMUnavailable, Paused
 from .state import (
     DONE, FAILED, PAUSED, RUNNING, SKIPPED, STAGE_ORDER,
     ProjectState, Stage, Verdict, slugify,
@@ -128,6 +128,12 @@ def run_project(
         except Paused:
             _log(f"paused during {stage.value} — checkpointing")
             state.status = PAUSED
+            state.save(cfg.root)
+            return state
+        except LLMUnavailable as e:
+            _log(f"LLM unavailable during {stage.value} — pausing for retry: {e}")
+            state.status = PAUSED
+            state.error = f"{stage.value}: {e}"
             state.save(cfg.root)
             return state
         except Exception as e:  # noqa: BLE001 — surface, don't crash the supervisor

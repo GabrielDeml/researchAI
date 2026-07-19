@@ -33,6 +33,10 @@ class Paused(RuntimeError):
     """Raised when the STOP file exists; callers checkpoint and unwind."""
 
 
+class LLMUnavailable(RuntimeError):
+    """Raised after retries exhaust on a transient model-service failure."""
+
+
 class LLM:
     def __init__(self, cfg: Config, project: str = ""):
         self.cfg = cfg
@@ -87,7 +91,9 @@ class LLM:
                 last_err = e
             if attempt < retries:
                 time.sleep(min(60.0, 2.0 ** attempt + random.random()))
-        raise RuntimeError(f"LLM call failed after {retries + 1} attempts: {last_err}")
+        raise LLMUnavailable(
+            f"LLM call failed after {retries + 1} attempts: {last_err}"
+        ) from last_err
 
     def chat_json(self, role: str, prompt: str, **kw) -> Any:
         text = self.chat(role, prompt, **kw)
