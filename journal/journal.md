@@ -46,3 +46,11 @@
 - **Verdict:** refuted
 - **Key numbers:** batch_Q=-0.3421223958333333; batch_ci_high=-0.3279947916666667; batch_ci_low=-0.35592447916666664; batch_decision=serial superior; batch_validation_success_rate=0.16197916666666667; bootstrap_seed=20250308; delta_negative_splits=40; delta_positive_splits=78
 - **What I'd do differently:** Next time, preregister the calibration, paired split analysis, bootstrap confidence interval, and decision threshold before running the full comparison to prevent post hoc interpretation of modest effects.
+
+## 2026-07-19 — topic-does-a-larger-evaluation-budget-reveal-a-s
+
+- **Topic:** Topic **Does a larger evaluation budget reveal a success-rate difference?** Repeat the paired experiment at 100,000, 250,000, and 500,000 evaluations while retaining shared initialization and operator-schedule controls. These should be treated as distinct, prospectively specified hypotheses rather than retrospective extensions of the present result. _(auto-enqueued follow-up from genetic-algorithms)_
+- **Hypothesis:** Among paired runs in which neither algorithm has reached the optimum by 100,000 evaluations, serial populations will contain an average of at least one more fully solved all-ones trap-5 block in their best individual than matched frozen-parent batch-size-16 populations.
+- **Verdict:** refuted
+- **Key numbers:** at_100000_batch16_optimum_success_count=0; at_100000_batch16_optimum_success_proportion=0.0; at_100000_bootstrap_90pct_high=0.359375; at_100000_bootstrap_90pct_low=-0.5; at_100000_eligible_mean_best_fitness_difference=-0.078125; at_100000_eligible_mean_solved_block_difference=-0.078125; at_100000_mcnemar_n01_batch16_only=0; at_100000_mcnemar_n10_serial_only=0
+- **What I'd do differently:** Next time, increase the number of independent paired instances and use a prespecified graded performance metric, because zero optimum successes at every budget made success-rate comparisons uninformative despite 500,000 evaluations.

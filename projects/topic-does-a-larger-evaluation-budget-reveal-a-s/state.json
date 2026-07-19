@@ -1,0 +1,242 @@
+{
+  "slug": "topic-does-a-larger-evaluation-budget-reveal-a-s",
+  "topic": "Topic **Does a larger evaluation budget reveal a success-rate difference?** Repeat the paired experiment at 100,000, 250,000, and 500,000 evaluations while retaining shared initialization and operator-schedule controls. These should be treated as distinct, prospectively specified hypotheses rather than retrospective extensions of the present result. _(auto-enqueued follow-up from genetic-algorithms)_",
+  "created_at": "2026-07-19T09:49:19+00:00",
+  "updated_at": "2026-07-19T10:09:33+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Variations of Genetic Algorithms",
+      "authors": [
+        "Alison Jenkins",
+        "Vinika Gupta",
+        "Alexis Myrick",
+        "Mary Lenoir"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1911.00490v1",
+      "source": "arXiv:1911.00490v1"
+    },
+    {
+      "title": "Evolutionary Dynamic Optimization and Machine Learning",
+      "authors": [
+        "Abdennour Boulesnane"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2310.08748v3",
+      "source": "arXiv:2310.08748v3"
+    },
+    {
+      "title": "The Role of Morphological Variation in Evolutionary Robotics: Maximizing Performance and Robustness",
+      "authors": [
+        "Jonata Tyska Carvalho",
+        "Stefano Nolfi"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2208.02809v2",
+      "source": "arXiv:2208.02809v2"
+    },
+    {
+      "title": "Efficient Parallel Genetic Algorithm for Perturbed Substructure Optimization in Complex Network",
+      "authors": [
+        "Shanqing Yu",
+        "Meng Zhou",
+        "Jintao Zhou",
+        "Minghao Zhao",
+        "Yidan Song",
+        "Yao Lu",
+        "Zeyu Wang",
+        "Qi Xuan"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2412.20980v1",
+      "source": "arXiv:2412.20980v1"
+    },
+    {
+      "title": "Cheating for Problem Solving: A Genetic Algorithm with Social Interactions",
+      "authors": [
+        "Rafeal Lahoz-Beltra",
+        "Gabriela Ochoa",
+        "Uwe Aickelin"
+      ],
+      "year": 2010,
+      "url": "http://arxiv.org/abs/1001.1889v1",
+      "source": "arXiv:1001.1889v1"
+    },
+    {
+      "title": "Evolutionary Optimization of Physics-Informed Neural Networks: Advancing Generalizability by the Baldwin Effect",
+      "authors": [
+        "Jian Cheng Wong",
+        "Chin Chun Ooi",
+        "Abhishek Gupta",
+        "Pao-Hsiung Chiu",
+        "Joshua Shao Zheng Low",
+        "My Ha Dao",
+        "Yew-Soon Ong"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2312.03243v4",
+      "source": "arXiv:2312.03243v4"
+    },
+    {
+      "title": "Predicting Friction System Performance with Symbolic Regression and Genetic Programming with Factor Variables",
+      "authors": [
+        "Gabriel Kronberger",
+        "Michael Kommenda",
+        "Andreas Promberger",
+        "Falk Nickel"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2107.09484v1",
+      "source": "arXiv:2107.09484v1"
+    },
+    {
+      "title": "Phase-Only Planar Antenna Array Synthesis with Fuzzy Genetic Algorithms",
+      "authors": [
+        "Boufeldja Kadri",
+        "Miloud Boussahla",
+        "Fethi Tarik Bendimerad"
+      ],
+      "year": 2010,
+      "url": "http://arxiv.org/abs/1002.1176v1",
+      "source": "arXiv:1002.1176v1"
+    },
+    {
+      "title": "Evolutionary Generation of Random Surreal Numbers for Benchmarking",
+      "authors": [
+        "Matthew Roughan"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2504.07152v1",
+      "source": "arXiv:2504.07152v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "In the population-100, 100-bit concatenated trap-5 comparison, using the same fixed selection, crossover, mutation, and replacement settings as the earlier 50,000-evaluation experiment, 96 fresh deterministic seed pairs with shared initial populations and identical evaluation-indexed operator schedules will show an absolute serial-versus-frozen-parent-batch-size-16 optimum-reaching success-rate difference of no more than 5 percentage points at 100,000 evaluations.",
+      "rationale": "This prospectively tests the first larger budget as a distinct endpoint rather than selecting it after observing results. It addresses the survey gap at 100,000 evaluations while allowing the earlier null result to persist despite additional search.",
+      "novelty": 7.6,
+      "feasibility": 9.4,
+      "info_gain": 8.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "Under the same paired trap-5 protocol and 96 held-out seed pairs, serial elitist steady-state replacement will exceed frozen-parent batch-size-16 replacement in optimum-reaching success by at least 8 percentage points at the prospectively specified 250,000-evaluation checkpoint.",
+      "rationale": "This is the separate intermediate-horizon hypothesis required by the literature gap. A positive result after little or no difference at 100,000 evaluations would support the claim that different search trajectories expose an advantage only after prolonged evolution, as suggested by stagnation and premature-convergence concerns [2].",
+      "novelty": 7.9,
+      "feasibility": 9.2,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "Under the same paired trap-5 protocol and 96 held-out seed pairs, serial elitist steady-state replacement will exceed frozen-parent batch-size-16 replacement in optimum-reaching success by at least 12 percentage points at the prospectively specified 500,000-evaluation checkpoint, with more serial-only than batch-only discordant pairs.",
+      "rationale": "None of the surveyed work reports a paired success comparison at 500,000 evaluations. The discordance requirement directly tests whether a late difference favors one method within matched initializations rather than arising from marginal seed imbalance.",
+      "novelty": 8.0,
+      "feasibility": 9.0,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "Among paired runs in which neither algorithm has reached the trap-5 optimum by 100,000 evaluations, frozen-parent batch-size-16 populations will have at least 10% greater mean normalized per-locus genotype entropy than their matched serial populations at that checkpoint.",
+      "rationale": "The literature motivates diversity as a possible determinant of long-horizon behavior [2,8], but does not establish whether the method that retains more raw diversity is ultimately more successful. Measuring entropy only within jointly unsuccessful pairs separates population state from early success selection effects.",
+      "novelty": 8.6,
+      "feasibility": 9.3,
+      "info_gain": 8.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Among paired runs in which neither algorithm has reached the optimum by 100,000 evaluations, serial populations will contain an average of at least one more fully solved all-ones trap-5 block in their best individual than matched frozen-parent batch-size-16 populations.",
+      "rationale": "This tests whether serial replacement accumulates problem-relevant building blocks despite potentially lower generic diversity. It distinguishes useful structural progress from the undifferentiated diversity measures emphasized in the surveyed evolutionary-computation literature.",
+      "novelty": 8.8,
+      "feasibility": 9.5,
+      "info_gain": 8.9,
+      "chosen": true,
+      "outcome": "refuted"
+    },
+    {
+      "id": 6,
+      "statement": "For algorithm-runs that have not succeeded by 100,000 evaluations, the number of fully solved trap-5 blocks in the best individual at 100,000 evaluations will predict success by 500,000 evaluations with leave-one-seed-pair-out AUROC of at least 0.75 and an AUROC at least 0.10 higher than normalized per-locus genotype entropy.",
+      "rationale": "The survey identifies diversity loss and stagnation as long-horizon mechanisms [2] but provides no test of which intermediate state measure predicts eventual success. Comparing a landscape-specific progress measure with entropy would clarify whether diversity is informative beyond preserved but unproductive variation.",
+      "novelty": 9.0,
+      "feasibility": 9.0,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "After deterministically dividing the 96 shared initial populations into tertiles by initial best fitness, the serial-minus-batch-size-16 success-rate difference at 500,000 evaluations will be at least 10 percentage points larger in the lowest-initial-fitness tertile than in the highest-initial-fitness tertile.",
+      "rationale": "Population initialization is identified as an important source of evolutionary-search variability [2]. This hypothesis uses pairing to test a specific moderation effect: whether the late method advantage is concentrated on difficult initial populations rather than being uniform across seeds.",
+      "novelty": 8.7,
+      "feasibility": 9.2,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "Across all 96 paired runs, defining time to success as the first optimum evaluation and censoring failures at 500,000 evaluations, serial elitist steady-state replacement will have a paired mean restricted time to success at least 40,000 evaluations lower than frozen-parent batch-size-16 replacement.",
+      "rationale": "Binary checkpoints can conceal substantial timing differences among runs that eventually share the same success status. Evaluation-based restricted time respects the resource axis recommended by Jenkins et al. [1] and tests whether a larger budget reveals a trajectory advantage even when endpoint success rates approach saturation.",
+      "novelty": 8.4,
+      "feasibility": 9.3,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Run 64 deterministically paired trap-5 genetic-algorithm comparisons and prospectively test, at 100,000, 250,000, and 500,000 evaluations, whether serial replacement yields at least one additional solved trap block in the best individual relative to frozen-parent batches of 16.",
+    "protocol": "1. Use Python 3.11 with numpy, numba, scipy, pandas, and matplotlib; perform no network or file input other than package installation, and save outputs to a local results directory.\n2. Generate a synthetic concatenated deceptive trap-5 problem with 20 nonoverlapping blocks, 5 bits per block, and genome length 100. Represent each block as an integer from 0 through 31. For a block containing u one-bits, assign score 5 if u=5 and otherwise assign score 4-u. Individual fitness is the sum over the 20 blocks, so the unique global optimum is the 100-bit all-ones string with fitness 100. A fully solved block is a block with value 31.\n3. Use 64 prospectively fixed paired replicates, indexed r=0,...,63, with population size N=256. For replicate r, initialize one population by drawing every bit independently as Bernoulli(0.5) using numpy.random.Generator(numpy.random.PCG64(10000+r)). Use this exact initialized population for both algorithms in the pair. Assign each initial individual an independent uint64 tie-priority from the same initialization generator. Larger tie-priority wins fitness ties.\n4. For each replicate, create one shared operator schedule of 499,744 offspring events using numpy.random.Generator(numpy.random.PCG64(20000+r)). For every event t, generate in this fixed order: four population indices uniformly from 0,...,255 for two size-2 parent tournaments; one crossover boundary uniformly from 1,...,19; one mutation block uniformly from 0,...,19; one mutation bit uniformly from 0,...,4; one replacement-target index uniformly from 0,...,255; and one uint64 offspring tie-priority. Store the schedule and give the identical arrays to both algorithms. Generate schedules one replicate at a time and discard them after both paired runs to limit memory use.\n5. In each size-2 parent tournament, select the individual with greater fitness; break equal-fitness ties using greater tie-priority. Select two parents using the two scheduled tournaments. Construct one child by copying blocks before the scheduled block boundary from parent 1 and blocks at or after the boundary from parent 2. Then flip the scheduled bit in the scheduled mutation block. Compute the child's trap-5 fitness.\n6. Use target-slot replacement for both algorithms. At the scheduled replacement target, replace the incumbent if the child has higher fitness, or if fitness is equal and the child's tie-priority is greater. Otherwise discard the child. This rule and the shared schedule must be identical between algorithms.\n7. Serial algorithm: for every offspring event, select parents from the current population, construct and evaluate the child, and immediately apply target-slot replacement before processing the next event.\n8. Frozen-parent batch-size-16 algorithm: process consecutive groups of exactly 16 offspring events. At the start of each group, freeze a snapshot of the population. Select all 32 parents and construct and evaluate all 16 children using only that snapshot. After all 16 children have been created, apply their target-slot replacements sequentially in event order to the live population. Thus the only timing difference is that parent selection and child construction are frozen for 16 events. The evaluation checkpoints align with complete batches because 100000-256, 250000-256, and 500000-256 are all divisible by 16.\n9. Count the 256 initialized individuals as the first 256 fitness evaluations. Continue each run to exactly 500,000 total evaluations. At exactly 100,000, 250,000, and 500,000 evaluations, identify the population's best individual by maximum fitness with tie-priority as the tie-breaker, and record its fitness and number of value-31 blocks. Also record whether an optimum has been reached by that checkpoint; because replacement never accepts lower fitness over an optimum, current presence of an optimum is equivalent to having reached one.\n10. Define the eligibility cohort once, using only the prospectively specified 100,000-evaluation checkpoint: pair r is eligible if neither the serial nor the frozen-parent run has reached fitness 100 by 100,000 evaluations. Retain this same cohort for analyses at all three budgets, even if either algorithm reaches the optimum later. Do not redefine or filter the cohort at later checkpoints.\n11. For each budget B in {100000,250000,500000} and each eligible pair r, calculate d[r,B] = solved_blocks_serial[r,B] - solved_blocks_batch16[r,B]. Treat H_100000, H_250000, and H_500000 as three separate, prospectively specified hypotheses. The deterministic primary decision at budget B is 'supported' if the arithmetic mean of d[r,B] over eligible pairs is at least 1.000 solved block and 'refuted' if it is below 1.000. Do not pool budgets, select the most favorable budget, or use later outcomes to alter the 100,000-evaluation cohort.\n12. Quantify uncertainty with 20,000 paired bootstrap resamples of the eligible pair indices using PCG64 seed 900001. For each budget, report the 5th and 95th percentiles of bootstrap mean differences as a two-sided 90% percentile interval. This interval is descriptive and does not replace the prespecified mean-difference decision threshold. If there are zero eligible pairs, classify all three hypotheses as refuted and explicitly report eligible_n=0.\n13. As a prospectively specified secondary analysis addressing success rates, use all 64 pairs at each budget. Compute serial and batch optimum-success proportions and their difference. Compute an exact one-sided paired McNemar/binomial p-value from discordant pairs: if n10 is serial-only success and n01 is batch-only success, calculate P[X>=n10] for X distributed Binomial(n10+n01,0.5); set p=1 when there are no discordant pairs. Apply Holm correction jointly to the three p-values. Declare a success-rate advantage at a budget only when serial success rate exceeds batch success rate and the Holm-adjusted p-value is below 0.05.\n14. Save a CSV containing one row per replicate, algorithm, and checkpoint, including replicate, algorithm, evaluations, best_fitness, solved_blocks, optimum_reached, and eligible_at_100000. Save a JSON summary containing all primary decisions, means, bootstrap intervals, success rates, discordant counts, raw and Holm-adjusted McNemar p-values, package versions, and all seeds.\n15. Save key_result.png at 1600 by 900 pixels. Use two panels: the left panel plots the eligible-cohort mean paired solved-block difference at the three budgets with the 90% bootstrap intervals and a horizontal dashed line at the decision threshold y=1; the right panel plots serial and batch optimum-success proportions over the three budgets. Label axes, display eligible cohort size, and use a fixed noninteractive matplotlib backend.\n16. Implement the two evolutionary loops and trap-score operations with numba.njit after one untimed compilation warm-up. Time the complete 64-pair experiment after warm-up and assert that elapsed wall-clock time is at most 30 minutes.",
+    "metrics": [
+      "Primary paired solved-block difference at each budget: for the fixed cohort in which neither member reached fitness 100 by 100,000 evaluations, compute d[r,B]=serial solved blocks minus batch-size-16 solved blocks in the best individual, then report mean(d); supported at B iff mean(d)>=1.000, otherwise refuted.",
+      "Bootstrap uncertainty: 5th and 95th percentiles of 20,000 bootstrap resampled eligible-cohort mean differences at each evaluation budget.",
+      "Eligible cohort size: number and fraction of the 64 pairs in which neither algorithm reached the optimum by 100,000 evaluations.",
+      "Optimum success rate at each budget: fraction of all 64 runs reaching fitness 100, reported separately for serial and batch-size-16 algorithms.",
+      "Paired success-rate difference: serial optimum-success proportion minus batch optimum-success proportion at each budget.",
+      "Paired success significance: exact one-sided McNemar/binomial p-value from serial-only versus batch-only successes, with Holm adjustment across the three budgets.",
+      "Best fitness difference: eligible-cohort mean of serial best fitness minus batch best fitness at each budget, reported as a secondary structural-progress metric.",
+      "Runtime: elapsed wall-clock minutes after numba warm-up, required to be no more than 30."
+    ],
+    "time_budget_minutes": 30,
+    "expected_if_true": "At one or more prospectively analyzed budgets, especially 250,000 or 500,000 evaluations, the eligible-cohort mean paired difference is at least +1.000 solved trap-5 block; a larger-budget success-rate effect is separately established only if serial has the higher success proportion and the Holm-adjusted paired McNemar p-value is below 0.05.",
+    "expected_if_false": "At each budget where the hypothesis fails, the eligible-cohort mean paired solved-block difference is below +1.000 and is therefore classified as refuted; the strongest false-pattern result would show differences near zero or negative, bootstrap intervals centered below +1, and no Holm-significant serial success-rate advantage."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T09:53:07+00:00",
+      "finished_at": "2026-07-19T10:03:29+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "refuted",
+      "notes": "At 100,000, 250,000, and 500,000 evaluations, the eligible-cohort mean paired solved-block difference was -0.078125, far below the prespecified +1.000 threshold. The 90% bootstrap interval was [-0.5, 0.359375] at every budget, remaining entirely below +1. Neither algorithm achieved any optimum successes among 64 pairs, so the success-proportion difference was 0.0 and every Holm-adjusted McNemar p-value was 1.0."
+    }
+  ],
+  "verdict": "refuted",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.0,
+  "error": ""
+}
