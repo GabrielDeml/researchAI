@@ -18,3 +18,5 @@ STOP
 SKIP
 .runner.lock
 .results-worktree/
+.self-improve-worktree/
+SELF_IMPROVE_SUMMARY.md

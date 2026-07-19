@@ -46,3 +46,26 @@ dashboard:
 results:
   publish: true                   # after each project: commit+push outputs to the results branch
   branch: "results"               # orphan branch in .results-worktree/ (see scripts/setup_results_branch.sh)
+
+self_improve:
+  enabled: true                   # after every N finished projects, codex improves the harness itself
+  mode: "apply"                   # "apply" = merge + restart once the selfcheck gate passes; "propose" = leave a branch for review
+  every_n_projects: 3             # cadence, in finished (done/failed/skipped) projects
+  timeout_minutes: 45             # wall clock for the codex self-improvement run
+  max_attempts_per_day: 4         # hard cap on attempts per day, whatever their outcome
+  push: false                     # push main to origin after a successful apply (flip on if another machine pulls)
+  # Any change touching these is rejected outright — the gate and the guardrails
+  # may never be edited by the process they guard. Model policy is additionally
+  # pinned inside harness/selfcheck.py.
+  protected_paths:
+    - harness/selfcheck.py
+    - harness/self_improve.py
+    - prompts/self_improve.md
+    - config.yaml
+    - scripts/
+    - launchd/
+    - .gitignore
+
+self_update:
+  pull: true                      # ff-only pull from origin at cycle boundaries; restart on new code
+  check_minutes: 30

@@ -24,6 +24,19 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("drain", help="work through the queue (and resume crashed projects), then exit")
     sub.add_parser("serve", help="run the monitoring dashboard")
 
+    p_improve = sub.add_parser(
+        "improve",
+        help="run one self-improvement cycle (codex edits the harness, gated by selfcheck)",
+    )
+    p_improve.add_argument(
+        "--propose", action="store_true",
+        help="leave the change on a branch for review instead of applying it",
+    )
+    sub.add_parser(
+        "selfcheck",
+        help="offline gate: imports, config, model policy, CLI commands, prompts",
+    )
+
     return parser
 
 
@@ -61,6 +74,29 @@ def main(argv: list[str] | None = None) -> int:
         from .web import app
         app.main()
         return 0
+
+    if args.command == "improve":
+        from .config import load_config
+        from .lockfile import RunnerActive, acquire_runner_lock
+        from .supervisor import _setup_logging
+        from . import self_improve
+        cfg = load_config()
+        try:
+            runner_lock = acquire_runner_lock(cfg.root)  # noqa: F841 — held for process lifetime
+        except RunnerActive as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 1
+        log = _setup_logging(cfg)
+        result = self_improve.run_improvement(
+            cfg, log, mode="propose" if args.propose else None,
+        )
+        print(f"self-improvement result: {result}")
+        ok = (self_improve.APPLIED, self_improve.PROPOSED, self_improve.NO_CHANGE)
+        return 0 if result in ok else 1
+
+    if args.command == "selfcheck":
+        from . import selfcheck
+        return selfcheck.main()
 
     parser.error(f"unknown command {args.command!r}")
     return 2  # pragma: no cover - argparse.error() exits before this

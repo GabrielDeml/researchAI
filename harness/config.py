@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 from functools import cached_property
 from pathlib import Path
+from typing import Literal
 
 import yaml
 from pydantic import BaseModel
@@ -54,6 +55,33 @@ class ResultsCfg(BaseModel):
     branch: str = "results"
 
 
+class SelfImproveCfg(BaseModel):
+    """Codex-driven improvement of the harness's own code (harness.self_improve)."""
+    enabled: bool = False
+    mode: Literal["apply", "propose"] = "apply"
+    every_n_projects: int = 3        # cadence, in finished (done/failed/skipped) projects
+    timeout_minutes: int = 45        # wall clock for the codex self-improvement run
+    max_attempts_per_day: int = 4    # hard cap on attempts regardless of outcome
+    push: bool = False               # push the current branch to origin after an apply
+    # A change touching any of these is rejected outright: the gate and the
+    # guardrails may never be edited by the process they guard.
+    protected_paths: list[str] = [
+        "harness/selfcheck.py",
+        "harness/self_improve.py",
+        "prompts/self_improve.md",
+        "config.yaml",
+        "scripts/",
+        "launchd/",
+        ".gitignore",
+    ]
+
+
+class SelfUpdateCfg(BaseModel):
+    """Fast-forward-only pulls from origin so a deployed harness tracks pushes."""
+    pull: bool = False
+    check_minutes: int = 30
+
+
 class Config(BaseModel):
     model_config = {"arbitrary_types_allowed": True, "ignored_types": (cached_property,)}
 
@@ -63,6 +91,8 @@ class Config(BaseModel):
     supervisor: SupervisorCfg = SupervisorCfg()
     dashboard: DashboardCfg = DashboardCfg()
     results: ResultsCfg = ResultsCfg()
+    self_improve: SelfImproveCfg = SelfImproveCfg()
+    self_update: SelfUpdateCfg = SelfUpdateCfg()
     root: Path
 
     # --- canonical layout; all components must use these, never hardcode paths ---
@@ -88,6 +118,12 @@ class Config(BaseModel):
     def usage_log(self) -> Path: return self.logs_dir / "usage.jsonl"
     @property
     def supervisor_log(self) -> Path: return self.logs_dir / "supervisor.log"
+    @property
+    def self_improve_worktree(self) -> Path: return self.root / ".self-improve-worktree"
+    @property
+    def self_improve_history(self) -> Path: return self.logs_dir / "self_improve.jsonl"
+    @property
+    def improvements_log(self) -> Path: return self.journal_dir / "improvements.md"
 
 
 def find_root() -> Path:

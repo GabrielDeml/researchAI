@@ -224,6 +224,38 @@ def _publish_results(cfg: Config, log: logging.Logger) -> None:
         log.exception("!!! results publishing failed !!!")
 
 
+def _reexec(log: logging.Logger, drain: bool) -> None:
+    """Replace this process with a fresh supervisor so just-merged code takes
+    effect. Python file descriptors are close-on-exec, so the runner flock
+    releases at exec and the successor immediately re-acquires it."""
+    mode = "drain" if drain else "supervise"
+    log.info("re-exec: %s -m harness %s", sys.executable, mode)
+    os.execv(sys.executable, [sys.executable, "-m", "harness", mode])
+
+
+def _maybe_self_update(cfg: Config, log: logging.Logger, drain: bool) -> None:
+    """ff-only pull from origin; on new code, re-exec (does not return then)."""
+    try:
+        from . import self_improve
+        if self_improve.maybe_pull_update(cfg, log):
+            log.info("harness updated from origin; restarting to load new code")
+            _reexec(log, drain)
+    except Exception:
+        log.exception("!!! self-update check failed !!!")
+
+
+def _maybe_self_improve(cfg: Config, log: logging.Logger, drain: bool) -> None:
+    """Cadence-gated self-improvement after a project; on an applied change,
+    re-exec (does not return then)."""
+    try:
+        from . import self_improve
+        if self_improve.maybe_run(cfg, log):
+            log.info("self-improvement applied; restarting to load new code")
+            _reexec(log, drain)
+    except Exception:
+        log.exception("!!! self-improvement cycle failed !!!")
+
+
 def _run_one_unit_of_work(
     cfg: Config, log: logging.Logger, allow_auto_topics: bool = True,
 ) -> bool:
@@ -338,6 +370,8 @@ def main(max_cycles: int | None = None, drain: bool = False) -> None:
                     log.info("STOP file removed; resuming")
                     stop_logged = False
 
+                _maybe_self_update(cfg, log, drain)
+
                 budget_reason = _budget_blocked(cfg)
                 if not _disk_ok(cfg, log):
                     if drain:
@@ -369,6 +403,7 @@ def main(max_cycles: int | None = None, drain: bool = False) -> None:
                         _sleep(CYCLE_ERROR_BACKOFF_SECONDS)
                     else:
                         if did_work:
+                            _maybe_self_improve(cfg, log, drain)
                             _sleep(0 if drain else cfg.supervisor.project_cooldown_seconds)
                         elif drain:
                             log.info("queue drained; exiting")
