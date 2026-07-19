@@ -194,7 +194,24 @@ def _publish_results(cfg: Config, log: logging.Logger) -> None:
                     "run scripts/setup_results_branch.sh", wt)
         return
     try:
-        ignore = shutil.ignore_patterns(".venv", "venv", "__pycache__", ".git", "node_modules")
+        patterns = shutil.ignore_patterns(
+            ".venv", "venv", "__pycache__", ".git", "node_modules",
+            ".podman-data", ".docker", ".cache", "archived-*",
+        )
+
+        def ignore(src: str, names: list[str]) -> set[str]:
+            # Also skip anything GitHub would reject (hard limit 100MB) — one
+            # oversized workspace artifact otherwise wedges every future push.
+            skip = set(patterns(src, names))
+            for n in names:
+                if n in skip:
+                    continue
+                p = os.path.join(src, n)
+                if os.path.isfile(p) and os.path.getsize(p) > 95 * 1024 * 1024:
+                    log.warning("results publish: skipping oversized file %s", p)
+                    skip.add(n)
+            return skip
+
         for name in ("projects", "journal", "digests"):
             src = cfg.root / name
             if src.exists():
