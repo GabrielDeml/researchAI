@@ -70,3 +70,11 @@
 - **Verdict:** broken
 - **Key numbers:** artifact_seed=20250308; classification=BROKEN; error=docker info remained unsuccessful after the bounded recovery poll; evidence_checks_attempted=0; evidence_checks_passed=0; evidence_verification_rate=0.0; execution_completion_rate=0.0; png_exists_nonempty=False
 - **What I'd do differently:** Next time, verify Docker daemon health, socket permissions, context, and storage before timing, record recovery diagnostics, and treat failed preflight separately from experimental metrics before rerunning all 12 primary and replay containers.
+
+## 2026-07-19 — topic-can-the-complete-repository-and-release-pa
+
+- **Topic:** Topic Can the complete repository and release payload be published with a cryptographic archive digest, commit identifier, full file inventory, and SHA-256 table covering source, schema, lock file, Makefile, README, outputs, raw results, logs, mutation specifications, and figure? _(auto-enqueued follow-up from topic-can-a-complete-artifact-package-be-release)_
+- **Hypothesis:** On 20 valid synthetic releases containing every committed file plus explicitly declared generated outputs and exclusions, and 40 invalid releases containing either an omitted committed file, an undeclared extra file, or a tracked file falsely reclassified as generated, a role-aware repository-to-release reconciliation algorithm will classify all 60 correctly; strict commit/release set equality will reject all 20 valid releases, and a simple rule requiring only that committed paths be a subset of release paths will accept all 20 invalid variants containing undeclared extras.
+- **Verdict:** supported
+- **Key numbers:** committed_subset_omitted_acceptance_rate=0.0; committed_subset_omitted_accepted=0; committed_subset_omitted_total=10; committed_subset_reclassified_acceptance_rate=1.0; committed_subset_reclassified_accepted=10; committed_subset_reclassified_total=10; committed_subset_undeclared_extra_acceptance_rate=1.0; committed_subset_undeclared_extra_accepted=20
+- **What I'd do differently:** Next time, expand beyond synthetic balanced cases by adding independently generated, adversarial repositories and blinded validation to test generalization and prevent implementation-specific success.

@@ -1,0 +1,5 @@
+"""Synthetic repository 10."""
+
+SEED = 20250308
+REPOSITORY_INDEX = 10
+CONTENT_TOKEN = "9488fb14f7a310c6867729cc27ac38e1"

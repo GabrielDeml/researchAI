@@ -1,0 +1,5 @@
+"""Synthetic repository 9."""
+
+SEED = 20250308
+REPOSITORY_INDEX = 9
+CONTENT_TOKEN = "8c59a3110b956ab60b2641a8cddd302c"

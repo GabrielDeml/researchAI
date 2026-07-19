@@ -1,0 +1,1 @@
+{"component_checks":{"committed_subset_accepts_all_undeclared_extra":true,"cryptographic_construction_integrity":true,"role_aware_accepts_all_valid":true,"role_aware_rejects_all_invalid":true,"strict_equality_rejects_all_valid":true},"decision":"supported"}

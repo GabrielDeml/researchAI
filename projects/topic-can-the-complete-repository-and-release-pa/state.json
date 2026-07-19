@@ -1,0 +1,254 @@
+{
+  "slug": "topic-can-the-complete-repository-and-release-pa",
+  "topic": "Topic Can the complete repository and release payload be published with a cryptographic archive digest, commit identifier, full file inventory, and SHA-256 table covering source, schema, lock file, Makefile, README, outputs, raw results, logs, mutation specifications, and figure? _(auto-enqueued follow-up from topic-can-a-complete-artifact-package-be-release)_",
+  "created_at": "2026-07-19T12:10:28+00:00",
+  "updated_at": "2026-07-19T12:26:04+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Packaging research artefacts with RO-Crate",
+      "authors": [
+        "Stian Soiland-Reyes",
+        "Peter Sefton",
+        "Mercè Crosas",
+        "Leyla Jael Castro",
+        "Frederik Coppens",
+        "José M. Fernández",
+        "Daniel Garijo",
+        "Björn Grüning"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2108.06503v2",
+      "source": "arXiv:2108.06503v2"
+    },
+    {
+      "title": "Archiving and referencing source code with Software Heritage",
+      "authors": [
+        "Roberto Di Cosmo"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2004.00514v1",
+      "source": "arXiv:2004.00514v1"
+    },
+    {
+      "title": "An Infrastructure for Software Release Analysis through Provenance Graphs",
+      "authors": [
+        "Felipe Curty",
+        "Troy Kohwalter",
+        "Vanessa Braganholo",
+        "Leonardo Murta"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1809.10265v1",
+      "source": "arXiv:1809.10265v1"
+    },
+    {
+      "title": "Recording provenance of workflow runs with RO-Crate",
+      "authors": [
+        "Simone Leo",
+        "Michael R. Crusoe",
+        "Laura Rodríguez-Navas",
+        "Raül Sirvent",
+        "Alexander Kanitz",
+        "Paul De Geest",
+        "Rudolf Wittner",
+        "Luca Pireddu"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2312.07852v2",
+      "source": "arXiv:2312.07852v2"
+    },
+    {
+      "title": "The Software Heritage Open Science Ecosystem",
+      "authors": [
+        "Roberto Di Cosmo",
+        "Stefano Zacchiroli"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2310.10295v1",
+      "source": "arXiv:2310.10295v1"
+    },
+    {
+      "title": "The Software Heritage Filesystem (SwhFS): Integrating Source Code Archival with Development",
+      "authors": [
+        "Thibault Allançon",
+        "Antoine Pietri",
+        "Stefano Zacchiroli"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2102.06390v1",
+      "source": "arXiv:2102.06390v1"
+    },
+    {
+      "title": "Preparing Reproducible Scientific Artifacts using Docker",
+      "authors": [
+        "Michael Canesche",
+        "Roland Leissa",
+        "Fernando Magno Quintão Pereira"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2308.14122v1",
+      "source": "arXiv:2308.14122v1"
+    },
+    {
+      "title": "require: Package dependencies for reproducible research",
+      "authors": [
+        "Sergio Correia",
+        "Matthew P. Seay"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2309.11058v2",
+      "source": "arXiv:2309.11058v2"
+    },
+    {
+      "title": "How to Read a Research Compendium",
+      "authors": [
+        "Daniel Nüst",
+        "Carl Boettiger",
+        "Ben Marwick"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1806.09525v1",
+      "source": "arXiv:1806.09525v1"
+    },
+    {
+      "title": "Research Artifacts in Secondary Studies: A Systematic Mapping in Software Engineering",
+      "authors": [
+        "Aleksi Huotala",
+        "Miikka Kuutila",
+        "Mika Mäntylä"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2504.12646v3",
+      "source": "arXiv:2504.12646v3"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across 40 deterministically altered release archives spanning source, schema, lock file, Makefile, README, outputs, raw results, logs, mutation specifications, and figure, an adversary that changes one target and recomputes every internal inventory and SHA-256 entry will cause an internal-only verifier to accept all 40 archives, whereas comparison with a separately published original archive SHA-256 digest will reject all 40.",
+      "rationale": "This tests the trust root of the proposed chain rather than ordinary accidental corruption. The survey's gap calls for both file-level checksums and an archive digest but does not empirically establish that the external digest remains necessary when a coordinated alteration can rewrite internal integrity metadata.",
+      "novelty": 9.1,
+      "feasibility": 9.9,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For 24 deterministic TAR variants that preserve every regular-file byte sequence but alter executable mode bits, convert symbolic links into regular files containing the same target text, or change archive entry types, a path-and-SHA-256-only verifier will accept all 24, while an enriched inventory recording path, entity type, link target, and normalized permission mode will reject all 24 and accept all 12 unmodified controls.",
+      "rationale": "The proposed SHA-256 table may establish byte integrity without preserving execution-relevant filesystem semantics. This directly tests an unresolved sufficiency issue noted by the survey: neither the retrieved literature nor the stated gap establishes what metadata a full-file inventory must contain.",
+      "novelty": 9.2,
+      "feasibility": 9.7,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "A pre-extraction archive verifier that rejects absolute paths, parent-directory traversal, duplicate normalized paths, backslash aliases, Unicode-normalization collisions, and case-fold collisions will reject all 36 deterministically constructed ambiguous or unsafe ZIP archives while accepting all 12 portable controls; a verifier that checks only raw entry names and matching SHA-256 values will accept all 36 unsafe archives.",
+      "rationale": "A complete checksum table can still describe an archive whose extracted file set depends on platform or extractor behavior. The survey's repository-to-payload verification gap does not address path canonicalization, so this experiment tests whether portable path uniqueness is a necessary additional condition for a verifiable inventory.",
+      "novelty": 9.4,
+      "feasibility": 9.6,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "For 32 deterministically salted bundles, a builder that attempts to include the SHA-256 of its checksum table inside that same table will fail to reach a byte-identical fixed point within 100 rebuild iterations in every case, whereas a two-layer design that excludes the table from its own entries and covers it with a detached archive digest will produce an identical table and archive digest on two successive deterministic builds in all 32 cases.",
+      "rationale": "The requested complete SHA-256 coverage creates a self-reference boundary that the surveyed packaging approaches do not resolve explicitly. Testing a detached outer digest against a naive self-hashing design clarifies how the proposed publication pattern can cover integrity metadata itself without circularity.",
+      "novelty": 9.6,
+      "feasibility": 9.8,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "For 20 synthetic Git repositories containing LF-normalized tracked text files, constructing a release from a fresh checkout configured with `core.autocrlf=true` will retain the same HEAD commit identifier but change at least one tracked-file SHA-256 value in all 20 repositories, while constructing the source portion with `git archive HEAD` will match the committed blob bytes for every tracked file in all 20.",
+      "rationale": "This tests whether a named commit determines the bytes of a release assembled from a transformed working tree. The survey distinguishes commit identity from release integrity but does not evaluate checkout filters or line-ending conversion as a source of repository–payload disagreement.",
+      "novelty": 8.9,
+      "feasibility": 9.5,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "Across 16 synthetic superprojects containing both a local Git submodule and a Git-LFS-style pointer whose object identifier names a local content blob, verification of the top-level commit will succeed for every payload that omits the materialized submodule tree and large-file content, while a closure-aware inventory will reject all 16 incomplete payloads and accept all 16 counterparts containing and hashing the referenced contents.",
+      "rationale": "A commit can identify gitlinks and pointer files without packaging the content users expect to execute or inspect. This extends the survey's observation that a commit does not necessarily identify all release contents by testing two common indirection mechanisms absent from its empirical evidence.",
+      "novelty": 9.3,
+      "feasibility": 9.3,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "For 48 deterministic metadata mutations that preserve every payload file and SHA-256 value but delete, redirect, or swap provenance links among commands, source, raw results, logs, outputs, mutation specifications, and figure, a role-aware provenance-closure validator will reject at least 46 mutations while accepting all 16 unmodified release graphs.",
+      "rationale": "Checksums prove that listed bytes are unchanged but not that a figure or result was produced by the declared command and inputs. The survey motivates provenance links through RO-Crate and workflow-run models, yet its stated gap lacks an empirical test of provenance closure within the combined repository-and-release chain.",
+      "novelty": 9.0,
+      "feasibility": 9.7,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "On 20 valid synthetic releases containing every committed file plus explicitly declared generated outputs and exclusions, and 40 invalid releases containing either an omitted committed file, an undeclared extra file, or a tracked file falsely reclassified as generated, a role-aware repository-to-release reconciliation algorithm will classify all 60 correctly; strict commit/release set equality will reject all 20 valid releases, and a simple rule requiring only that committed paths be a subset of release paths will accept all 20 invalid variants containing undeclared extras.",
+      "rationale": "The survey explicitly identifies the absence of a metric for correspondence between a repository snapshot and a payload containing generated or excluded files. Comparing exact equality, permissive subset checking, and role-aware reconciliation directly tests a candidate metric for that central gap.",
+      "novelty": 9.2,
+      "feasibility": 9.8,
+      "info_gain": 9.6,
+      "chosen": true,
+      "outcome": "supported"
+    }
+  ],
+  "design": {
+    "summary": "Generate 20 deterministic synthetic repository snapshots and 60 release packages, then compare strict path equality, committed-path subset checking, and cryptographically verified role-aware reconciliation on valid, omitted-file, undeclared-extra, and falsely-reclassified releases.",
+    "protocol": "1. Implement the experiment in Python 3.11 or later using only the standard library plus matplotlib. Set the global seed to 20250308 and complete all work in a fresh directory named `artifact_reconciliation_experiment`.\n2. Define 20 synthetic repositories indexed 0 through 19. Each repository must contain these six committed paths: `src/main.py` (source), `schema/schema.json` (schema), `requirements.lock` (lock file), `Makefile` (Makefile), `README.md` (README), and `mutations/spec.yaml` (mutation specification). It must also contain two uncommitted workspace paths, `.DS_Store` and `build/tmp.bin`, which are explicitly declared as exclusions. Generate deterministic, repository-index-specific UTF-8 content for every committed and excluded workspace file using the fixed seed and repository index.\n3. For each repository, define four declared generated outputs: `outputs/summary.json` (output), `results/raw.csv` (raw results), `logs/run.log` (log), and `figures/result.png` (figure). Generate their bytes deterministically from the repository index and committed-file hashes. Create `figures/result.png` with a deterministic standard-library PNG writer using fixed dimensions, pixels, compression settings, and no timestamps or variable metadata.\n4. Compute SHA-256 for every committed file. Compute the synthetic commit identifier as `sha256:` followed by the SHA-256 hex digest of canonical compact JSON containing the sorted list of committed entries, where every entry has exactly `path`, `size`, and `sha256`, keys are sorted, separators are `(',', ':')`, and UTF-8 encoding is used. The excluded workspace files and generated outputs must not contribute to this commit identifier.\n5. For every release variant, create a deterministic uncompressed POSIX tar archive containing only payload files. Add members in lexicographic path order and set every tar member's mtime, uid, gid, uname, and gname to zero or the empty string and its mode to 0644. Compute the archive SHA-256 over the final tar bytes.\n6. Store a sidecar `release_manifest.json` outside the tar archive. It must contain: format version; repository index; commit identifier; archive filename; archive SHA-256; sorted committed-file table; sorted declared-generated table; exact exclusion list `[\".DS_Store\",\"build/tmp.bin\"]`; and a complete sorted payload inventory with `path`, `size`, `sha256`, and declared role for every tar member. Serialize it using the same canonical JSON rules as in step 4. The manifest itself is publication metadata and is not a payload member, preventing recursive archive hashing.\n7. Construct one valid release for each repository, for 20 valid releases total. Its tar payload must be exactly the six committed files plus the four declared generated outputs. Neither excluded workspace file may appear. All hashes, inventory records, the commit identifier, and the archive digest must be correct.\n8. Construct one undeclared-extra invalid release for every repository, for 20 such releases. Start from the corresponding valid payload and add `extras/undeclared_<index>.txt` with deterministic bytes, but do not add that path to the declared-generated table or committed table. Include it honestly in the full payload inventory and recompute the tar digest and manifest. Thus all six committed paths remain present and the only semantic defect is an undeclared payload path.\n9. Construct one omitted-committed-file invalid release for repositories 0 through 9, for 10 such releases. Start from the valid release and remove one committed path selected as the committed-path list at position `index mod 6`. Leave the repository committed table and commit identifier unchanged, but make the payload inventory and archive digest accurately describe the reduced archive. The only semantic defect must be the missing required committed path.\n10. Construct one falsely-reclassified invalid release for repositories 10 through 19, for 10 such releases. Keep the valid archive bytes and all paths, but select the committed path at position `index mod 6`, add that tracked path to the declared-generated table, and label its payload inventory role as generated rather than committed. Preserve its correct bytes and hash and recompute the sidecar manifest. The repository committed table and commit identifier must remain unchanged. The semantic defect is that a path known to be tracked is falsely declared generated.\n11. The final labeled dataset must therefore contain exactly 60 cases: 20 valid, 20 undeclared-extra invalid, 10 omitted-committed-file invalid, and 10 falsely-reclassified invalid. Before evaluating algorithms, assert these counts and assert that every manifest inventory exactly matches the actual tar member paths, sizes, and SHA-256 values and that every archive digest verifies. Abort on any failed construction assertion.\n12. Implement the strict-equality baseline. Let `C` be the set of committed paths from the repository snapshot and `P` the set of actual tar member paths. Accept if and only if `C == P`. Do not consult generated or exclusion declarations.\n13. Implement the committed-subset baseline. Using the same sets, accept if and only if `C` is a subset of `P`. Do not reject undeclared paths and do not consult generated roles or exclusions.\n14. Implement role-aware reconciliation without using the ground-truth case label. Recompute the commit identifier from the repository committed table; recompute the archive digest; read every tar member directly; and recompute the full path, size, and SHA-256 inventory. Accept if and only if all of the following hold: the manifest commit identifier equals the recomputed commit identifier; the manifest archive digest equals the recomputed archive digest; the manifest inventory exactly equals the actual archive inventory; every committed payload file has the repository-recorded hash; every declared-generated file has its declared hash; the declared-generated path set `G` is disjoint from `C`; every exclusion path belongs to the known uncommitted workspace set, no exclusion path belongs to `C` or `G`, and no exclusion path appears in `P`; and `P == C union G`. Any failed condition means reject.\n15. Run all three algorithms on all 60 cases. Record one CSV row per case and algorithm with repository index, case type, ground-truth validity, predicted acceptance, correctness, and the failed role-aware checks if applicable. Save this as `outputs/per_case_results.csv`, and save aggregate counts and rates as `outputs/metrics.json`.\n16. Compute acceptance rates separately for valid, omitted, undeclared-extra, and reclassified cases for each algorithm. Also compute role-aware overall accuracy, valid-release acceptance rate, invalid-release rejection rate, and rejection counts by invalid subtype; strict-equality valid-release rejection count; and subset-baseline acceptance count for undeclared-extra releases.\n17. Create `outputs/reconciliation_acceptance.png` as a grouped bar chart with case type on the x-axis, acceptance rate from 0 to 1 on the y-axis, and separate bars for strict equality, committed subset, and role-aware reconciliation. Annotate every bar with its numerator and denominator, use a fixed figure size and color palette, and save at 150 DPI.\n18. Mark the hypothesis `supported` if and only if role-aware reconciliation accepts exactly 20 of 20 valid releases and rejects exactly 40 of 40 invalid releases, strict equality rejects exactly 20 of 20 valid releases, and committed-subset checking accepts exactly 20 of 20 undeclared-extra releases. Otherwise mark it `refuted`. Write this decision and all component Boolean checks to `outputs/decision.json`.",
+    "metrics": [
+      "Role-aware overall accuracy: number of all 60 releases whose accept/reject result matches the label divided by 60; required value is 1.0.",
+      "Role-aware valid acceptance rate: accepted valid releases divided by 20; required value is 20/20 = 1.0.",
+      "Role-aware invalid rejection rate: rejected invalid releases divided by 40; required value is 40/40 = 1.0.",
+      "Role-aware subtype rejection: rejected omitted releases out of 10, undeclared-extra releases out of 20, and falsely-reclassified releases out of 10; required values are 10/10, 20/20, and 10/10.",
+      "Strict-equality valid rejection count: valid releases for which committed path set is not exactly equal to payload path set; required value is 20/20 rejected.",
+      "Committed-subset undeclared-extra acceptance count: undeclared-extra releases satisfying committed paths subset of payload paths; required value is 20/20 accepted.",
+      "Per-algorithm, per-case-type acceptance rate: accepted cases divided by the number of cases in each of the four case types, plotted in the PNG figure.",
+      "Cryptographic construction integrity: number of releases with matching archive digest, exact full inventory, and correct listed file hashes; required value is 60/60 so semantic classification is not confounded by corrupted metadata."
+    ],
+    "time_budget_minutes": 10,
+    "expected_if_true": "Role-aware reconciliation achieves 60/60 correct classifications, accepting 20/20 valid releases and rejecting all 10 omissions, all 20 undeclared extras, and all 10 false reclassifications; strict equality accepts 0/20 valid releases; committed-subset checking accepts 20/20 undeclared-extra releases; and all 60 archives independently pass digest and inventory verification.",
+    "expected_if_false": "The hypothesis is refuted if role-aware reconciliation makes even one error, if strict equality accepts even one valid release, or if committed-subset checking rejects even one of the 20 undeclared-extra releases; any archive integrity failure also invalidates the run and requires fixing the generator before interpreting the hypothesis."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T12:14:03+00:00",
+      "finished_at": "2026-07-19T12:21:19+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "The role-aware algorithm classified all 60 releases correctly: it accepted 20/20 valid releases and rejected all 40 invalid releases, including 10/10 omissions, 20/20 undeclared extras, and 10/10 false reclassifications. Strict equality rejected 20/20 valid releases, while committed-subset checking accepted 20/20 undeclared-extra variants. Cryptographic construction and inventory integrity passed for all 60/60 archives, so the run satisfies every prespecified criterion."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
+  "error": ""
+}

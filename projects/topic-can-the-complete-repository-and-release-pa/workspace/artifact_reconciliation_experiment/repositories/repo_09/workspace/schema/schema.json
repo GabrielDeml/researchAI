@@ -1,0 +1,1 @@
+{"$schema":"https://json-schema.org/draft/2020-12/schema","additionalProperties":false,"properties":{"repository_index":{"const":9,"type":"integer"},"token":{"const":"d1a738762d45f411651952861e66cf56","type":"string"}},"required":["repository_index","token"],"title":"SyntheticRepository9","type":"object"}
