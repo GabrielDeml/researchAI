@@ -1,0 +1,260 @@
+{
+  "slug": "topic-can-the-original-executable-source-code-ex",
+  "topic": "Topic Can the original executable source code, exact dependency versions, environment specification, and timestamped machine-readable outputs be archived under a persistent identifier? _(auto-enqueued follow-up from genetic-algorithms-2)_",
+  "created_at": "2026-07-18T22:57:41+00:00",
+  "updated_at": "2026-07-19T01:45:35+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Source Code Archiving to the Rescue of Reproducible Deployment",
+      "authors": [
+        "Ludovic Courtès",
+        "Timothy Sample",
+        "Simon Tournier",
+        "Stefano Zacchiroli"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2405.15516v1",
+      "source": "arXiv:2405.15516v1"
+    },
+    {
+      "title": "Archiving and referencing source code with Software Heritage",
+      "authors": [
+        "Roberto Di Cosmo"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2004.00514v1",
+      "source": "arXiv:2004.00514v1"
+    },
+    {
+      "title": "Packaging research artefacts with RO-Crate",
+      "authors": [
+        "Stian Soiland-Reyes",
+        "Peter Sefton",
+        "Mercè Crosas",
+        "Leyla Jael Castro",
+        "Frederik Coppens",
+        "José M. Fernández",
+        "Daniel Garijo",
+        "Björn Grüning"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2108.06503v2",
+      "source": "arXiv:2108.06503v2"
+    },
+    {
+      "title": "Recording provenance of workflow runs with RO-Crate",
+      "authors": [
+        "Simone Leo",
+        "Michael R. Crusoe",
+        "Laura Rodríguez-Navas",
+        "Raül Sirvent",
+        "Alexander Kanitz",
+        "Paul De Geest",
+        "Rudolf Wittner",
+        "Luca Pireddu"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2312.07852v2",
+      "source": "arXiv:2312.07852v2"
+    },
+    {
+      "title": "The Software Heritage Open Science Ecosystem",
+      "authors": [
+        "Roberto Di Cosmo",
+        "Stefano Zacchiroli"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2310.10295v1",
+      "source": "arXiv:2310.10295v1"
+    },
+    {
+      "title": "The Software Heritage Filesystem (SwhFS): Integrating Source Code Archival with Development",
+      "authors": [
+        "Thibault Allançon",
+        "Antoine Pietri",
+        "Stefano Zacchiroli"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2102.06390v1",
+      "source": "arXiv:2102.06390v1"
+    },
+    {
+      "title": "Case Studies and Challenges in Reproducibility in the Computational Sciences",
+      "authors": [
+        "Sylwester Arabas",
+        "Michael R. Bareford",
+        "Lakshitha R. de Silva",
+        "Ian P. Gent",
+        "Benjamin M. Gorman",
+        "Masih Hajiarabderkani",
+        "Tristan Henderson",
+        "Luke Hutton"
+      ],
+      "year": 2014,
+      "url": "http://arxiv.org/abs/1408.2123v2",
+      "source": "arXiv:1408.2123v2"
+    },
+    {
+      "title": "Similarity-Based Assessment of Computational Reproducibility in Jupyter Notebooks",
+      "authors": [
+        "A S M Shahadat Hossain",
+        "Colin Brown",
+        "David Koop",
+        "Tanu Malik"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2509.23645v1",
+      "source": "arXiv:2509.23645v1"
+    },
+    {
+      "title": "Dependency Smells in JavaScript Projects",
+      "authors": [
+        "Abbas Javan Jafari",
+        "Diego Elias Costa",
+        "Rabe Abdalkareem",
+        "Emad Shihab",
+        "Nikolaos Tsantalis"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2010.14573v2",
+      "source": "arXiv:2010.14573v2"
+    },
+    {
+      "title": "How to Read a Research Compendium",
+      "authors": [
+        "Daniel Nüst",
+        "Carl Boettiger",
+        "Ben Marwick"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1806.09525v1",
+      "source": "arXiv:1806.09525v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "For 30 deterministic synthetic Python experiments packaged as single RO-Crate-style ZIP archives containing source, a hash-locked transitive wheelhouse, an environment specification, UTC run provenance, and JSON outputs, a SHA-256 content identifier for each archive will resolve after relocation to three different filesystem roots, and every relocated archive will pass 100% of manifest-hash checks and reproduce its archived output byte-for-byte in a fresh virtual environment.",
+      "rationale": "This directly tests the survey's central gap: whether all required components can be bound into one content-identified object that remains resolvable and sufficient for reconstruction, rather than testing source preservation, environment capture, or provenance packaging separately [1-4].",
+      "novelty": 8.7,
+      "feasibility": 9.1,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "Across 20 synthetic experiments with two-level local dependency graphs, bundles that vendor every transitive dependency artifact with recorded SHA-256 hashes will reconstruct successfully offline in all 20 cases after the original package repository is deleted, whereas version-pinned manifests that omit transitive artifacts will fail reconstruction in at least 15 cases.",
+      "rationale": "The Guix literature stresses that nominal versions are insufficient when dependency sources disappear [1], but the surveyed work does not test this failure mode inside a unified archival object. Deliberately deleting a local synthetic repository gives a deterministic, laptop-scale test of archival completeness.",
+      "novelty": 8.3,
+      "feasibility": 9.6,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "For 100 copies of a complete computational bundle, independently changing one byte in the source, one dependency artifact, the environment specification, or the machine-readable output will always change the bundle's SHA-256 persistent identifier and cause manifest verification to fail, while changing only the bundle's filesystem path will never change the identifier.",
+      "rationale": "Software Heritage establishes content-derived identifiers for source components [2], but the gap concerns fixity and identity of the entire research object. This experiment tests both sensitivity to component tampering and invariance to storage location for a unified bundle.",
+      "novelty": 7.8,
+      "feasibility": 9.9,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "For 50 pairs of semantically identical RO-Crate metadata documents generated with randomized JSON key order, whitespace, and entity order, hashing raw ZIP bytes will assign different identifiers to at least 90% of pairs, whereas hashing a bundle representation using canonical JSON, normalized archive paths, fixed file permissions, and fixed ZIP timestamps will assign the same identifier to all 50 pairs.",
+      "rationale": "RO-Crate defines machine-readable relationships but does not itself guarantee stable whole-object identifiers [3,4]. The result would determine whether canonicalization is necessary to prevent irrelevant serialization choices from fragmenting persistent identity.",
+      "novelty": 9.1,
+      "feasibility": 9.7,
+      "info_gain": 9.2,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 5,
+      "statement": "When the same deterministic program is executed twice in clean environments from one archived bundle, including wall-clock timestamps inside the scientific output will prevent byte-identical output in all 30 paired reruns, whereas separating execution timestamps into provenance metadata and using a fixed logical run timestamp in the output will yield byte-identical output in all 30 pairs.",
+      "rationale": "The survey requires timestamped machine-readable outputs but also identifies byte equality as the strongest reproducibility criterion. This tests whether timestamp placement, an issue not resolved by the cited packaging work, determines whether archived and regenerated outputs can agree exactly.",
+      "novelty": 8.6,
+      "feasibility": 9.8,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "For a deterministic seeded genetic-algorithm run archived with its source, complete local dependency artifacts, interpreter and platform specification, seed, parameters, and JSON output, replay in two independently created virtual environments will reproduce the output byte-for-byte for all 20 seeds; deleting any one of the seed, dependency hashes, or interpreter-version constraints will cause at least one of three deliberately compatible-looking alternative reconstructions to produce a different output or become unverifiable.",
+      "rationale": "This operationalizes the end-to-end gap on the computational domain that motivated the follow-up. It tests not only successful replay but also whether each commonly omitted specification category contributes necessary information for independently verifying the archived result.",
+      "novelty": 8.8,
+      "feasibility": 9.2,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Across 20 bundles whose metadata references source, environment, and outputs by external relative or file URIs, moving the metadata document without its original directory tree will leave fewer than 25% of component references resolvable, while packaging the same components inside one archive with identifier-relative paths and per-entity hashes will leave 100% resolvable after the archive is moved and renamed.",
+      "rationale": "Workflow Run RO-Crate can relate plans, inputs, code, and outputs [4], but the survey notes that metadata relationships alone do not establish durable storage or continued resolution. This experiment distinguishes a merely descriptive crate from a self-contained archival object.",
+      "novelty": 8.4,
+      "feasibility": 9.8,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "For 30 deterministic Python zipapp executables built from identical archived source and dependencies, ordinary builds that preserve current file timestamps will produce at least 25 distinct executable hashes, whereas builds using sorted archive entries, normalized permissions, and a fixed SOURCE_DATE_EPOCH will produce one executable hash; archiving that executable hash in the unified research object will detect every deliberately substituted noncanonical build.",
+      "rationale": "The survey explicitly identifies generated executables as outside the principal scope of source archives [2,5,6]. This tests whether reproducible-build controls plus whole-object provenance can extend a source-and-environment bundle to independently verifiable generated executables.",
+      "novelty": 9.0,
+      "feasibility": 9.5,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Generate 50 pairs of semantically identical synthetic RO-Crates with deliberately different JSON serializations, then compare SHA-256 identifiers computed from raw ZIP bytes against identifiers computed from a fully specified canonical ZIP representation.",
+    "protocol": "1. Use CPython 3.11 or newer and create a single implementation script named `experiment.py`. The only third-party package may be `matplotlib==3.9.2`, used solely to create the PNG figure; all archive, JSON, hashing, randomization, and CSV operations must use the Python standard library. Set the master random seed to 20250308 and do not use current time, filesystem metadata, locale-dependent formatting, or nondeterministic iteration over sets.\n2. Create output directories `artifacts/raw`, `artifacts/canonical`, and `results`. Generate exactly 50 synthetic crate pairs indexed 0 through 49. Each pair represents one semantic research bundle, while different pair indices represent different bundles.\n3. For each pair index i, create the same non-metadata files for variants A and B: (a) `src/run.py`, an ASCII executable Python script that reads `data/input.json`, computes the sum of squares of its `values` array, and writes JSON containing `pair_index`, `sum_squares`, and the fixed timestamp `2025-01-01T00:00:00Z`; (b) `data/input.json`, encoded as compact sorted-key JSON plus a final newline, containing `pair_index: i` and `values: [i, i+1, i+2]`; (c) `outputs/results.json`, encoded as compact sorted-key JSON plus a final newline, containing `pair_index: i`, `sum_squares: i*i + (i+1)*(i+1) + (i+2)*(i+2)`, and `generated_at: \"2025-01-01T00:00:00Z\"`; (d) `requirements-lock.txt` with the exact bytes `# No third-party runtime dependencies; Python standard library only\\n`; and (e) `environment.json`, encoded as compact sorted-key JSON plus a final newline, containing `python: \"3.12.8\"`, `implementation: \"CPython\"`, `os: \"any\"`, and `architecture: \"any\"`. Use identical bytes for these five files in A and B.\n4. Construct one RO-Crate JSON-LD metadata object per pair. It must have `@context` equal to `https://w3id.org/ro/crate/1.1/context` and an `@graph` containing entities for `ro-crate-metadata.json`, the root dataset `./`, and each of the five files. Give every entity a unique `@id`; give the metadata descriptor `@type: \"CreativeWork\"` and `about: {\"@id\":\"./\"}`; give the root `@type: \"Dataset\"`, name `Synthetic reproducibility bundle i`, datePublished `2025-01-01T00:00:00Z`, and a `hasPart` array of single-key `{\"@id\": path}` references to all five files; give each file entity `@type: \"File\"`, its byte length, and its lowercase hexadecimal SHA-256 checksum under the key `sha256`. Do not include floating-point numbers, blank nodes, `@list`, or arrays other than `@graph` and arrays consisting exclusively of single-key `{\"@id\": ...}` references.\n5. Produce metadata serializations A and B using independent RNG instances seeded with `20250308 + 2*i` and `20250308 + 2*i + 1`. Recursively rebuild every JSON object with its keys shuffled by the corresponding RNG. Independently shuffle `@graph` and every array consisting exclusively of `{\"@id\": ...}` references. If the two resulting `@graph` orders happen to be identical, rotate B's `@graph` by one position. Randomly assign one variant to compact JSON using separators `(',', ':')` with no final newline and the other to pretty JSON with an RNG-selected indentation of either 2 or 4 spaces and one final newline. Encode both as UTF-8 with `ensure_ascii=False` and `allow_nan=False`. Thus each pair is guaranteed to differ in whitespace and entity order while retaining the same parsed JSON-LD content.\n6. Validate semantic identity before creating archives. Parse both metadata byte strings. Normalize each parsed document by recursively sorting object keys, sorting `@graph` by each entity's `@id`, and sorting every array made exclusively of single-key `{\"@id\": ...}` references by `@id`, while preserving all other arrays. Assert that the normalized A and B structures are exactly equal and that all five non-metadata files are byte-for-byte equal. Abort the experiment if any of the 50 validations fails.\n7. Create raw ZIP A and raw ZIP B for every pair using `zipfile.ZipFile` with `ZIP_STORED` and `allowZip64=True`. Add the six paths in identical lexicographic path order. Use normalized forward-slash paths, an empty archive comment, empty per-entry comments and extra fields, `create_system=3`, timestamp `(1980,1,1,0,0,0)`, and Unix mode `0100755` for `src/run.py` and `0100644` for every other entry. The only byte-level difference intentionally introduced between raw A and raw B must be the serialization of `ro-crate-metadata.json`. Save them as `artifacts/raw/pair_XX_A.zip` and `artifacts/raw/pair_XX_B.zip`.\n8. Compute each raw identifier as `sha256:` followed by the lowercase hexadecimal SHA-256 digest of the complete ZIP byte sequence, including ZIP headers and directory records. Record whether the two raw identifiers in each pair differ.\n9. Define canonical path normalization exactly as follows: replace backslashes with `/`; split on `/`; discard empty components and `.` components; reject the path if it is absolute, contains a `..` component, or normalizes to an empty string; then join the remaining components with `/`. Reject duplicate normalized paths.\n10. Canonicalize each raw ZIP independently. Read every member and normalize its path using step 9. For `ro-crate-metadata.json`, parse the JSON, recursively sort object keys, sort `@graph` by entity `@id`, sort every array consisting exclusively of single-key `{\"@id\": ...}` references by `@id`, and preserve all other array orders. Serialize the result as UTF-8 using `json.dumps(..., sort_keys=True, separators=(',', ':'), ensure_ascii=False, allow_nan=False)` followed by exactly one newline. Leave all other file bytes unchanged.\n11. Build a new canonical ZIP in memory by writing normalized paths in lexicographic order with `ZIP_STORED`, `allowZip64=True`, an empty archive comment, empty entry comments and extra fields, `create_system=3`, fixed timestamp `(1980,1,1,0,0,0)`, and fixed Unix mode `0100755` for `src/run.py` and `0100644` for all other entries. Set each `ZipInfo.compress_type` explicitly to `ZIP_STORED`. Do not copy any timestamp, permission, entry order, compression setting, or other ZIP metadata from the raw archive.\n12. Compute each canonical identifier as `sha256:` followed by the lowercase hexadecimal SHA-256 digest of the complete canonical ZIP bytes. Save each canonical ZIP under `artifacts/canonical/<64-hex-digest>.zip`; if A and B produce the same path, verify that the bytes are identical and retain one deduplicated file. Record whether the two canonical identifiers in each pair are equal.\n13. Write `results/pair_metrics.csv` with one row per pair and columns `pair_index`, `semantic_validation_passed`, `raw_id_A`, `raw_id_B`, `raw_ids_different`, `canonical_id_A`, `canonical_id_B`, `canonical_ids_equal`, `raw_size_A`, `raw_size_B`, `canonical_size_A`, and `canonical_size_B`. Write the same information plus aggregate metrics and the fixed experiment timestamp `2025-01-01T00:00:00Z` to `results/summary.json` using sorted keys and indentation of 2 spaces.\n14. Calculate the raw fragmentation rate as the number of pairs with different raw identifiers divided by 50, and the canonical preservation rate as the number of pairs with equal canonical identifiers divided by 50. Also count unique raw identifiers among all 100 raw archives and unique canonical identifiers among all 100 canonicalized variants.\n15. Create `results/hash_identity_result.png` using matplotlib with two bars on a 0-100% y-axis: `Raw ZIP pairs fragmented` equal to 100 times the raw fragmentation rate and `Canonical pairs preserved` equal to 100 times the canonical preservation rate. Annotate each bar with its integer count out of 50, draw a dashed horizontal line at 90% labeled `raw fragmentation threshold`, and place the canonical requirement `50/50 required` in the canonical bar label or annotation. Use a fixed figure size of 8 by 5 inches, 150 DPI, and `tight_layout()` before saving.\n16. Mark the hypothesis `supported` if and only if all 50 semantic validations pass, at least 45 of 50 raw pairs have different identifiers, and exactly 50 of 50 canonical pairs have equal identifiers. Mark it `refuted` otherwise. Store this decision and the three component pass/fail conditions in `results/summary.json`.",
+    "metrics": [
+      "Raw fragmentation count and rate: count pairs for which SHA-256(raw ZIP A) differs from SHA-256(raw ZIP B), then divide by 50; the required threshold is at least 45/50, or 0.90.",
+      "Canonical preservation count and rate: count pairs for which SHA-256(canonical ZIP A) equals SHA-256(canonical ZIP B), then divide by 50; the required threshold is exactly 50/50, or 1.00.",
+      "Semantic validation rate: number of pairs whose normalized parsed metadata structures are equal and whose non-metadata files are byte-identical, divided by 50; it must equal 1.00.",
+      "Identifier multiplicity: count distinct raw identifiers among the 100 raw archives and distinct canonical identifiers among the 100 canonicalized variants; the anticipated values are 100 raw identifiers and 50 canonical identifiers.",
+      "Archive sizes: record raw and canonical byte lengths for both variants of every pair to document serialization overhead and verify that canonical variants within each pair have identical sizes."
+    ],
+    "time_budget_minutes": 10,
+    "expected_if_true": "All 50 semantic validations pass; at least 45 of 50 raw pairs, and expectedly all 50, have different raw SHA-256 identifiers; exactly 50 of 50 pairs have identical canonical SHA-256 identifiers; and canonicalization reduces the 100 variant archives to exactly 50 pair-specific identifiers.",
+    "expected_if_false": "The hypothesis is refuted if any semantic-equivalence validation fails, fewer than 45 of 50 raw pairs receive different raw identifiers, or even one of the 50 semantically identical pairs receives different canonical identifiers."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-18T23:00:50+00:00",
+      "finished_at": "2026-07-18T23:08:02+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "All 50 semantic-equivalence validations passed. Raw-byte hashing produced different identifiers for 50/50 pairs, exceeding the required 45/50 threshold, while canonical hashing preserved identical identifiers for exactly 50/50 pairs. The 100 variant archives yielded 100 unique raw identifiers but exactly 50 pair-specific canonical identifiers, demonstrating the predicted non-trivial reduction."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
+  "error": ""
+}

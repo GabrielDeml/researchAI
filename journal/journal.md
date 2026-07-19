@@ -30,3 +30,11 @@
 - **Verdict:** supported
 - **Key numbers:** decision=supported; hypothesis_supported=True; independent_forward_generational_initialization_failed_count=0; independent_forward_generational_offspring_failed_count=0; independent_forward_sha256=b49d29ff1ff73164509c486ff7bd4f20d0c63a9e78f0f0699ec63526e76855e0; independent_forward_steady_state_initialization_failed_count=0; independent_forward_steady_state_offspring_failed_count=0; independent_generational_best_score_change_count=0
 - **What I'd do differently:** Next time, release raw per-seed traces and reverse execution order in both independent and shared modes, verifying byte-level equality and duplicate-ratio changes to distinguish true invariance from order-dependent behavior.
+
+## 2026-07-18 — topic-can-the-original-executable-source-code-ex
+
+- **Topic:** Topic Can the original executable source code, exact dependency versions, environment specification, and timestamped machine-readable outputs be archived under a persistent identifier? _(auto-enqueued follow-up from genetic-algorithms-2)_
+- **Hypothesis:** For 50 pairs of semantically identical RO-Crate metadata documents generated with randomized JSON key order, whitespace, and entity order, hashing raw ZIP bytes will assign different identifiers to at least 90% of pairs, whereas hashing a bundle representation using canonical JSON, normalized archive paths, fixed file permissions, and fixed ZIP timestamps will assign the same identifier to all 50 pairs.
+- **Verdict:** supported
+- **Key numbers:** all_semantic_validations_passed=True; canonical_archive_size_max_bytes=2513; canonical_archive_size_min_bytes=2504; canonical_pair_sizes_all_equal=True; canonical_preservation_count=50; canonical_preservation_rate=1.0; canonical_preservation_required_count=50; canonical_preservation_required_rate=1.0
+- **What I'd do differently:** Next time, I would predefine and publish the canonicalization rules and validation protocol, then replicate across independent environments to confirm stable identifiers beyond this single iteration.
