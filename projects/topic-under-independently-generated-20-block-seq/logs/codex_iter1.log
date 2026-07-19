@@ -1,0 +1,4610 @@
+
+===== codex exec start 2026-07-19T15:56:01 model=gpt-5.6-sol timeout_minutes=20 workspace=/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace =====
+Reading additional input from stdin...
+2026-07-19T22:56:01.607471Z ERROR codex_models_manager::cache: failed to load models cache: missing field `supports_reasoning_summaries` at line 88 column 5
+OpenAI Codex v0.144.1
+--------
+workdir: /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR] (network access enabled)
+reasoning effort: high
+reasoning summaries: none
+session id: 019f7c97-f728-7842-a7d6-a7c9ad51462a
+--------
+user
+You are an autonomous coding agent running non-interactively inside a sandboxed
+workspace. Implement and RUN the experiment below to completion, entirely within
+the current working directory. You have no one to ask questions of — make
+reasonable decisions and proceed.
+
+## Experiment
+Topic: Topic Under independently generated 20-block sequences, what is the null distribution of the lag-1 sample autocorrelation computed by `numpy.corrcoef(z[:-1], z[1:])[0, 1]` for selected uplift and binary threshold decisions? _(auto-enqueued follow-up from topic-across-many-independently-generated-and-pr)_
+Goal: Simulate 200,000 independent pools of 32 length-20 Gaussian sequences and compare lag-1 autocorrelations for a fixed candidate, the maximum-mean candidate, and the maximum-autocorrelation candidate.
+
+Protocol to implement:
+1. Use Python 3.11 or later with numpy==1.26.4, scipy==1.12.0, and matplotlib==3.8.3; do not use external data or network resources after package installation.
+2. Initialize exactly one random generator as `rng = numpy.random.Generator(numpy.random.PCG64(20250308))`.
+3. Set `N_EXPERIMENTS = 200000`, `N_CANDIDATES = 32`, `SEQUENCE_LENGTH = 20`, and `BATCH_SIZE = 5000`. Allocate three float64 arrays of length 200,000 named `r_fixed`, `r_max_mean`, and `r_max_r`.
+4. Process the experiments in 40 consecutive batches. For each batch, generate `z = rng.standard_normal((5000, 32, 20), dtype=numpy.float64)`. Each `z[e,c,:]` is one independent candidate sequence of 20 IID N(0,1) observations; do not normalize, round, filter, or otherwise transform the generated values.
+5. Compute each candidate's sequence mean as `candidate_mean = z.mean(axis=2)`. Define the fixed candidate as candidate index 0. Define the mean-selected candidate index as `idx_mean = numpy.argmax(candidate_mean, axis=1)`, with NumPy's default first-index tie behavior.
+6. Compute all candidate lag-1 correlations in vectorized float64 arithmetic using `x = z[:, :, :-1]`, `y = z[:, :, 1:]`, `xc = x - x.mean(axis=2, keepdims=True)`, `yc = y - y.mean(axis=2, keepdims=True)`, and `r = numpy.sum(xc*yc, axis=2) / numpy.sqrt(numpy.sum(xc*xc, axis=2) * numpy.sum(yc*yc, axis=2))`. This is the row-wise Pearson correlation corresponding to `numpy.corrcoef(z[e,c,:-1], z[e,c,1:])[0,1]`. Do not clip or Fisher-transform `r`.
+7. In the first batch only, verify the implementation on the first 256 candidate sequences in row-major order by separately evaluating `numpy.corrcoef(s[:-1], s[1:])[0,1]` for each sequence. Abort with an error unless every value is finite and the maximum absolute difference from the vectorized result is at most `1e-12`.
+8. For each experiment in each batch, store `r[:,0]` in the corresponding positions of `r_fixed`; store `r[numpy.arange(5000), idx_mean]` in `r_max_mean`; compute `idx_r = numpy.argmax(r, axis=1)` and store `r[numpy.arange(5000), idx_r]` in `r_max_r`.
+9. After all batches, assert that all three result arrays contain exactly 200,000 finite values in [-1,1]. Compute the empirical two-sample Kolmogorov-Smirnov distance between `r_fixed` and `r_max_mean` as `scipy.stats.ks_2samp(r_fixed, r_max_mean, alternative='two-sided', method='asymp').statistic`; use only the statistic, not its p-value, for the decision.
+10. Compute `p_max_r_gt_040 = numpy.mean(r_max_r > 0.40)`. The inequality must be strict. Also compute `p_fixed_gt_040 = numpy.mean(r_fixed > 0.40)`, `p_max_mean_gt_040 = numpy.mean(r_max_mean > 0.40)`, and the Monte Carlo standard error `sqrt(p_max_r_gt_040*(1-p_max_r_gt_040)/200000)` as descriptive checks.
+11. Compute the 5th, 25th, 50th, 75th, and 95th empirical percentiles of each of the three arrays using `numpy.quantile(array, [0.05,0.25,0.50,0.75,0.95], method='linear')`. Save all metrics, the seed, package versions, and the final support/refutation decision to `metrics.json`.
+12. Create `lag1_selection_null.png` at 1600 by 700 pixels or larger and 150 DPI. The left panel must plot empirical CDF step curves for `r_fixed` and `r_max_mean`, label both curves, and annotate the KS distance and the 0.01 decision threshold. The right panel must plot density-normalized histograms of `r_fixed` and `r_max_r` using the common bin edges `numpy.linspace(-1,1,101)`, draw a vertical dashed line at r=0.40, and annotate `p_max_r_gt_040` and the 0.50 threshold. Include axis labels, legends, and a title stating N=200,000, 32 candidates, and length 20.
+13. Declare the hypothesis SUPPORTED if and only if both `KS(r_fixed, r_max_mean) <= 0.01` and `p_max_r_gt_040 > 0.50`. Declare it REFUTED if either condition fails; do not substitute p-values or confidence-interval criteria for these fixed decision thresholds.
+
+Metrics to compute: Mean-selection KS distance: the two-sample empirical Kolmogorov-Smirnov statistic between the 200,000 fixed-candidate correlations and the 200,000 maximum-mean-selected correlations., Post-selection exceedance probability: the fraction of the 200,000 maximum-autocorrelation-selected values satisfying the strict inequality r > 0.40., Baseline and benign-selection exceedance probabilities: the fractions of `r_fixed` and `r_max_mean` satisfying r > 0.40., Monte Carlo standard error for the maximum-autocorrelation exceedance fraction: sqrt(p*(1-p)/200000)., Distribution summaries: 5th, 25th, 50th, 75th, and 95th empirical percentiles for fixed, maximum-mean-selected, and maximum-autocorrelation-selected correlations.
+Expected if hypothesis holds: The empirical KS distance between fixed-candidate and maximum-mean-selected correlations is at most 0.01, their ECDF curves nearly overlap, and more than 50% of maximum-autocorrelation-selected experiments have r > 0.40; both conditions are required for support.
+Expected if hypothesis fails: The hypothesis is refuted if the fixed-versus-maximum-mean KS distance exceeds 0.01, if the maximum-autocorrelation exceedance fraction is at most 0.50, or if both failures occur.
+Wall-clock budget: about 20 minutes. Keep the experiment inside it; if
+something is slow, reduce sample sizes rather than exceeding the budget.
+
+## Mandatory workspace conventions
+1. Create a Python virtual environment INSIDE this workspace: `python3 -m venv .venv`
+   and install dependencies into it (`.venv/bin/pip install ...`). Do not install
+   anything globally. Assume an Apple-Silicon Mac.
+2. Write all source code as files in this workspace (e.g. `experiment.py`), not as
+   throwaway one-liners. The code must be runnable again by a human.
+3. Use fixed random seeds so the run is deterministic.
+4. Actually EXECUTE the experiment with the venv Python and let it finish.
+5. Save the quantitative results to `results.json` in the workspace root. It MUST
+   be a FLAT JSON object of scalar values (numbers, strings, booleans) — one key
+   per metric, no deep nesting. Include the headline numbers that decide the
+   hypothesis. Example: {"accuracy_a": 0.91, "accuracy_b": 0.87, "p_value": 0.002, "n": 1000}
+6. Save every figure as a PNG under `figures/` (create the directory). Give files
+   descriptive names.
+7. Print a concise final summary to stdout: what you ran, the key numbers, and
+   whether they point toward supporting or refuting the hypothesis.
+
+Do not fabricate results — every number in results.json must come from code that
+actually ran. If a step fails, debug it and retry; if it is truly impossible
+within the budget, write results.json with an "error" field explaining why and
+still print your summary.
+
+warning: Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/gdeml/.codex/config.toml.
+codex
+I’ll implement the deterministic batched simulation, create both required JSON outputs and the figure under `figures/`, then run validation checks against the exact protocol and inspect the artifacts. I’ll preserve the full 200,000-experiment sample unless runtime forces a reduction.
+  → Inspect workspace instructions and existing files
+  • Create the workspace venv and install pinned dependencies
+  • Implement the deterministic experiment and artifact generation
+  • Run the full experiment and debug any failures
+  • Verify JSON metrics, figure dimensions, and reproducibility-facing details
+exec
+/bin/zsh -lc "pwd && rg --files -g 'AGENTS.md' -g '"'!*.pyc'"' -g '"'!__pycache__'"' && rg --files -g '"'!*.pyc'"' -g '"'!__pycache__'"' | sed -n '1,120p'" in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+exec
+/bin/zsh -lc "rg -n \"topic-under-independently-generated-20-block-seq|independently generated 20-block|auto-enqueued follow-up|researchAI\" /Users/gdeml/.codex/memories/MEMORY.md | sed -n '1,100p'" in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+ exited 1 in 0ms:
+/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+
+ succeeded in 0ms:
+1:# Task Group: /Users/gdeml/git/researchAI autonomous research harness design, operations, and publishing
+3:applies_to: cwd=/Users/gdeml/git/researchAI; reuse_rule=safe for this repo and closely related local harness work on this Mac, but live dashboard state, branch status, locks, and publishing configuration must be rechecked before acting
+5:## Task 1: explore Claude Code, Codex plugin setup, and the initial researchAI harness plan, partial context
+9:- extensions/chronicle/resources/2026-07-18T20-41-00-DZhN-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-41-00-DZhN-10min-memory-summary.md, updated_at=2026-07-18T20:41:00+00:00, thread_id=None, harness architecture and dashboard plan) [chronicle memory]
+10:- extensions/chronicle/resources/2026-07-18T20-31-00-pzzX-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-31-00-pzzX-10min-memory-summary.md, updated_at=2026-07-18T20:31:00+00:00, thread_id=None, PLAN.md and model-routing context) [chronicle memory]
+11:- extensions/chronicle/resources/2026-07-18T20-21-00-nTtG-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-21-00-nTtG-10min-memory-summary.md, updated_at=2026-07-18T20:21:00+00:00, thread_id=None, Codex plugin install and setup) [chronicle memory]
+12:- extensions/chronicle/resources/2026-07-18T20-11-00-pcgc-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-11-00-pcgc-10min-memory-summary.md, updated_at=2026-07-18T20:11:00+00:00, thread_id=None, pivot from multipathNetworking into new researchAI folder) [chronicle memory]
+16:- researchAI, Claude Code, codex@openai-codex, /codex:setup, PLAN.md, CLIProxyAPI, sol, tera, luna, 127.0.0.1:8780, localhost:8317, queue/, projects/<slug>/, harness/llm.py, harness/literature.py
+22:- extensions/chronicle/resources/2026-07-18T21-57-00-Ahpc-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T21-57-00-Ahpc-10min-memory-summary.md, updated_at=2026-07-18T21:57:00+00:00, thread_id=None, drain mode validation and checkpoint resume) [chronicle memory]
+23:- extensions/chronicle/resources/2026-07-18T21-47-00-iUyA-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T21-47-00-iUyA-10min-memory-summary.md, updated_at=2026-07-18T21:47:00+00:00, thread_id=None, on-demand Mac operation and drain command) [chronicle memory]
+24:- extensions/chronicle/resources/2026-07-18T21-37-00-ftrx-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T21-37-00-ftrx-10min-memory-summary.md, updated_at=2026-07-18T21:37:00+00:00, thread_id=None, adversarial review and harness fixes) [chronicle memory]
+25:- extensions/chronicle/resources/2026-07-18T20-57-00-doui-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-57-00-doui-10min-memory-summary.md, updated_at=2026-07-18T20:57:00+00:00, thread_id=None, foundation committed and teammate lanes running) [chronicle memory]
+35:- extensions/chronicle/resources/2026-07-18T22-27-00-AQGT-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-27-00-AQGT-10min-memory-summary.md, updated_at=2026-07-18T22:27:00+00:00, thread_id=None, dashboard review of genetic-algorithms-2 and follow-up questions) [chronicle memory]
+36:- extensions/chronicle/resources/2026-07-18T22-17-00-cDPj-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-17-00-cDPj-10min-memory-summary.md, updated_at=2026-07-18T22:17:00+00:00, thread_id=None, results branch publishing and dashboard validation) [chronicle memory]
+37:- extensions/chronicle/resources/2026-07-18T22-07-00-ZYVE-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-07-00-ZYVE-10min-memory-summary.md, updated_at=2026-07-18T22:07:00+00:00, thread_id=None, runner lock and public repo creation) [chronicle memory]
+41:- results.publish, results.branch, .results-worktree, scripts/setup_results_branch.sh, GabrielDeml/researchAI, logs/codex_iter1.log, genetic-algorithms-2, REFUTED, 127.0.0.1:8780/#history, auto-genetic-algorithms-can-the-optimization-comparison-be-re
+47:- extensions/chronicle/resources/2026-07-18T22-57-00-TQZO-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-57-00-TQZO-10min-memory-summary.md, updated_at=2026-07-18T22:57:00+00:00, thread_id=None, queue and writeup-stage reproducibility follow-up) [chronicle memory]
+48:- extensions/chronicle/resources/2026-07-18T22-47-00-uiux-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-47-00-uiux-10min-memory-summary.md, updated_at=2026-07-18T22:47:00+00:00, thread_id=None, literature-search explanation and Kagi/Medium browsing) [chronicle memory]
+49:- extensions/chronicle/resources/2026-07-18T22-37-00-yCUN-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-37-00-yCUN-10min-memory-summary.md, updated_at=2026-07-18T22:37:00+00:00, thread_id=None, live review-stage report and tmux/auto-publishing context) [chronicle memory]
+59:- extensions/chronicle/resources/2026-07-19T09-11-00-hSbW-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-11-00-hSbW-10min-memory-summary.md, updated_at=2026-07-19T09:11:00+00:00, thread_id=None, self-improve and self-update edits in harness/config.py) [chronicle memory]
+69:- extensions/chronicle/resources/2026-07-19T09-51-00-IjrQ-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-51-00-IjrQ-10min-memory-summary.md, updated_at=2026-07-19T09:51:00+00:00, thread_id=None, command-history recap and blocked finish of remote setup) [chronicle memory]
+70:- extensions/chronicle/resources/2026-07-19T09-41-00-XfNE-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-41-00-XfNE-10min-memory-summary.md, updated_at=2026-07-19T09:41:00+00:00, thread_id=None, remote `ulg` install and service-file setup) [chronicle memory]
+71:- extensions/chronicle/resources/2026-07-19T09-31-00-IPgB-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-31-00-IPgB-10min-memory-summary.md, updated_at=2026-07-19T09:31:00+00:00, thread_id=None, self-improve engine completion and remote-install start) [chronicle memory]
+72:- extensions/chronicle/resources/2026-07-19T09-21-00-PqmL-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-21-00-PqmL-10min-memory-summary.md, updated_at=2026-07-19T09:21:00+00:00, thread_id=None, `harness/selfcheck.py` and follow-on self-improve work) [chronicle memory]
+92:- `uv run python -m harness drain` is the on-demand queue-processing mode in this repo: it resumes crashed work, processes queued `queue/*.md` items serially, skips auto-topic self-ideation, and exits instead of idling. It must be run from `/Users/gdeml/git/researchAI`; the same command from `/Users/gdeml/git/multipathNetworking` failed with `No module named harness` [Task 2] [chronicle memory]
+98:- The visible remote target for 24/7 deployment is `gabe@ulg`: setup installed `uv`, Codex CLI, and `CLIProxyAPI`, synced `~/researchAI`, ran `uv sync` plus `uv run python -m harness selfcheck`, created `.results-worktree` via `scripts/setup_results_branch.sh`, and staged user-level service files `cliproxyapi.service`, `researchai-supervisor.service`, and `researchai-dashboard.service` [Task 6] [chronicle memory]
+103:- Symptom: queue items exist in the dashboard but no work happens -> cause: the supervisor loop is down and the queue is only a to-do list -> fix: run `uv run python -m harness drain` or `uv run python -m harness supervise` from `/Users/gdeml/git/researchAI`, not from another repo [Task 2] [chronicle memory]
+
+exec
+/bin/zsh -lc 'git status --short --branch' in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+ succeeded in 0ms:
+## main...origin/main [ahead 1]
+
+exec
+/bin/zsh -lc "rg --files -uu | sed -n '1,160p'; if [ -f AGENTS.md ]; then sed -n '1,240p' AGENTS.md; fi; python3 --version" in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+ succeeded in 179ms:
+Python 3.14.6
+
+codex
+The workspace is empty and has no local `AGENTS.md`; the system `python3` is 3.14.6. Because the requested NumPy/SciPy versions predate Python 3.14 support, I’m checking for a compatible Python 3.11/3.12 interpreter before creating the required `.venv`.
+exec
+/bin/zsh -lc 'for exe in python3.11 python3.12 python3.13 /opt/homebrew/bin/python3.11 /opt/homebrew/bin/python3.12 /usr/local/bin/python3.11; do if command -v "$exe" >/dev/null 2>&1; then "$exe" --version; command -v "$exe"; fi; done' in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+ succeeded in 185ms:
+Python 3.13.3
+/opt/homebrew/bin/python3.13
+Python 3.12.9
+/opt/homebrew/bin/python3.12
+
+exec
+/bin/zsh -lc 'ls -l /opt/homebrew/opt/python@3.12/libexec/bin/python3 /opt/homebrew/bin/python3.12 2>/dev/null || true; PATH=/opt/homebrew/opt/python@3.12/libexec/bin:$PATH python3 --version; PATH=/opt/homebrew/opt/python@3.12/libexec/bin:$PATH python3 -m venv .venv; .venv/bin/python --version' in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+ succeeded in 1740ms:
+Python 3.12.9
+
+Workspace inspection is complete; a compatible Python 3.12.9 interpreter is available and the required in-workspace venv has been created with `python3 -m venv .venv` under a Python 3.12 PATH.
+  ✓ Inspect workspace instructions and existing files
+  → Create the workspace venv and install pinned dependencies
+  • Implement the deterministic experiment and artifact generation
+  • Run the full experiment and debug any failures
+  • Verify JSON metrics, figure dimensions, and reproducibility-facing details
+exec
+/bin/zsh -lc '.venv/bin/pip install numpy==1.26.4 scipy==1.12.0 matplotlib==3.8.3' in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+ succeeded in 8052ms:
+WARNING: The directory '/Users/gdeml/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Collecting numpy==1.26.4
+  Downloading numpy-1.26.4-cp312-cp312-macosx_11_0_arm64.whl.metadata (61 kB)
+Collecting scipy==1.12.0
+  Downloading scipy-1.12.0-cp312-cp312-macosx_12_0_arm64.whl.metadata (217 kB)
+Collecting matplotlib==3.8.3
+  Downloading matplotlib-3.8.3-cp312-cp312-macosx_11_0_arm64.whl.metadata (5.8 kB)
+Collecting contourpy>=1.0.1 (from matplotlib==3.8.3)
+  Downloading contourpy-1.3.3-cp312-cp312-macosx_11_0_arm64.whl.metadata (5.5 kB)
+Collecting cycler>=0.10 (from matplotlib==3.8.3)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.22.0 (from matplotlib==3.8.3)
+  Downloading fonttools-4.63.0-cp312-cp312-macosx_10_13_universal2.whl.metadata (118 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib==3.8.3)
+  Downloading kiwisolver-1.5.0-cp312-cp312-macosx_11_0_arm64.whl.metadata (5.1 kB)
+Collecting packaging>=20.0 (from matplotlib==3.8.3)
+  Downloading packaging-26.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow>=8 (from matplotlib==3.8.3)
+  Downloading pillow-12.3.0-cp312-cp312-macosx_11_0_arm64.whl.metadata (9.1 kB)
+Collecting pyparsing>=2.3.1 (from matplotlib==3.8.3)
+  Downloading pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
+Collecting python-dateutil>=2.7 (from matplotlib==3.8.3)
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib==3.8.3)
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Downloading numpy-1.26.4-cp312-cp312-macosx_11_0_arm64.whl (13.7 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.7/13.7 MB 84.7 MB/s eta 0:00:00
+Downloading scipy-1.12.0-cp312-cp312-macosx_12_0_arm64.whl (31.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 31.4/31.4 MB 61.0 MB/s eta 0:00:00
+Downloading matplotlib-3.8.3-cp312-cp312-macosx_11_0_arm64.whl (7.5 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 7.5/7.5 MB 15.9 MB/s eta 0:00:00
+Downloading contourpy-1.3.3-cp312-cp312-macosx_11_0_arm64.whl (273 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.63.0-cp312-cp312-macosx_10_13_universal2.whl (2.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 103.7 MB/s eta 0:00:00
+Downloading kiwisolver-1.5.0-cp312-cp312-macosx_11_0_arm64.whl (64 kB)
+Downloading packaging-26.2-py3-none-any.whl (100 kB)
+Downloading pillow-12.3.0-cp312-cp312-macosx_11_0_arm64.whl (4.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 92.2 MB/s eta 0:00:00
+Downloading pyparsing-3.3.2-py3-none-any.whl (122 kB)
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Installing collected packages: six, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, scipy, python-dateutil, contourpy, matplotlib
+Successfully installed contourpy-1.3.3 cycler-0.12.1 fonttools-4.63.0 kiwisolver-1.5.0 matplotlib-3.8.3 numpy-1.26.4 packaging-26.2 pillow-12.3.0 pyparsing-3.3.2 python-dateutil-2.9.0.post0 scipy-1.12.0 six-1.17.0
+
+[notice] A new release of pip is available: 25.0 -> 26.1.2
+[notice] To update, run: python3.12 -m pip install --upgrade pip
+
+codex
+The pinned environment installed successfully on Python 3.12.9. I’m now writing a single rerunnable `experiment.py` that uses the exact RNG/data order and selection rules, records all quantiles as scalar keys, saves the canonical plot in `figures/`, and exposes the requested root plot name as a symlink to that artifact.
+apply patch
+patch: completed
+/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2db736f1fac41532a8476b7be222408ce69061aa
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,340 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    if (platform.python_version_tuple()[0], platform.python_version_tuple()[1]) < ("3", "11"):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2db736f1fac41532a8476b7be222408ce69061aa
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,340 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    if (platform.python_version_tuple()[0], platform.python_version_tuple()[1]) < ("3", "11"):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+
+2026-07-19T22:58:19.487225Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `supports_reasoning_summaries` at line 88 column 5
+exec
+/bin/zsh -lc "ls -la; .venv/bin/python -m py_compile experiment.py; .venv/bin/python - <<'PY'
+import numpy, scipy, matplotlib
+print(numpy.__version__, scipy.__version__, matplotlib.__version__)
+PY" in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2db736f1fac41532a8476b7be222408ce69061aa
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,340 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    if (platform.python_version_tuple()[0], platform.python_version_tuple()[1]) < ("3", "11"):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+
+ succeeded in 4675ms:
+Matplotlib created a temporary cache directory at /var/folders/wx/2t76kt5d3bx8q341hj7q8kyh0000gn/T/matplotlib-f4wg40v5 because the default path (/Users/gdeml/.matplotlib) is not a writable directory; it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+1.26.4 1.12.0 3.8.3
+
+Pinned dependencies and the rerunnable experiment program are ready; syntax and active versions were checked. The full deterministic run is starting now.
+  ✓ Inspect workspace instructions and existing files
+  ✓ Create the workspace venv and install pinned dependencies
+  ✓ Implement the deterministic experiment and artifact generation
+  → Run the full experiment and debug any failures
+  • Verify JSON metrics, figure dimensions, and reproducibility-facing details
+exec
+/bin/zsh -lc 'MPLCONFIGDIR="$PWD/.mplconfig" .venv/bin/python experiment.py' in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2db736f1fac41532a8476b7be222408ce69061aa
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,340 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    if (platform.python_version_tuple()[0], platform.python_version_tuple()[1]) < ("3", "11"):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+
+codex
+The full simulation is running with the exact 40-batch protocol. Its first-batch `corrcoef` equivalence check is embedded before any results are accepted; after completion I’ll independently check JSON flatness, decision recomputation, package/version metadata, and the PNG’s pixel dimensions.
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2db736f1fac41532a8476b7be222408ce69061aa
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,340 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    if (platform.python_version_tuple()[0], platform.python_version_tuple()[1]) < ("3", "11"):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+
+ succeeded in 19200ms:
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+Completed batch 10/40
+Completed batch 20/40
+Completed batch 30/40
+Completed batch 40/40
+Ran 200,000 independent pools of 32 length-20 Gaussian sequences in 40 batches.
+KS(fixed, max-mean) = 0.002675 (required <= 0.01).
+P(max-r > 0.40) = 0.450565 (required > 0.50); MCSE = 0.001113.
+P(fixed > 0.40) = 0.018865; P(max-mean > 0.40) = 0.018840.
+Decision: REFUTED.
+
+exec
+/bin/zsh -lc "jq -e '(.decision == (if (.ks_r_fixed_vs_r_max_mean <= .ks_decision_threshold and .p_max_r_gt_0_40 > .max_r_exceedance_decision_threshold) then \"SUPPORTED\" else \"REFUTED\" end)) and (.hypothesis_supported == (.decision == \"SUPPORTED\")) and (.n_experiments == 200000) and (.n_candidates == 32) and (.sequence_length == 20) and (.n_batches == 40) and (.correlation_validation_max_abs_diff <= 1e-12)' results.json" in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+ succeeded in 0ms:
+true
+
+exec
+/bin/zsh -lc "jq . results.json && cmp -s results.json metrics.json && echo 'results.json and metrics.json are byte-identical' && jq -e 'type == \"object\" and ([.[] | type] | all(. == \"string\" or . == \"number\" or . == \"boolean\"))' results.json" in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+ succeeded in 0ms:
+{
+  "batch_size": 5000,
+  "bit_generator": "PCG64",
+  "correlation_validation_max_abs_diff": 2.220446049250313E-16,
+  "correlation_validation_sequences": 256,
+  "decision": "REFUTED",
+  "exceedance_condition_passed": false,
+  "figure_path": "figures/lag1_selection_null.png",
+  "hypothesis_supported": false,
+  "ks_condition_passed": true,
+  "ks_decision_threshold": 0.01,
+  "ks_r_fixed_vs_r_max_mean": 0.002674999999999983,
+  "matplotlib_version": "3.8.3",
+  "max_r_exceedance_decision_threshold": 0.5,
+  "max_r_exceedance_is_strict": true,
+  "mcse_p_max_r_gt_0_40": 0.001112556022802897,
+  "n_batches": 40,
+  "n_candidates": 32,
+  "n_experiments": 200000,
+  "numpy_version": "1.26.4",
+  "p_fixed_gt_0_40": 0.018865,
+  "p_max_mean_gt_0_40": 0.01884,
+  "p_max_r_gt_0_40": 0.450565,
+  "python_version": "3.12.9",
+  "r_fixed_q05": -0.40977419729543263,
+  "r_fixed_q25": -0.20469823271538615,
+  "r_fixed_q50": -0.05363056547211355,
+  "r_fixed_q75": 0.0988363282050365,
+  "r_fixed_q95": 0.311906575295605,
+  "r_max_mean_q05": -0.40853856308881353,
+  "r_max_mean_q25": -0.20516111855384567,
+  "r_max_mean_q50": -0.05311844423151748,
+  "r_max_mean_q75": 0.0999876756848141,
+  "r_max_mean_q95": 0.3114227457465827,
+  "r_max_r_q05": 0.24593961654040825,
+  "r_max_r_q25": 0.32655952196949556,
+  "r_max_r_q50": 0.3881428968151447,
+  "r_max_r_q75": 0.45486679234285626,
+  "r_max_r_q95": 0.5593465721498307,
+  "scipy_version": "1.12.0",
+  "seed": 20250308,
+  "sequence_length": 20
+}
+results.json and metrics.json are byte-identical
+true
+
+exec
+/bin/zsh -lc 'file figures/lag1_selection_null.png lag1_selection_null.png; sips -g pixelWidth -g pixelHeight -g dpiWidth -g dpiHeight figures/lag1_selection_null.png 2>/dev/null; ls -l lag1_selection_null.png figures/lag1_selection_null.png; git status --short' in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+ succeeded in 0ms:
+figures/lag1_selection_null.png: PNG image data, 1800 x 825, 8-bit/color RGBA, non-interlaced
+lag1_selection_null.png:         PNG image data, 1800 x 825, 8-bit/color RGBA, non-interlaced
+/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/figures/lag1_selection_null.png
+  pixelWidth: 1800
+  pixelHeight: 825
+  dpiWidth: 150.000
+  dpiHeight: 150.000
+-rw-r--r--@ 1 gdeml  staff  98205 Jul 19 15:58 figures/lag1_selection_null.png
+lrwxr-xr-x@ 1 gdeml  staff     31 Jul 19 15:58 lag1_selection_null.png -> figures/lag1_selection_null.png
+
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2db736f1fac41532a8476b7be222408ce69061aa
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,340 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    if (platform.python_version_tuple()[0], platform.python_version_tuple()[1]) < ("3", "11"):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..2db736f1fac41532a8476b7be222408ce69061aa
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,340 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    if (platform.python_version_tuple()[0], platform.python_version_tuple()[1]) < ("3", "11"):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+
+codex
+The full run completed in well under budget. The first decision condition passed (KS = 0.002675 ≤ 0.01), but the required maximum-autocorrelation exceedance condition failed (0.450565 ≤ 0.50), so the pre-specified combined decision is REFUTED. The generated plot is legible at 1800×825 pixels and 150 DPI; I’m doing a final reproducibility pass now.
+apply patch
+patch: completed
+/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a844fa6e8c00cc36037fa176b35c23e0b833a358
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,341 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    python_major_minor = tuple(map(int, platform.python_version_tuple()[:2]))
++    if python_major_minor < (3, 11):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..7de0becbc315ce4f8929e1c645e015368a50b914
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+@@ -0,0 +1,3 @@
++numpy==1.26.4
++scipy==1.12.0
++matplotlib==3.8.3
+
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a844fa6e8c00cc36037fa176b35c23e0b833a358
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,341 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    python_major_minor = tuple(map(int, platform.python_version_tuple()[:2]))
++    if python_major_minor < (3, 11):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..7de0becbc315ce4f8929e1c645e015368a50b914
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+@@ -0,0 +1,3 @@
++numpy==1.26.4
++scipy==1.12.0
++matplotlib==3.8.3
+
+exec
+/bin/zsh -lc 'shasum -a 256 results.json metrics.json figures/lag1_selection_null.png > /tmp/lag1_before.sha256
+MPLCONFIGDIR="$PWD/.mplconfig" XDG_CACHE_HOME="$PWD/.cache" .venv/bin/python experiment.py
+shasum -a 256 results.json metrics.json figures/lag1_selection_null.png > /tmp/lag1_after.sha256
+diff -u /tmp/lag1_before.sha256 /tmp/lag1_after.sha256
+.venv/bin/pip check' in /Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a844fa6e8c00cc36037fa176b35c23e0b833a358
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,341 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    python_major_minor = tuple(map(int, platform.python_version_tuple()[:2]))
++    if python_major_minor < (3, 11):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..7de0becbc315ce4f8929e1c645e015368a50b914
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+@@ -0,0 +1,3 @@
++numpy==1.26.4
++scipy==1.12.0
++matplotlib==3.8.3
+
+ succeeded in 2798ms:
+Completed batch 10/40
+Completed batch 20/40
+Completed batch 30/40
+Completed batch 40/40
+Ran 200,000 independent pools of 32 length-20 Gaussian sequences in 40 batches.
+KS(fixed, max-mean) = 0.002675 (required <= 0.01).
+P(max-r > 0.40) = 0.450565 (required > 0.50); MCSE = 0.001113.
+P(fixed > 0.40) = 0.018865; P(max-mean > 0.40) = 0.018840.
+Decision: REFUTED.
+WARNING: The directory '/Users/gdeml/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+No broken requirements found.
+
+The full experiment completed twice with identical SHA-256 hashes for both JSON files and the PNG. JSON flatness and decision logic, the 256-sequence correlation check, pinned environment health, and figure size/DPI were all verified.
+  ✓ Inspect workspace instructions and existing files
+  ✓ Create the workspace venv and install pinned dependencies
+  ✓ Implement the deterministic experiment and artifact generation
+  ✓ Run the full experiment and debug any failures
+  ✓ Verify JSON metrics, figure dimensions, and reproducibility-facing details
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a844fa6e8c00cc36037fa176b35c23e0b833a358
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,341 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    python_major_minor = tuple(map(int, platform.python_version_tuple()[:2]))
++    if python_major_minor < (3, 11):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..7de0becbc315ce4f8929e1c645e015368a50b914
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+@@ -0,0 +1,3 @@
++numpy==1.26.4
++scipy==1.12.0
++matplotlib==3.8.3
+
+codex
+The experiment completed at the full requested scale. The hypothesis is **REFUTED**.
+
+- KS(fixed, max-mean): `0.002675` — passes `≤ 0.01`
+- P(max-r > 0.40): `0.450565` — fails required `> 0.50`
+- Monte Carlo SE: `0.00111256`
+- P(fixed > 0.40): `0.018865`
+- P(max-mean > 0.40): `0.018840`
+
+Validation succeeded: the 256-sequence correlation check had maximum error `2.22e-16`. A second complete run produced identical JSON and PNG hashes. The figure is 1800×825 at 150 DPI.
+
+Artifacts:
+
+- [results.json](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/results.json)
+- [metrics.json](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/metrics.json)
+- [lag1_selection_null.png](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/figures/lag1_selection_null.png)
+- [experiment.py](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py)
+- [requirements.txt](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt)
+
+
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a844fa6e8c00cc36037fa176b35c23e0b833a358
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py
+@@ -0,0 +1,341 @@
++#!/usr/bin/env python3
++"""Simulate the null distribution of lag-1 correlations after candidate selection."""
++
++from __future__ import annotations
++
++import json
++import os
++import platform
++from pathlib import Path
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy
++import scipy
++from scipy import stats
++
++
++SEED = 20250308
++N_EXPERIMENTS = 200_000
++N_CANDIDATES = 32
++SEQUENCE_LENGTH = 20
++BATCH_SIZE = 5_000
++N_BATCHES = N_EXPERIMENTS // BATCH_SIZE
++QUANTILE_LEVELS = numpy.array([0.05, 0.25, 0.50, 0.75, 0.95])
++KS_THRESHOLD = 0.01
++R_THRESHOLD = 0.40
++EXCEEDANCE_THRESHOLD = 0.50
++
++WORKSPACE = Path(__file__).resolve().parent
++FIGURES_DIR = WORKSPACE / "figures"
++FIGURE_PATH = FIGURES_DIR / "lag1_selection_null.png"
++ROOT_FIGURE_PATH = WORKSPACE / "lag1_selection_null.png"
++METRICS_PATH = WORKSPACE / "metrics.json"
++RESULTS_PATH = WORKSPACE / "results.json"
++
++
++def validate_environment() -> None:
++    """Fail early if the protocol's exact package versions are not active."""
++    required = {
++        "numpy": "1.26.4",
++        "scipy": "1.12.0",
++        "matplotlib": "3.8.3",
++    }
++    actual = {
++        "numpy": numpy.__version__,
++        "scipy": scipy.__version__,
++        "matplotlib": matplotlib.__version__,
++    }
++    if actual != required:
++        raise RuntimeError(f"Package version mismatch: required={required}, actual={actual}")
++    python_major_minor = tuple(map(int, platform.python_version_tuple()[:2]))
++    if python_major_minor < (3, 11):
++        raise RuntimeError(f"Python 3.11+ is required, found {platform.python_version()}")
++
++
++def simulate() -> tuple[numpy.ndarray, numpy.ndarray, numpy.ndarray, float]:
++    """Run all batches in protocol order and return the three result arrays."""
++    if N_EXPERIMENTS % BATCH_SIZE != 0 or N_BATCHES != 40:
++        raise RuntimeError("The protocol requires exactly 40 complete batches")
++
++    # The protocol requires exactly one Generator, initialized this way.
++    rng = numpy.random.Generator(numpy.random.PCG64(20250308))
++
++    r_fixed = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_mean = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    r_max_r = numpy.empty(N_EXPERIMENTS, dtype=numpy.float64)
++    verification_max_abs_diff = numpy.nan
++    batch_rows = numpy.arange(BATCH_SIZE)
++
++    for batch_index in range(N_BATCHES):
++        start = batch_index * BATCH_SIZE
++        stop = start + BATCH_SIZE
++
++        z = rng.standard_normal(
++            (BATCH_SIZE, N_CANDIDATES, SEQUENCE_LENGTH),
++            dtype=numpy.float64,
++        )
++        candidate_mean = z.mean(axis=2)
++        idx_mean = numpy.argmax(candidate_mean, axis=1)
++
++        x = z[:, :, :-1]
++        y = z[:, :, 1:]
++        xc = x - x.mean(axis=2, keepdims=True)
++        yc = y - y.mean(axis=2, keepdims=True)
++        r = numpy.sum(xc * yc, axis=2) / numpy.sqrt(
++            numpy.sum(xc * xc, axis=2) * numpy.sum(yc * yc, axis=2)
++        )
++
++        if batch_index == 0:
++            first_sequences = z.reshape(-1, SEQUENCE_LENGTH)[:256]
++            corrcoef_values = numpy.array(
++                [
++                    numpy.corrcoef(sequence[:-1], sequence[1:])[0, 1]
++                    for sequence in first_sequences
++                ],
++                dtype=numpy.float64,
++            )
++            vectorized_values = r.reshape(-1)[:256]
++            if not numpy.all(numpy.isfinite(corrcoef_values)):
++                raise RuntimeError("Non-finite value in corrcoef verification")
++            verification_max_abs_diff = float(
++                numpy.max(numpy.abs(corrcoef_values - vectorized_values))
++            )
++            if verification_max_abs_diff > 1e-12:
++                raise RuntimeError(
++                    "Vectorized correlation verification failed: "
++                    f"max abs diff={verification_max_abs_diff:.17g}"
++                )
++
++        r_fixed[start:stop] = r[:, 0]
++        r_max_mean[start:stop] = r[batch_rows, idx_mean]
++        idx_r = numpy.argmax(r, axis=1)
++        r_max_r[start:stop] = r[batch_rows, idx_r]
++
++        if (batch_index + 1) % 10 == 0:
++            print(f"Completed batch {batch_index + 1}/{N_BATCHES}", flush=True)
++
++    for name, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        if values.shape != (N_EXPERIMENTS,):
++            raise RuntimeError(f"{name} has incorrect shape {values.shape}")
++        if numpy.count_nonzero(numpy.isfinite(values)) != N_EXPERIMENTS:
++            raise RuntimeError(f"{name} does not contain exactly 200,000 finite values")
++        if not numpy.all((values >= -1.0) & (values <= 1.0)):
++            raise RuntimeError(f"{name} contains a value outside [-1, 1]")
++
++    return r_fixed, r_max_mean, r_max_r, verification_max_abs_diff
++
++
++def build_metrics(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    verification_max_abs_diff: float,
++) -> dict[str, bool | float | int | str]:
++    """Compute all pre-specified statistics and the fixed-threshold decision."""
++    ks_distance = float(
++        stats.ks_2samp(
++            r_fixed,
++            r_max_mean,
++            alternative="two-sided",
++            method="asymp",
++        ).statistic
++    )
++    p_max_r_gt_040 = float(numpy.mean(r_max_r > 0.40))
++    p_fixed_gt_040 = float(numpy.mean(r_fixed > 0.40))
++    p_max_mean_gt_040 = float(numpy.mean(r_max_mean > 0.40))
++    mcse_max_r_gt_040 = float(
++        numpy.sqrt(p_max_r_gt_040 * (1.0 - p_max_r_gt_040) / 200000)
++    )
++    ks_condition = ks_distance <= KS_THRESHOLD
++    exceedance_condition = p_max_r_gt_040 > EXCEEDANCE_THRESHOLD
++    supported = bool(ks_condition and exceedance_condition)
++
++    metrics: dict[str, bool | float | int | str] = {
++        "decision": "SUPPORTED" if supported else "REFUTED",
++        "hypothesis_supported": supported,
++        "ks_condition_passed": bool(ks_condition),
++        "exceedance_condition_passed": bool(exceedance_condition),
++        "ks_r_fixed_vs_r_max_mean": ks_distance,
++        "ks_decision_threshold": KS_THRESHOLD,
++        "p_max_r_gt_0_40": p_max_r_gt_040,
++        "p_fixed_gt_0_40": p_fixed_gt_040,
++        "p_max_mean_gt_0_40": p_max_mean_gt_040,
++        "max_r_exceedance_decision_threshold": EXCEEDANCE_THRESHOLD,
++        "max_r_exceedance_is_strict": True,
++        "mcse_p_max_r_gt_0_40": mcse_max_r_gt_040,
++        "seed": SEED,
++        "n_experiments": N_EXPERIMENTS,
++        "n_candidates": N_CANDIDATES,
++        "sequence_length": SEQUENCE_LENGTH,
++        "batch_size": BATCH_SIZE,
++        "n_batches": N_BATCHES,
++        "correlation_validation_sequences": 256,
++        "correlation_validation_max_abs_diff": verification_max_abs_diff,
++        "numpy_version": numpy.__version__,
++        "scipy_version": scipy.__version__,
++        "matplotlib_version": matplotlib.__version__,
++        "python_version": platform.python_version(),
++        "bit_generator": "PCG64",
++        "figure_path": "figures/lag1_selection_null.png",
++    }
++
++    for prefix, values in (
++        ("r_fixed", r_fixed),
++        ("r_max_mean", r_max_mean),
++        ("r_max_r", r_max_r),
++    ):
++        quantiles = numpy.quantile(values, QUANTILE_LEVELS, method="linear")
++        for percentile, value in zip((5, 25, 50, 75, 95), quantiles, strict=True):
++            metrics[f"{prefix}_q{percentile:02d}"] = float(value)
++
++    return metrics
++
++
++def create_figure(
++    r_fixed: numpy.ndarray,
++    r_max_mean: numpy.ndarray,
++    r_max_r: numpy.ndarray,
++    metrics: dict[str, bool | float | int | str],
++) -> None:
++    """Create the required ECDF and density-histogram figure."""
++    FIGURES_DIR.mkdir(parents=True, exist_ok=True)
++    fig, axes = plt.subplots(1, 2, figsize=(12, 5.5), dpi=150)
++
++    ecdf_y = numpy.arange(1, N_EXPERIMENTS + 1, dtype=numpy.float64) / N_EXPERIMENTS
++    for values, label, color in (
++        (r_fixed, "Fixed candidate", "#1f77b4"),
++        (r_max_mean, "Maximum-mean candidate", "#ff7f0e"),
++    ):
++        sorted_values = numpy.sort(values)
++        axes[0].step(
++            numpy.concatenate(([-1.0], sorted_values)),
++            numpy.concatenate(([0.0], ecdf_y)),
++            where="post",
++            label=label,
++            color=color,
++            linewidth=1.5,
++        )
++    axes[0].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[0].set_ylabel("Empirical CDF")
++    axes[0].set_xlim(-1.0, 1.0)
++    axes[0].set_ylim(0.0, 1.0)
++    axes[0].grid(alpha=0.2)
++    axes[0].legend(loc="lower right")
++    axes[0].set_title("Fixed vs. maximum-mean selection")
++    axes[0].text(
++        0.03,
++        0.96,
++        f"KS = {float(metrics['ks_r_fixed_vs_r_max_mean']):.5f}\n"
++        f"decision threshold = {KS_THRESHOLD:.2f}",
++        transform=axes[0].transAxes,
++        ha="left",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    bins = numpy.linspace(-1, 1, 101)
++    axes[1].hist(
++        r_fixed,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Fixed candidate",
++        color="#1f77b4",
++    )
++    axes[1].hist(
++        r_max_r,
++        bins=bins,
++        density=True,
++        alpha=0.55,
++        label="Maximum-r candidate",
++        color="#2ca02c",
++    )
++    axes[1].axvline(
++        R_THRESHOLD,
++        color="black",
++        linestyle="--",
++        linewidth=1.5,
++        label="r = 0.40",
++    )
++    axes[1].set_xlabel("Lag-1 sample autocorrelation r")
++    axes[1].set_ylabel("Density")
++    axes[1].set_xlim(-1.0, 1.0)
++    axes[1].grid(alpha=0.2)
++    axes[1].legend(loc="upper left")
++    axes[1].set_title("Fixed vs. maximum-autocorrelation selection")
++    axes[1].text(
++        0.97,
++        0.96,
++        f"P(max r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.5f}\n"
++        f"decision threshold = {EXCEEDANCE_THRESHOLD:.2f}",
++        transform=axes[1].transAxes,
++        ha="right",
++        va="top",
++        bbox={"facecolor": "white", "edgecolor": "0.7", "alpha": 0.9},
++    )
++
++    fig.suptitle(
++        "Lag-1 autocorrelation selection null: "
++        "N=200,000, 32 candidates, length 20",
++        fontsize=13,
++    )
++    fig.tight_layout(rect=(0, 0, 1, 0.94))
++    fig.savefig(FIGURE_PATH, dpi=150)
++    plt.close(fig)
++
++    # Keep the canonical artifact under figures/ while also providing the exact
++    # root-level filename requested by the protocol.
++    if ROOT_FIGURE_PATH.is_symlink() or ROOT_FIGURE_PATH.exists():
++        ROOT_FIGURE_PATH.unlink()
++    os.symlink(FIGURE_PATH.relative_to(WORKSPACE), ROOT_FIGURE_PATH)
++
++
++def write_json(path: Path, metrics: dict[str, bool | float | int | str]) -> None:
++    """Write a stable, flat JSON object containing scalar values only."""
++    if not all(isinstance(value, (bool, float, int, str)) for value in metrics.values()):
++        raise TypeError("All result values must be JSON scalar values")
++    path.write_text(json.dumps(metrics, indent=2, sort_keys=True) + "\n", encoding="utf-8")
++
++
++def main() -> None:
++    validate_environment()
++    r_fixed, r_max_mean, r_max_r, verification_max_abs_diff = simulate()
++    metrics = build_metrics(
++        r_fixed,
++        r_max_mean,
++        r_max_r,
++        verification_max_abs_diff,
++    )
++    create_figure(r_fixed, r_max_mean, r_max_r, metrics)
++    write_json(METRICS_PATH, metrics)
++    write_json(RESULTS_PATH, metrics)
++
++    print(
++        "Ran 200,000 independent pools of 32 length-20 Gaussian sequences "
++        "in 40 batches."
++    )
++    print(
++        f"KS(fixed, max-mean) = {float(metrics['ks_r_fixed_vs_r_max_mean']):.6f} "
++        f"(required <= {KS_THRESHOLD:.2f})."
++    )
++    print(
++        f"P(max-r > 0.40) = {float(metrics['p_max_r_gt_0_40']):.6f} "
++        f"(required > {EXCEEDANCE_THRESHOLD:.2f}); "
++        f"MCSE = {float(metrics['mcse_p_max_r_gt_0_40']):.6f}."
++    )
++    print(
++        f"P(fixed > 0.40) = {float(metrics['p_fixed_gt_0_40']):.6f}; "
++        f"P(max-mean > 0.40) = {float(metrics['p_max_mean_gt_0_40']):.6f}."
++    )
++    print(f"Decision: {metrics['decision']}.")
++
++
++if __name__ == "__main__":
++    main()
+diff --git a/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..7de0becbc315ce4f8929e1c645e015368a50b914
+--- /dev/null
++++ b/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt
+@@ -0,0 +1,3 @@
++numpy==1.26.4
++scipy==1.12.0
++matplotlib==3.8.3
+
+tokens used
+92,672
+The experiment completed at the full requested scale. The hypothesis is **REFUTED**.
+
+- KS(fixed, max-mean): `0.002675` — passes `≤ 0.01`
+- P(max-r > 0.40): `0.450565` — fails required `> 0.50`
+- Monte Carlo SE: `0.00111256`
+- P(fixed > 0.40): `0.018865`
+- P(max-mean > 0.40): `0.018840`
+
+Validation succeeded: the 256-sequence correlation check had maximum error `2.22e-16`. A second complete run produced identical JSON and PNG hashes. The figure is 1800×825 at 150 DPI.
+
+Artifacts:
+
+- [results.json](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/results.json)
+- [metrics.json](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/metrics.json)
+- [lag1_selection_null.png](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/figures/lag1_selection_null.png)
+- [experiment.py](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/experiment.py)
+- [requirements.txt](/Users/gdeml/git/researchAI/projects/topic-under-independently-generated-20-block-seq/workspace/requirements.txt)
+
+
+
+===== codex exec end exit=0 timed_out=False killed_for=n/a duration_s=244.7 =====

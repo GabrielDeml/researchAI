@@ -1,0 +1,251 @@
+{
+  "slug": "topic-across-many-independently-generated-and-pr",
+  "topic": "Topic Across many independently generated and prospectively defined 48-seed blocks, what are the distributions of selected-rule uplift, held-out retention, selected-rule identity, eligible sample size, and threshold-decision rate? _(auto-enqueued follow-up from topic-can-a-feasibility-study-report-every-attem)_",
+  "created_at": "2026-07-19T22:35:23+00:00",
+  "updated_at": "2026-07-19T22:49:56+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "A New Causal Rule Learning Approach to Interpretable Estimation of Heterogeneous Treatment Effect",
+      "authors": [
+        "Ying Wu",
+        "Hanzhong Liu",
+        "Kai Ren",
+        "Shujie Ma",
+        "Xiangyu Chang"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2310.06746v3",
+      "source": "arXiv:2310.06746v3"
+    },
+    {
+      "title": "A Flexible Defense Against the Winner's Curse",
+      "authors": [
+        "Tijana Zrnic",
+        "William Fithian"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2411.18569v1",
+      "source": "arXiv:2411.18569v1"
+    },
+    {
+      "title": "Valuing Winners: When and How to Correct for Selection Bias in Randomized Experiments",
+      "authors": [
+        "Ron Berman",
+        "Walter W. Zhang",
+        "Hangcheng Zhao"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2605.18887v1",
+      "source": "arXiv:2605.18887v1"
+    },
+    {
+      "title": "Reliable Selection of Heterogeneous Treatment Effect Estimators",
+      "authors": [
+        "Jiayi Guo",
+        "Zijun Gao"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2511.18464v1",
+      "source": "arXiv:2511.18464v1"
+    },
+    {
+      "title": "Estimating heterogeneous treatment effects versus building individualized treatment rules: Connection and disconnection",
+      "authors": [
+        "Zhongyuan Chen",
+        "Jun Xie"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2210.01342v1",
+      "source": "arXiv:2210.01342v1"
+    },
+    {
+      "title": "Policy Learning with Observational Data",
+      "authors": [
+        "Susan Athey",
+        "Stefan Wager"
+      ],
+      "year": 2017,
+      "url": "http://arxiv.org/abs/1702.02896v6",
+      "source": "arXiv:1702.02896v6"
+    },
+    {
+      "title": "Variable Selection for Individualized Treatment Rules with Discrete Outcomes",
+      "authors": [
+        "Zeyu Bian",
+        "Erica EM Moodie",
+        "Susan M Shortreed",
+        "Sylvie D Lambert",
+        "Sahir Bhatnagar"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2205.13609v2",
+      "source": "arXiv:2205.13609v2"
+    },
+    {
+      "title": "A churn prediction dataset from the telecom sector: a new benchmark for uplift modeling",
+      "authors": [
+        "Théo Verhelst",
+        "Denis Mercier",
+        "Jeevan Shrestha",
+        "Gianluca Bontempi"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2312.07206v1",
+      "source": "arXiv:2312.07206v1"
+    },
+    {
+      "title": "Feature Selection Methods for Uplift Modeling and Heterogeneous Treatment Effect",
+      "authors": [
+        "Zhenyu Zhao",
+        "Yumin Zhang",
+        "Totte Harinen",
+        "Mike Yung"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2005.03447v2",
+      "source": "arXiv:2005.03447v2"
+    },
+    {
+      "title": "Uplift Modeling with Multiple Treatments and General Response Types",
+      "authors": [
+        "Yan Zhao",
+        "Xiao Fang",
+        "David Simchi-Levi"
+      ],
+      "year": 2017,
+      "url": "http://arxiv.org/abs/1705.08492v1",
+      "source": "arXiv:1705.08492v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across 300 prospectively defined 48-seed blocks, each split into 24 discovery and 24 held-out randomized-trial seeds under a synthetic DGP with four overlapping candidate rules whose population uplifts differ by at most 0.005, no rule will be selected in more than 35% of blocks and normalized selected-identity entropy will exceed 0.75, while the 10th-to-90th-percentile range of held-out uplift for the selected rule will be less than 0.03.",
+      "rationale": "This tests whether rule identity can be highly unstable even when the selected rules are nearly interchangeable in out-of-sample value. The survey identifies identity frequencies and held-out performance as jointly important, but no cited study measures their distributions across independent 48-seed blocks.",
+      "novelty": 9.1,
+      "feasibility": 9.8,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "In 300 independent 48-seed blocks generated under a constant-treatment-effect DGP, selecting the largest discovery uplift from 16 nested rules with eligible prevalences ranging from 0.05 to 0.80 will choose a rule in the lowest prevalence quartile in at least 45% of blocks, and discovery uplift will have Spearman correlation at most -0.35 with eligible sample size, whereas the corresponding held-out-uplift correlation will have absolute value below 0.10.",
+      "rationale": "Equal population effects isolate variance-driven selection of small subgroups from genuine HTE. This directly tests the survey's proposed connection between eligible sample size, winner's-curse uplift, and held-out attenuation, which has not been jointly characterized for 48-seed blocks.",
+      "novelty": 9.3,
+      "feasibility": 9.8,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "Across 300 independent 48-seed blocks from a null-effect DGP with 20 fixed candidate rules, the retention ratio defined as held-out uplift divided by discovery uplift for the discovery-selected rule will be negative in at least 40% of blocks and will have a 10th-to-90th-percentile width greater than 1.0, even though the median held-out uplift will lie within 0.01 of zero.",
+      "rationale": "The survey notes that no standard retention formula exists. Under weak or null effects, this hypothesis tests whether ratio retention gives a volatile, sign-changing distribution that can obscure the simpler conclusion that held-out uplift is approximately zero.",
+      "novelty": 9.4,
+      "feasibility": 9.9,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "In 300 prospectively defined 48-seed blocks with 16 candidate rules all having population uplift equal to a preregistered action threshold of 0.05, selecting the maximum discovery uplift will produce a discovery threshold-decision rate of at least 85%, but applying the selected identity unchanged to held-out seeds will produce a threshold-decision rate between 40% and 60%, with discovery-versus-held-out decisions disagreeing in at least 35% of blocks.",
+      "rationale": "This separates action-threshold behavior from effect-estimation quality and quantifies threshold inflation induced by winner selection. The literature distinguishes treatment-rule decisions from HTE estimation, but the survey found no distributional evidence for threshold decisions across independent 48-seed blocks.",
+      "novelty": 8.9,
+      "feasibility": 9.8,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Across the same 300 independent 48-seed blocks from a DGP containing eight rare rules with prevalence 0.02-0.06 and eight broad rules with prevalence 0.25-0.70, increasing the preregistered discovery eligibility minimum from 30 to 120 observations will reduce the 90th percentile of selected discovery uplift by at least 0.04, increase median held-out retention defined as held-out uplift divided by discovery uplift by at least 0.20, and reduce normalized selected-identity entropy by at least 0.15.",
+      "rationale": "This tests whether a support requirement changes not only eligible sample size but the entire joint selection distribution. It addresses the survey gap concerning how eligibility, winner's-curse uplift, retention, and identity stability interact under a fixed prospective protocol.",
+      "novelty": 9.2,
+      "feasibility": 9.7,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "For a deterministic sequence of 1,000 independently generated seeds analyzed as consecutive 48-seed windows, stride-1 overlapping windows will yield lag-1 autocorrelation above 0.90 for selected-rule uplift and above 0.80 for threshold decisions, whereas disjoint 48-seed blocks will have absolute lag-1 autocorrelation below 0.10 for both outcomes; treating the overlapping windows as independent will underestimate the Monte Carlo standard error of the threshold-decision rate by at least a factor of three.",
+      "rationale": "The topic specifically calls for independently generated prospective blocks. This hypothesis tests the consequential distinction between genuinely independent blocks and superficially numerous overlapping blocks, a design issue not addressed in the retrieved literature.",
+      "novelty": 9.5,
+      "feasibility": 9.9,
+      "info_gain": 9.5,
+      "chosen": true,
+      "outcome": "refuted"
+    },
+    {
+      "id": 7,
+      "statement": "Across 300 independent 48-seed blocks with six exchangeable candidate rules, rounding discovery uplift to two decimal places before selection and changing the preregistered tie-breaker from lowest rule identifier to highest rule identifier will change the selected identity in at least 25% of blocks, while changing mean selected uplift by less than 0.003, held-out threshold-decision rate by less than 2 percentage points, and median eligible sample size by less than 5 observations.",
+      "rationale": "This distinguishes procedural identity instability from substantive performance instability. The survey recommends prespecifying tie-breaking but provides no evidence about how much tie-breaking can alter identity distributions while leaving uplift, retention-related decisions, and support essentially unchanged.",
+      "novelty": 9.4,
+      "feasibility": 9.9,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "In 400 independent 48-seed blocks containing a broad-rule family with eligible prevalence 0.55 and population uplift 0.055 and a narrow-rule family with eligible prevalence 0.12 and population uplift 0.085, each family will supply the selected rule in at least 30% of blocks, the conditional median eligible sample sizes will differ by at least a factor of three, and the pooled selected-rule eligible-size distribution will reject unimodality by a deterministic bootstrap Hartigan dip test at p < 0.01.",
+      "rationale": "This tests whether identity switching between substantively different rule families creates a multimodal support distribution that marginal means would conceal. Joint multimodality of selected identity, uplift, and eligible size across prospective 48-seed blocks is part of the explicit gap in the survey.",
+      "novelty": 9.3,
+      "feasibility": 9.5,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Simulate 1,000 independent prospective seed-level experiments, compare statistics from 953 overlapping stride-1 windows with 20 disjoint 48-seed blocks, and quantify autocorrelation and Monte Carlo standard-error inflation.",
+    "protocol": "1. Use Python 3 with numpy, pandas, and matplotlib only. Set MASTER_SEED = 20250308 and create 1,000 independent seed streams with numpy.random.SeedSequence(MASTER_SEED).spawn(1000), using one spawned stream per prospective seed-level experiment.\n2. For each seed s from 0 through 999, generate two independent synthetic splits, development and held-out, each containing exactly 256 observations. For each observation generate six independent binary features X1,...,X6 with P(Xj=1)=0.5, randomized treatment T with P(T=1)=0.5, noise epsilon distributed N(0,1), individual treatment effect tau = 0.15 + 0.10*X1, and outcome Y = T*tau + epsilon. Generate the development split first and the held-out split second from the seed's RNG stream.\n3. Prospectively define six candidate rules before analyzing any data: R1={X1=1}, R2={X2=1}, ..., R6={X6=1}. For every seed, split, and rule, store sufficient statistics: eligible count, eligible treated count and outcome sum, and eligible control count and outcome sum. Do not select rules within individual seeds.\n4. Define a block-level rule uplift as mean(Y | eligible,T=1) minus mean(Y | eligible,T=0), computed after pooling the sufficient statistics across all seeds in that block. A rule is eligible for selection only if its pooled development data contain at least 500 treated and 500 control observations; this should normally hold for every rule in a 48-seed block. If no rule is eligible, mark all block outputs missing, although this event is not expected.\n5. Construct 953 overlapping windows W_t={t,...,t+47} for t=0,...,952. Separately construct 20 disjoint prospective blocks B_b={48b,...,48b+47} for b=0,...,19, discarding seeds 960 through 999 only for the disjoint analysis.\n6. In each window or block, select the eligible rule with the largest pooled development uplift. Resolve exact ties by choosing the lowest-numbered rule. Record: selected-rule identity; selected development uplift U_dev; selected rule's pooled development eligible count N_eligible; held-out uplift U_hold obtained by applying that already-selected rule to the corresponding pooled held-out observations; held-out retention H=U_hold/U_dev; and threshold decision D=1 if U_dev >= 0.25 and D=0 otherwise. Never use held-out data for rule selection or threshold decisions.\n7. For both the 953 overlapping windows and 20 disjoint blocks, summarize U_dev, H, and N_eligible by count, mean, sample standard deviation, minimum, 5th, 25th, 50th, 75th, and 95th percentiles, and maximum. Report rule-identity counts and proportions for R1 through R6, the threshold-decision count, and threshold-decision rate.\n8. For a numeric series z_1,...,z_m, define lag-1 autocorrelation as numpy.corrcoef(z[:-1],z[1:])[0,1]. Compute this separately for U_dev and D in the overlapping sequence and in the disjoint sequence. If either side of a correlation has zero variance, report the correlation as undefined and treat the associated hypothesis condition as failed.\n9. Compute the naive Monte Carlo standard error for the overlapping threshold-decision rate as SE_naive=sqrt(p_overlap*(1-p_overlap)/953), where p_overlap is the mean of the 953 overlapping decisions.\n10. Estimate a dependence-aware Monte Carlo standard error by nonparametric bootstrap of the independent seed-level records. Use numpy.random.default_rng(8675309), B=2000 bootstrap replicates, and in each replicate sample 1,000 indices with replacement from 0,...,999. Preserve each sampled seed's complete development and held-out sufficient-statistic record, place sampled records in draw order, reconstruct all 953 stride-1 48-record windows, repeat development rule selection and threshold decisions exactly as above, and save that replicate's mean decision. Define SE_bootstrap as the sample standard deviation with ddof=1 of the 2,000 bootstrap decision rates. Compute the underestimation factor F=SE_bootstrap/SE_naive; if SE_naive is zero, set F to infinity only when SE_bootstrap is positive, otherwise mark it undefined.\n11. Save all block-level records to block_results.csv with a column identifying overlapping versus disjoint analysis. Save scalar summaries, autocorrelations, decision rates, standard errors, the ratio F, and each pass/fail condition to metrics.json.\n12. Create key_results.png at 180 DPI as a 2-by-2 figure: panel A plots overlapping U_dev against window start with a horizontal line at 0.25; panel B plots overlapping D against window start using a step plot; panel C is a grouped bar chart of the four lag-1 autocorrelations with horizontal reference lines at 0.90, 0.80, 0.10, and -0.10; panel D compares SE_naive and SE_bootstrap as bars and annotates their ratio F. Use fixed axis labels and no randomized plotting operations.\n13. Declare the hypothesis supported only if all five preregistered conditions hold simultaneously: overlapping uplift autocorrelation > 0.90; overlapping decision autocorrelation > 0.80; absolute disjoint uplift autocorrelation < 0.10; absolute disjoint decision autocorrelation < 0.10; and F >= 3.00. Otherwise declare it refuted. Do not round values before applying thresholds; display at least six decimal places in metrics.json.",
+    "metrics": [
+      "Overlapping selected-rule uplift lag-1 autocorrelation: Pearson correlation between U_dev values in adjacent members of the 953-window stride-1 sequence; required to exceed 0.90.",
+      "Overlapping threshold-decision lag-1 autocorrelation: Pearson correlation between adjacent binary D values in the 953-window sequence; required to exceed 0.80.",
+      "Disjoint selected-rule uplift lag-1 autocorrelation: Pearson correlation between adjacent U_dev values across the 20 disjoint blocks; its absolute value must be below 0.10.",
+      "Disjoint threshold-decision lag-1 autocorrelation: Pearson correlation between adjacent binary D values across the 20 disjoint blocks; its absolute value must be below 0.10.",
+      "Monte Carlo standard-error underestimation factor: SE_bootstrap divided by sqrt(p_overlap*(1-p_overlap)/953), where SE_bootstrap is the standard deviation of 2,000 seed-record bootstrap estimates; required to be at least 3.00.",
+      "Selected-rule uplift distribution: count, mean, sample standard deviation, minimum, 5th, 25th, 50th, 75th, and 95th percentiles, and maximum of U_dev, reported separately for overlapping and disjoint blocks.",
+      "Held-out retention distribution: the same summaries for H=U_hold/U_dev, reported separately for overlapping and disjoint blocks.",
+      "Selected-rule identity distribution: counts and proportions of selected R1 through R6 under each block construction.",
+      "Eligible sample-size distribution: the same summaries for the selected rule's pooled development eligible count.",
+      "Threshold-decision rate: mean of D under each block construction, with the overlapping rate also accompanied by naive and bootstrap Monte Carlo standard errors."
+    ],
+    "time_budget_minutes": 20,
+    "expected_if_true": "All five conjunctive criteria pass: overlapping-window lag-1 autocorrelation is greater than 0.90 for selected uplift and greater than 0.80 for threshold decisions, both disjoint-block autocorrelations have absolute value below 0.10, and the bootstrap-to-naive Monte Carlo standard-error ratio is at least 3.00; the figure should visibly show slowly varying overlapping outcomes and a much larger bootstrap standard error.",
+    "expected_if_false": "The hypothesis is refuted if any criterion fails, including overlapping autocorrelation at or below 0.90 for uplift or 0.80 for decisions, either disjoint absolute autocorrelation at or above 0.10, an undefined required correlation, or a bootstrap-to-naive standard-error ratio below 3.00."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T22:38:44+00:00",
+      "finished_at": "2026-07-19T22:44:04+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "refuted",
+      "notes": "The conjunctive hypothesis fails because the disjoint-block lag-1 autocorrelations were -0.516 for selected-rule uplift and -0.430 for threshold decisions, with absolute values far above the required 0.10. Although the overlapping-window autocorrelations passed their thresholds (0.973 for uplift and 0.863 for decisions) and the reported SE-underestimation-factor criterion passed, failure of either disjoint criterion prospectively refutes the hypothesis."
+    }
+  ],
+  "verdict": "refuted",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
+  "error": ""
+}

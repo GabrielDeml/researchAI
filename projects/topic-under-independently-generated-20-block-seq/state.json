@@ -1,0 +1,226 @@
+{
+  "slug": "topic-under-independently-generated-20-block-seq",
+  "topic": "Topic Under independently generated 20-block sequences, what is the null distribution of the lag-1 sample autocorrelation computed by `numpy.corrcoef(z[:-1], z[1:])[0, 1]` for selected uplift and binary threshold decisions? _(auto-enqueued follow-up from topic-across-many-independently-generated-and-pr)_",
+  "created_at": "2026-07-19T22:52:47+00:00",
+  "updated_at": "2026-07-19T23:07:04+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "The Finite-Sample Density of the Sufficient Statistic and Related Tests in a Gaussian Autoregression",
+      "authors": [
+        "K. Abadir"
+      ],
+      "year": 2026,
+      "url": "https://www.semanticscholar.org/paper/d08dc5fbcd700edca1635385c0a5e0ce79bef585",
+      "source": "S2:d08dc5fbcd700edca1635385c0a5e0ce79bef585"
+    },
+    {
+      "title": "Autocorrelation of returns in major cryptocurrency markets",
+      "authors": [
+        "Eugene Tartakovsky",
+        "Ksenia Plesovskikh",
+        "Anastasiia Sarmakeeva",
+        "Alexander Bibik"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2003.13517v2",
+      "source": "arXiv:2003.13517v2"
+    },
+    {
+      "title": "Robust Adaptive Lasso via Robust Sample Autocorrelation Coefficient for the Autoregressive Models",
+      "authors": [
+        "Yunlu Jiang",
+        "Fudong Chen",
+        "Xiao Yan"
+      ],
+      "year": 2025,
+      "url": "https://www.semanticscholar.org/paper/0d5a21bc51caa4a22d01a412bb8c97df0735cb1d",
+      "source": "S2:0d5a21bc51caa4a22d01a412bb8c97df0735cb1d"
+    },
+    {
+      "title": "Non-existence of perfect binary sequences",
+      "authors": [
+        "X. Niu",
+        "H. Cao",
+        "K. Feng"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1804.03808v1",
+      "source": "arXiv:1804.03808v1"
+    },
+    {
+      "title": "A churn prediction dataset from the telecom sector: a new benchmark for uplift modeling",
+      "authors": [
+        "Théo Verhelst",
+        "Denis Mercier",
+        "Jeevan Shrestha",
+        "Gianluca Bontempi"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2312.07206v1",
+      "source": "arXiv:2312.07206v1"
+    },
+    {
+      "title": "Causal Inference Based Single-branch Ensemble Trees For Uplift Modeling",
+      "authors": [
+        "Fanglan Zheng",
+        "Menghan Wang",
+        "Kun Li",
+        "Jiang Tian",
+        "Xiaojia Xiang"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2302.01563v1",
+      "source": "arXiv:2302.01563v1"
+    },
+    {
+      "title": "Valid post-selection inference",
+      "authors": [
+        "Richard Berk",
+        "Lawrence Brown",
+        "Andreas Buja",
+        "Kai Zhang",
+        "Linda Zhao"
+      ],
+      "year": 2013,
+      "url": "http://arxiv.org/abs/1306.1059v1",
+      "source": "arXiv:1306.1059v1"
+    },
+    {
+      "title": "Post-selection inference in generalized linear models via parametric programming",
+      "authors": [
+        "Qinyan Shen",
+        "Karl Gregory",
+        "Xianzheng Huang"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2603.24875v1",
+      "source": "arXiv:2603.24875v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across 1,000,000 deterministically seeded IID Gaussian sequences of length 20, the NumPy lag-1 correlation will have an empirical mean between -0.060 and -0.040, at least 57% of values will be negative, and its distribution will have Kolmogorov-Smirnov distance at least 0.06 from the standard zero-correlation distribution for a Pearson correlation computed from 19 independent bivariate-normal pairs.",
+      "rationale": "The overlapping vectors are not independent samples, so the ordinary Pearson null is inappropriate. This directly quantifies the finite-sample negative bias and distributional error identified but not characterized in the survey's gap.",
+      "novelty": 8.7,
+      "feasibility": 10.0,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For 500,000 IID length-20 sequences from each of three standardized continuous marginals—Gaussian, Student-t with 3 degrees of freedom, and lognormal with log-scale standard deviation 1—the null distributions of the NumPy lag-1 correlation will not be distribution-free: the maximum pairwise Kolmogorov-Smirnov distance will exceed 0.04 and the range of their 97.5th percentiles will exceed 0.04.",
+      "rationale": "Independence alone need not determine a finite-sample Pearson-autocorrelation null because skewness and heavy tails affect centering and normalization. The survey notes robustness concerns but provides no distribution for these independent non-Gaussian outputs.",
+      "novelty": 9.0,
+      "feasibility": 9.9,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "For IID Bernoulli length-20 sequences with event probability p, the undefined-correlation rate measured over 1,000,000 deterministic replicates will agree within 0.001 with 2[p^19 + (1-p)^19] - [p^20 + (1-p)^20] for each p in {0.05, 0.10, 0.25, 0.50}; in particular, it will exceed 39% at p=0.05 and 14% at p=0.10.",
+      "rationale": "The statistic is undefined exactly when either overlapping length-19 vector is constant. Quantifying this mass is essential for rare threshold decisions, yet the survey explicitly reports that the requested binary null and its undefined frequency are unavailable.",
+      "novelty": 8.8,
+      "feasibility": 10.0,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "Exact enumeration of all 2^20 binary sequences under IID Bernoulli(0.5) weighting will show that, after excluding undefined cases, the NumPy lag-1 correlation has no more than 600 distinct support values and that its largest individual probability atom is at least 0.01.",
+      "rationale": "This tests whether the binary null is materially discrete rather than merely a continuous autocorrelation distribution with altered variance. Periodic uncentered binary results cited in the survey do not establish the support or atom sizes of this centered, non-cyclic NumPy statistic.",
+      "novelty": 9.2,
+      "feasibility": 9.9,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Under exact enumeration, the conditional distribution of the defined NumPy lag-1 correlation given exactly K ones will be identical for Bernoulli probabilities p=0.10 and p=0.30 for every K in {2, 3, 4, 5}, while the corresponding unconditional defined-correlation distributions will have Kolmogorov-Smirnov distance greater than 0.10.",
+      "rationale": "Conditional on the event count, every binary sequence with that count has equal probability, so any dependence on the threshold crossing probability must enter through mixing weights over counts. This separates combinatorial effects from the marginal-rate dependence highlighted in the survey.",
+      "novelty": 9.4,
+      "feasibility": 9.9,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "In 500,000 null replicates where each of 20 independent blocks contains M IID Gaussian candidate uplift estimates and the block output is their maximum, changing M from 1 to 64 will change the NumPy lag-1 null distribution by a Kolmogorov-Smirnov distance exceeding 0.02 and will shift at least one of its 2.5th or 97.5th percentiles by more than 0.03, despite independence across blocks.",
+      "rationale": "Per-block maximization preserves temporal independence but changes the selected uplift's marginal distribution, potentially changing the finite-sample correlation null. This operationalizes the survey's recommendation to reproduce the complete uplift-selection mechanism within each null replicate.",
+      "novelty": 9.5,
+      "feasibility": 9.8,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Across 200,000 experiments containing 32 independent Gaussian candidate sequences of length 20, selecting the candidate with the largest sequence mean will leave the lag-1-correlation distribution within Kolmogorov-Smirnov distance 0.01 of that for a fixed candidate, whereas selecting the candidate with the largest observed lag-1 correlation will make P(r > 0.40) exceed 0.50.",
+      "rationale": "For Gaussian data, a sequence's mean is independent of its centered residual geometry, predicting invariance under mean-based selection, while direct selection on the tested statistic should cause severe post-selection distortion. This distinguishes benign from harmful selection mechanisms rather than treating all uplift selection as equivalent.",
+      "novelty": 9.7,
+      "feasibility": 9.8,
+      "info_gain": 9.8,
+      "chosen": true,
+      "outcome": "refuted"
+    },
+    {
+      "id": 8,
+      "statement": "Using 20,000 deterministic null sequences from each of Gaussian, standardized lognormal, Bernoulli(0.10), and Bernoulli(0.50) marginals, a permutation test that permutes sequence order and uses randomized tie handling—restricted to permutations for which the statistic is defined in binary cases—will reject between 4.5% and 5.5% of defined sequences at level 0.05 in every condition, while the ordinary Pearson t-test treating the 19 adjacent pairs as independent will differ from 5% by at least 2 percentage points in at least one condition.",
+      "rationale": "Exchangeability supplies a computational null calibration that respects overlap, discreteness, and marginal shape. Comparing it with the ordinary independent-pair test directly addresses the survey's central gap and yields a practical inference procedure if the parametric approximation is miscalibrated.",
+      "novelty": 9.1,
+      "feasibility": 9.5,
+      "info_gain": 9.7,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Simulate 200,000 independent pools of 32 length-20 Gaussian sequences and compare lag-1 autocorrelations for a fixed candidate, the maximum-mean candidate, and the maximum-autocorrelation candidate.",
+    "protocol": "1. Use Python 3.11 or later with numpy==1.26.4, scipy==1.12.0, and matplotlib==3.8.3; do not use external data or network resources after package installation.\n2. Initialize exactly one random generator as `rng = numpy.random.Generator(numpy.random.PCG64(20250308))`.\n3. Set `N_EXPERIMENTS = 200000`, `N_CANDIDATES = 32`, `SEQUENCE_LENGTH = 20`, and `BATCH_SIZE = 5000`. Allocate three float64 arrays of length 200,000 named `r_fixed`, `r_max_mean`, and `r_max_r`.\n4. Process the experiments in 40 consecutive batches. For each batch, generate `z = rng.standard_normal((5000, 32, 20), dtype=numpy.float64)`. Each `z[e,c,:]` is one independent candidate sequence of 20 IID N(0,1) observations; do not normalize, round, filter, or otherwise transform the generated values.\n5. Compute each candidate's sequence mean as `candidate_mean = z.mean(axis=2)`. Define the fixed candidate as candidate index 0. Define the mean-selected candidate index as `idx_mean = numpy.argmax(candidate_mean, axis=1)`, with NumPy's default first-index tie behavior.\n6. Compute all candidate lag-1 correlations in vectorized float64 arithmetic using `x = z[:, :, :-1]`, `y = z[:, :, 1:]`, `xc = x - x.mean(axis=2, keepdims=True)`, `yc = y - y.mean(axis=2, keepdims=True)`, and `r = numpy.sum(xc*yc, axis=2) / numpy.sqrt(numpy.sum(xc*xc, axis=2) * numpy.sum(yc*yc, axis=2))`. This is the row-wise Pearson correlation corresponding to `numpy.corrcoef(z[e,c,:-1], z[e,c,1:])[0,1]`. Do not clip or Fisher-transform `r`.\n7. In the first batch only, verify the implementation on the first 256 candidate sequences in row-major order by separately evaluating `numpy.corrcoef(s[:-1], s[1:])[0,1]` for each sequence. Abort with an error unless every value is finite and the maximum absolute difference from the vectorized result is at most `1e-12`.\n8. For each experiment in each batch, store `r[:,0]` in the corresponding positions of `r_fixed`; store `r[numpy.arange(5000), idx_mean]` in `r_max_mean`; compute `idx_r = numpy.argmax(r, axis=1)` and store `r[numpy.arange(5000), idx_r]` in `r_max_r`.\n9. After all batches, assert that all three result arrays contain exactly 200,000 finite values in [-1,1]. Compute the empirical two-sample Kolmogorov-Smirnov distance between `r_fixed` and `r_max_mean` as `scipy.stats.ks_2samp(r_fixed, r_max_mean, alternative='two-sided', method='asymp').statistic`; use only the statistic, not its p-value, for the decision.\n10. Compute `p_max_r_gt_040 = numpy.mean(r_max_r > 0.40)`. The inequality must be strict. Also compute `p_fixed_gt_040 = numpy.mean(r_fixed > 0.40)`, `p_max_mean_gt_040 = numpy.mean(r_max_mean > 0.40)`, and the Monte Carlo standard error `sqrt(p_max_r_gt_040*(1-p_max_r_gt_040)/200000)` as descriptive checks.\n11. Compute the 5th, 25th, 50th, 75th, and 95th empirical percentiles of each of the three arrays using `numpy.quantile(array, [0.05,0.25,0.50,0.75,0.95], method='linear')`. Save all metrics, the seed, package versions, and the final support/refutation decision to `metrics.json`.\n12. Create `lag1_selection_null.png` at 1600 by 700 pixels or larger and 150 DPI. The left panel must plot empirical CDF step curves for `r_fixed` and `r_max_mean`, label both curves, and annotate the KS distance and the 0.01 decision threshold. The right panel must plot density-normalized histograms of `r_fixed` and `r_max_r` using the common bin edges `numpy.linspace(-1,1,101)`, draw a vertical dashed line at r=0.40, and annotate `p_max_r_gt_040` and the 0.50 threshold. Include axis labels, legends, and a title stating N=200,000, 32 candidates, and length 20.\n13. Declare the hypothesis SUPPORTED if and only if both `KS(r_fixed, r_max_mean) <= 0.01` and `p_max_r_gt_040 > 0.50`. Declare it REFUTED if either condition fails; do not substitute p-values or confidence-interval criteria for these fixed decision thresholds.",
+    "metrics": [
+      "Mean-selection KS distance: the two-sample empirical Kolmogorov-Smirnov statistic between the 200,000 fixed-candidate correlations and the 200,000 maximum-mean-selected correlations.",
+      "Post-selection exceedance probability: the fraction of the 200,000 maximum-autocorrelation-selected values satisfying the strict inequality r > 0.40.",
+      "Baseline and benign-selection exceedance probabilities: the fractions of `r_fixed` and `r_max_mean` satisfying r > 0.40.",
+      "Monte Carlo standard error for the maximum-autocorrelation exceedance fraction: sqrt(p*(1-p)/200000).",
+      "Distribution summaries: 5th, 25th, 50th, 75th, and 95th empirical percentiles for fixed, maximum-mean-selected, and maximum-autocorrelation-selected correlations."
+    ],
+    "time_budget_minutes": 20,
+    "expected_if_true": "The empirical KS distance between fixed-candidate and maximum-mean-selected correlations is at most 0.01, their ECDF curves nearly overlap, and more than 50% of maximum-autocorrelation-selected experiments have r > 0.40; both conditions are required for support.",
+    "expected_if_false": "The hypothesis is refuted if the fixed-versus-maximum-mean KS distance exceeds 0.01, if the maximum-autocorrelation exceedance fraction is at most 0.50, or if both failures occur."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T22:56:01+00:00",
+      "finished_at": "2026-07-19T23:00:06+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "refuted",
+      "notes": "The maximum-mean selection condition passed: its lag-1 correlation distribution was very close to the fixed-candidate distribution, with KS distance 0.002675, below the 0.01 threshold. However, only 0.450565 of maximum-autocorrelation-selected experiments had r > 0.40, below the required 0.50; with MCSE 0.001113 and 200,000 experiments, this shortfall is decisive rather than sampling noise. Because both conditions were required, the hypothesis is refuted."
+    }
+  ],
+  "verdict": "refuted",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 5.5,
+  "error": ""
+}

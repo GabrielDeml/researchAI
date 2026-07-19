@@ -1,0 +1,169 @@
+{
+  "block_size": 48,
+  "bootstrap_rate_maximum": 0.8940188877229801,
+  "bootstrap_rate_mean": 0.5621825813221405,
+  "bootstrap_rate_minimum": 0.20776495278069254,
+  "bootstrap_seed": 8675309,
+  "criteria": {
+    "abs_disjoint_decision_autocorrelation_lt_0_10": false,
+    "abs_disjoint_uplift_autocorrelation_lt_0_10": false,
+    "overlap_decision_autocorrelation_gt_0_80": true,
+    "overlap_uplift_autocorrelation_gt_0_90": true,
+    "se_underestimation_factor_ge_3_00": true
+  },
+  "disjoint": {
+    "eligible_sample_size": {
+      "count": 20,
+      "maximum": 6280.0,
+      "mean": 6138.85,
+      "minimum": 6016.0,
+      "p05": 6023.6,
+      "p25": 6092.5,
+      "p50": 6138.5,
+      "p75": 6182.0,
+      "p95": 6250.55,
+      "sample_std": 74.12313723584701
+    },
+    "held_out_retention": {
+      "count": 20,
+      "maximum": 1.3175850836235585,
+      "mean": 0.9596545962842663,
+      "minimum": 0.6512780610229247,
+      "p05": 0.809510404363001,
+      "p25": 0.8813753188112795,
+      "p50": 0.9653179746358618,
+      "p75": 1.029720003747325,
+      "p95": 1.086485300318098,
+      "sample_std": 0.13155623449296738
+    },
+    "n_blocks": 20,
+    "no_eligible_rule_count": 0,
+    "selected_rule_identity": {
+      "R1": {
+        "count": 19,
+        "proportion": 0.95
+      },
+      "R2": {
+        "count": 0,
+        "proportion": 0.0
+      },
+      "R3": {
+        "count": 1,
+        "proportion": 0.05
+      },
+      "R4": {
+        "count": 0,
+        "proportion": 0.0
+      },
+      "R5": {
+        "count": 0,
+        "proportion": 0.0
+      },
+      "R6": {
+        "count": 0,
+        "proportion": 0.0
+      }
+    },
+    "selected_rule_uplift": {
+      "count": 20,
+      "maximum": 0.291928362990574,
+      "mean": 0.25386206020211627,
+      "minimum": 0.20087554743983846,
+      "p05": 0.20666146528371768,
+      "p25": 0.24276415604247215,
+      "p50": 0.2513232214731415,
+      "p75": 0.2734885622592904,
+      "p95": 0.28546430248404037,
+      "sample_std": 0.02513914062637003
+    },
+    "threshold_decision_count": 12,
+    "threshold_decision_rate": 0.6
+  },
+  "experiment": "overlapping_stride1_vs_disjoint_48_seed_blocks",
+  "hypothesis_conclusion": "refuted",
+  "hypothesis_supported": false,
+  "lag1_autocorrelations": {
+    "disjoint_decision": -0.43034894730929263,
+    "disjoint_uplift": -0.5155324650205372,
+    "overlap_decision": 0.8626855545671421,
+    "overlap_uplift": 0.9734845058947076
+  },
+  "master_seed": 20250308,
+  "n_bootstrap_replicates": 2000,
+  "n_disjoint_blocks": 20,
+  "n_overlapping_windows": 953,
+  "n_seed_experiments": 1000,
+  "observations_per_split_per_seed": 256,
+  "overlapping": {
+    "eligible_sample_size": {
+      "count": 953,
+      "maximum": 6313.0,
+      "mean": 6140.196222455404,
+      "minimum": 6000.0,
+      "p05": 6041.0,
+      "p25": 6098.0,
+      "p50": 6138.0,
+      "p75": 6175.0,
+      "p95": 6257.0,
+      "sample_std": 60.80187471541026
+    },
+    "held_out_retention": {
+      "count": 953,
+      "maximum": 1.5895068645302841,
+      "mean": 0.9653857691515763,
+      "minimum": 0.5615584634803082,
+      "p05": 0.7699124863241917,
+      "p25": 0.8785540809743049,
+      "p50": 0.9598526148506695,
+      "p75": 1.028410467189561,
+      "p95": 1.2271864846763845,
+      "sample_std": 0.14154914884110978
+    },
+    "n_blocks": 953,
+    "no_eligible_rule_count": 0,
+    "selected_rule_identity": {
+      "R1": {
+        "count": 936,
+        "proportion": 0.9821615949632738
+      },
+      "R2": {
+        "count": 0,
+        "proportion": 0.0
+      },
+      "R3": {
+        "count": 5,
+        "proportion": 0.005246589716684155
+      },
+      "R4": {
+        "count": 10,
+        "proportion": 0.01049317943336831
+      },
+      "R5": {
+        "count": 1,
+        "proportion": 0.001049317943336831
+      },
+      "R6": {
+        "count": 1,
+        "proportion": 0.001049317943336831
+      }
+    },
+    "selected_rule_uplift": {
+      "count": 953,
+      "maximum": 0.300905645632149,
+      "mean": 0.2542608390898446,
+      "minimum": 0.18472781231392665,
+      "p05": 0.21416667974401438,
+      "p25": 0.24027382286146337,
+      "p50": 0.2552384883298037,
+      "p75": 0.27182371548044076,
+      "p95": 0.28873347439674707,
+      "sample_std": 0.022912916281729243
+    },
+    "threshold_decision_count": 567,
+    "threshold_decision_rate": 0.5949632738719832
+  },
+  "overlapping_threshold_rate": 0.5949632738719832,
+  "overlapping_threshold_se_bootstrap": 0.09532772567606723,
+  "overlapping_threshold_se_naive": 0.015901783298845326,
+  "se_underestimation_factor": 5.994782087301444
+}

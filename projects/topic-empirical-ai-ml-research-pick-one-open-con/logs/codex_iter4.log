@@ -1,11 +1,28 @@
-# Experiment design: Topic Empirical AI/ML research. Pick one open, concrete question about the behavior of machine-learning models — for example: training dynamics and generalization (grokking, double descent), in-context learning in small transformers, calibration of model confidence, prompt/format sensitivity of language models, tokenization effects, or optimizer behavior — that can be investigated rigorously with small-scale experiments runnable on a single machine (CPU or Apple-Silicon MPS), and study it end-to-end.
 
-**Hypothesis:** At a memorized cross-entropy checkpoint, adding a rank-one class-common component to the output matrix that doubles total squared parameter norm while leaving every softmax probability unchanged, then decaying only that component until total norm crosses the threshold fitted from ordinary AdamW runs, will change the sustained-95%-test-accuracy grokking step by less than 10% relative to an unmodified no-decay fork across four matched seeds.
+===== codex exec start 2026-07-19T15:08:30 model=gpt-5.6-sol timeout_minutes=30 workspace=/Users/gdeml/git/researchAI/projects/topic-empirical-ai-ml-research-pick-one-open-con/workspace =====
+Reading additional input from stdin...
+OpenAI Codex v0.144.1
+--------
+workdir: /Users/gdeml/git/researchAI/projects/topic-empirical-ai-ml-research-pick-one-open-con/workspace
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR] (network access enabled)
+reasoning effort: high
+reasoning summaries: none
+session id: 019f7c6c-778d-7550-b061-dc7dea461c14
+--------
+user
+You are an autonomous coding agent running non-interactively inside a sandboxed
+workspace. Implement and RUN the experiment below to completion, entirely within
+the current working directory. You have no one to ask questions of — make
+reasonable decisions and proceed.
 
-## Summary
-Use four seeded modular-addition grokking runs to test whether forcing total parameter norm through an AdamW-fitted threshold via a softmax-invisible rank-one output component changes the sustained-95%-test-accuracy step.
+## Experiment
+Topic: Topic Empirical AI/ML research. Pick one open, concrete question about the behavior of machine-learning models — for example: training dynamics and generalization (grokking, double descent), in-context learning in small transformers, calibration of model confidence, prompt/format sensitivity of language models, tokenization effects, or optimizer behavior — that can be investigated rigorously with small-scale experiments runnable on a single machine (CPU or Apple-Silicon MPS), and study it end-to-end.
+Goal: Use four seeded modular-addition grokking runs to test whether forcing total parameter norm through an AdamW-fitted threshold via a softmax-invisible rank-one output component changes the sustained-95%-test-accuracy step.
 
-## Protocol
+Protocol to implement:
 1. Start in a newly created empty workspace. Set PYTHONDONTWRITEBYTECODE=1, PIP_NO_CACHE_DIR=off, MPLCONFIGDIR=<workspace>/.mplconfig, OMP_NUM_THREADS=1, MKL_NUM_THREADS=1, and OPENBLAS_NUM_THREADS=1. Create the environment with `python -m venv --system-site-packages .venv`. First try importing torch, numpy, and matplotlib from system packages; install only missing packages with `python -m pip install --no-cache-dir <package>`. Use CPU only, float64 tensors, one Torch thread, `torch.use_deterministic_algorithms(True)`, and disable MPS/CUDA. Delete pip, matplotlib, Python bytecode, and build caches before training.
 2. Implement `workspace_bytes()` by recursively summing allocated file sizes (`st_blocks*512` when available, otherwise `st_size`) within the workspace. Record the largest observed value as `maximum_workspace_bytes`. Run this guard before dependency installation, after installation, every 100 optimization steps, and before and after writing outputs. Delete caches immediately if usage exceeds 1,500,000,000 bytes; terminate with a compact flat results.json carrying `audit_disk_valid=false` if it remains above 1,800,000,000 bytes. Never write model checkpoints. Keep model and optimizer snapshots only in RAM, and save only results.json, curves.npz, and result.png.
 3. For each matched seed s in {0,1,2,3}, generate the complete modular-addition dataset over p=23: inputs are all 529 ordered pairs (a,b) in {0,...,22}^2 and the class is y=(a+b) mod 23. Construct a class-stratified split using NumPy `Generator(1000+s)`: independently permute the 23 examples of each target class and put the first 9 in training. Thus every seed has exactly 207 training and 322 test examples, with 9 training examples per class. Use full-batch training and preserve this fixed ordering throughout a run.
@@ -23,20 +40,40 @@ Use four seeded modular-addition grokking runs to test whether forcing total par
 15. Write a flat results.json with scalar keys only, including at minimum: `status`, `hypothesis_supported`, `T`, `seed_0_X` through `seed_3_X`, `seed_0_baseline_grokking_step` through `seed_3_baseline_grokking_step`, corresponding intervention steps and R values, `R_max`, per-seed checkpoint and reference steps, per-seed initial and run-maximum probability/centered-logit/cross-entropy/common-residual errors, norm-ratio errors, prediction mismatches, model-state drift, optimizer-state drift, every per-seed audit-validity flag, aggregate audit flags, and `maximum_workspace_bytes`. Use JSON null for censored or undefined numeric values; do not use NaN.
 16. Save compressed scalar curves as curves.npz. Produce result.png at 160 dpi with two columns and four seed-colored curves: the left panel plots baseline and intervention test accuracy against absolute step, with horizontal 0.95 and vertical X_s markers; the right panel plots baseline and intervention conceptual total norm with horizontal line T and vertical X_s markers. Use solid lines for baseline and dashed lines for intervention. Close the matplotlib figure, delete .mplconfig and all remaining caches, update `maximum_workspace_bytes`, rewrite results.json if that maximum changed, and verify that results.json, curves.npz, and result.png all exist and the workspace remains below 1,800,000,000 bytes.
 
-## Metrics
-- T: median total parameter norm at the sustained-95% grokking step in the four ordinary AdamW reference runs
-- X_s: first absolute step at which seed s's intervention conceptual total norm is less than or equal to T
-- G_base_s and G_intervention_s: first evaluation steps beginning 20 consecutive 10-step evaluations with test accuracy at least 0.95
-- R_s: abs(G_intervention_s-G_base_s)/G_base_s, with R_max equal to the maximum over four matched seeds
-- Initial squared-norm ratio error: abs(S_intervention/S_baseline-2) immediately after adding the rank-one component
-- Invariance errors: run-wide maxima of probability, centered-logit, cross-entropy, and class-common-residual differences over all 529 examples, plus prediction mismatch count
-- Trajectory audit: maximum absolute difference between corresponding trainable parameters and Adam moment tensors in the matched forks
-- Validity metrics: per-seed reference-grokking, checkpoint-bracketing, threshold-crossing, replay, invariance, grokking, and disk-quota flags
-- Maximum workspace bytes: largest recursively measured workspace allocation during setup, training, and output generation
+Metrics to compute: T: median total parameter norm at the sustained-95% grokking step in the four ordinary AdamW reference runs, X_s: first absolute step at which seed s's intervention conceptual total norm is less than or equal to T, G_base_s and G_intervention_s: first evaluation steps beginning 20 consecutive 10-step evaluations with test accuracy at least 0.95, R_s: abs(G_intervention_s-G_base_s)/G_base_s, with R_max equal to the maximum over four matched seeds, Initial squared-norm ratio error: abs(S_intervention/S_baseline-2) immediately after adding the rank-one component, Invariance errors: run-wide maxima of probability, centered-logit, cross-entropy, and class-common-residual differences over all 529 examples, plus prediction mismatch count, Trajectory audit: maximum absolute difference between corresponding trainable parameters and Adam moment tensors in the matched forks, Validity metrics: per-seed reference-grokking, checkpoint-bracketing, threshold-crossing, replay, invariance, grokking, and disk-quota flags, Maximum workspace bytes: largest recursively measured workspace allocation during setup, training, and output generation
+Expected if hypothesis holds: All audits pass, each intervention starts with squared norm ratio 2 within 1e-10, each X_s exists, probability and centered-logit errors remain at or below 1e-10 with zero prediction mismatches, all forks grok, and every R_s is below 0.10 so R_max<0.10; in the expected exact-null case the paired grokking steps and R_s values will be identical and zero.
+Expected if hypothesis fails: With all validity audits passing and all four comparisons defined, at least one intervention changes the sustained-95% grokking step by 10% or more, giving R_max>=0.10; a norm-threshold-causal pattern would additionally show intervention grokking delayed toward or beyond X_s despite unchanged probabilities before the crossing.
+Wall-clock budget: about 30 minutes. Keep the experiment inside it; if
+something is slow, reduce sample sizes rather than exceeding the budget.
 
-## Time budget
-30 minutes (ceiling 30).
+## Mandatory workspace conventions
+1. Create a Python virtual environment INSIDE this workspace: `python3 -m venv .venv`
+   and install dependencies into it (`.venv/bin/pip install ...`). Do not install
+   anything globally. Assume an Apple-Silicon Mac.
+2. Write all source code as files in this workspace (e.g. `experiment.py`), not as
+   throwaway one-liners. The code must be runnable again by a human.
+3. Use fixed random seeds so the run is deterministic.
+4. Actually EXECUTE the experiment with the venv Python and let it finish.
+5. Save the quantitative results to `results.json` in the workspace root. It MUST
+   be a FLAT JSON object of scalar values (numbers, strings, booleans) — one key
+   per metric, no deep nesting. Include the headline numbers that decide the
+   hypothesis. Example: {"accuracy_a": 0.91, "accuracy_b": 0.87, "p_value": 0.002, "n": 1000}
+6. Save every figure as a PNG under `figures/` (create the directory). Give files
+   descriptive names.
+7. Print a concise final summary to stdout: what you ran, the key numbers, and
+   whether they point toward supporting or refuting the hypothesis.
 
-## Expected outcomes
-- **If supported:** All audits pass, each intervention starts with squared norm ratio 2 within 1e-10, each X_s exists, probability and centered-logit errors remain at or below 1e-10 with zero prediction mismatches, all forks grok, and every R_s is below 0.10 so R_max<0.10; in the expected exact-null case the paired grokking steps and R_s values will be identical and zero.
-- **If refuted:** With all validity audits passing and all four comparisons defined, at least one intervention changes the sustained-95% grokking step by 10% or more, giving R_max>=0.10; a norm-threshold-causal pattern would additionally show intervention grokking delayed toward or beyond X_s despite unchanged probabilities before the crossing.
+Do not fabricate results — every number in results.json must come from code that
+actually ran. If a step fails, debug it and retry; if it is truly impossible
+within the budget, write results.json with an "error" field explaining why and
+still print your summary.
+
+warning: Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/gdeml/.codex/config.toml.
+codex
+I’m implementing the full deterministic protocol, including replay and invariance audits, then I’ll run it end-to-end in the local venv and verify the three quantitative artifacts plus the required figure location. I’ll keep all failures explicit in the flat JSON rather than weakening the validity rules.
+
+!!!!! RESOURCE LIMIT: workspace exceeded 2048MB disk quota; killing experiment !!!!!
+
+!!!!! TIMEOUT: wall-clock limit exceeded, sending SIGTERM to pgid=44181 and 3 descendant process(es) [44182, 44253, 44254] !!!!!
+
+===== codex exec end exit=0 timed_out=False killed_for=workspace exceeded 2048MB disk quota duration_s=10.7 =====

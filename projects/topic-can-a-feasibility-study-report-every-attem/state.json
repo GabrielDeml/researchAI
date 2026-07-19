@@ -1,0 +1,246 @@
+{
+  "slug": "topic-can-a-feasibility-study-report-every-attem",
+  "topic": "Topic Can a feasibility study report every attempted reference seed, including non-grokking runs and runs without eligible checkpoints, before defining the main intervention sample? _(auto-enqueued follow-up from topic-empirical-ai-ml-research-pick-one-open-con)_",
+  "created_at": "2026-07-19T22:18:29+00:00",
+  "updated_at": "2026-07-19T22:32:41+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Grokking Is Conditional and Fragile: A Fully-Tractable, Multi-Seed Study at 12K Parameters",
+      "authors": [
+        "Yoshiyuki Ootani"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2607.05104v1",
+      "source": "arXiv:2607.05104v1"
+    },
+    {
+      "title": "The Geometric Inductive Bias of Grokking: Bypassing Phase Transitions via Architectural Topology",
+      "authors": [
+        "Alper Yıldırım"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2603.05228v3",
+      "source": "arXiv:2603.05228v3"
+    },
+    {
+      "title": "What Does the Weight Norm Control in Grokking? Logit-Scale Mediation under Cross-Entropy",
+      "authors": [
+        "Truong Xuan Khanh"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2606.18465v1",
+      "source": "arXiv:2606.18465v1"
+    },
+    {
+      "title": "Mechanistic Insights into Grokking from the Embedding Layer",
+      "authors": [
+        "H. V. AlquBoj",
+        "Hilal AlQuabeh",
+        "Velibor Bojkovic",
+        "Munachiso Nwadike",
+        "Kentaro Inui"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2505.15624v1",
+      "source": "arXiv:2505.15624v1"
+    },
+    {
+      "title": "Grokking From Abstraction to Intelligence",
+      "authors": [
+        "Junjie Zhang",
+        "Zhen Shen",
+        "Gang Xiong",
+        "Xisong Dong"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2603.29262v1",
+      "source": "arXiv:2603.29262v1"
+    },
+    {
+      "title": "Provable Scaling Laws of Feature Emergence from Learning Dynamics of Grokking",
+      "authors": [
+        "Yuandong Tian"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2509.21519v5",
+      "source": "arXiv:2509.21519v5"
+    },
+    {
+      "title": "Learning Curves for Decision Making in Supervised Machine Learning: A Survey",
+      "authors": [
+        "Felix Mohr",
+        "Jan N. van Rijn"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2201.12150v2",
+      "source": "arXiv:2201.12150v2"
+    },
+    {
+      "title": "DOME: Recommendations for supervised machine learning validation in biology",
+      "authors": [
+        "Ian Walsh",
+        "Dmytro Fishman",
+        "Dario Garcia-Gasulla",
+        "Tiina Titma",
+        "Gianluca Pollastri",
+        "The ELIXIR Machine Learning focus group",
+        "Jen Harrow",
+        "Fotis E. Psomopoulos"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2006.16189v4",
+      "source": "arXiv:2006.16189v4"
+    },
+    {
+      "title": "The Modern Mathematics of Deep Learning",
+      "authors": [
+        "Julius Berner",
+        "Philipp Grohs",
+        "Gitta Kutyniok",
+        "Philipp Petersen"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2105.04026v2",
+      "source": "arXiv:2105.04026v2"
+    },
+    {
+      "title": "Learn to Accumulate Evidence from All Training Samples: Theory and Practice",
+      "authors": [
+        "Deep Pandey",
+        "Qi Yu"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2306.11113v2",
+      "source": "arXiv:2306.11113v2"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "In a deterministic 96-seed feasibility run with 12 deliberately injected pre-checkpoint process terminations, an append-only ledger that records each seed before launch and reconciles stale jobs after restart will account for all 96 attempts with exactly one terminal status each, whereas reconstructing attempts from checkpoint directories will omit all 12 terminated runs.",
+      "rationale": "This directly tests the survey's unvalidated assumption that every attempted seed, including runs producing no checkpoint, can be prospectively enumerated. It operationalizes the structured failure and exclusion accounting advocated by DOME [8].",
+      "novelty": 8.4,
+      "feasibility": 9.9,
+      "info_gain": 8.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For 24 deterministic mod-11 addition runs of a width-32 two-layer ReLU MLP evaluated every 25 steps for 12000 steps, retrospectively emulating checkpoint intervals of 500 rather than 25 steps will reduce the fraction of attempted seeds containing a checkpoint with at least 99% training accuracy, at most 60% test accuracy, and at least 500 remaining steps before sustained 95% test accuracy by at least 20 percentage points, while leaving the grokking rate unchanged.",
+      "rationale": "The literature does not standardize eligible checkpoints, so a completed grokking run can still be excluded solely because its trajectory was sampled too sparsely. This separates checkpoint availability from the underlying seed-level grokking outcome emphasized by Ootani [1].",
+      "novelty": 9.0,
+      "feasibility": 9.2,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "On the same 24 dense learning curves, a broad preregisterable eligibility rule requiring a memorized checkpoint with test accuracy at most 70% and at least 250 steps before grokking and a narrow rule requiring test accuracy at most 40% and at least 750 steps before grokking will produce eligible-seed sets with Jaccard similarity no greater than 0.70, and the narrow set will have a median grokking onset at least 15% later than the broad set.",
+      "rationale": "This tests whether apparently innocuous checkpoint definitions select systematically different trajectory types rather than merely changing sample size. Such sensitivity is a central unresolved gap because the retrieved intervention studies compare phases without a standard eligibility definition [2-4].",
+      "novelty": 8.8,
+      "feasibility": 9.5,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "When every mod-11 reference seed that reaches 99% training accuracy is deterministically forked to either retain its learning rate or double it, the reduction in restricted mean time to sustained 95% test accuracy estimated only among seeds whose reference trajectory satisfies the preregistered checkpoint-eligibility rule will be at least 25% larger than the reduction estimated across all memorizing attempted seeds with non-grokkers censored at 12000 steps.",
+      "rationale": "This directly tests whether reference-based eligibility changes the intervention estimand and preferentially retains trajectories with greater apparent scope for acceleration. It implements the survey's proposed distinction between unconditional feasibility and conditional checkpoint-level effects.",
+      "novelty": 9.3,
+      "feasibility": 8.8,
+      "info_gain": 9.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Among 32 deterministic mod-11 reference runs trained for 12000 steps, at least 25% of seeds that satisfy sustained 95% test accuracy by termination will first satisfy it after step 6000, causing a feasibility report that treats all step-6000 non-grokkers as permanent failures to underestimate the final attempted-seed grokking rate by at least 10 percentage points.",
+      "rationale": "Learning-curve methodology requires distinguishing right-censored delayed outcomes from permanent failure [7]. A seed ledger retaining interim non-grokkers makes that distinction measurable instead of silently redefining the reference population at an early stopping budget.",
+      "novelty": 8.5,
+      "feasibility": 9.3,
+      "info_gain": 8.9,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "Across 24 matched mod-11 runs using mathematically equivalent float32 linear layers with left-to-right versus pairwise-tree feature summation, the two numerical environments will differ in grokking or checkpoint-eligibility status for at least 20% of seeds, yielding an eligible-set Jaccard similarity below 0.80, even though their aggregate eligible-checkpoint rates differ by no more than 10 percentage points.",
+      "rationale": "Ootani [1] showed that small numerical changes can alter individual seed outcomes while aggregate narratives remain deceptively stable. This hypothesis tests whether a complete seed-level ledger reveals environment-dependent intervention-sample membership that aggregate rates conceal.",
+      "novelty": 9.2,
+      "feasibility": 8.7,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Using the observed eligibility labels from a fixed pool of 48 deterministic reference seeds, a protocol that scans a preregistered seed permutation until it obtains eight eligible runs and reports only those eight will conceal at least four attempted seeds at the median over 200 deterministic permutations and report 100% eligibility, whereas the complete ledger denominator will yield an eligibility rate no greater than 70% in at least 90% of permutations.",
+      "rationale": "This quantifies the distortion caused by replacing failed or ineligible seeds until a desired intervention sample is filled. Unlike a success-only report, the attempted-seed ledger exposes both the computational cost and the conditional nature of the resulting sample.",
+      "novelty": 8.7,
+      "feasibility": 9.8,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "For 48 paired reference and doubled-learning-rate trajectories split into 24 rule-selection and 24 held-out seeds, choosing post hoc from 12 threshold-based checkpoint-eligibility rules to maximize the apparent intervention reduction in restricted mean grokking time will yield a selected-sample effect at least 30% larger than that of a fixed broad rule on the selection seeds, but at least half of this excess will disappear when the chosen rule is applied unchanged to the held-out seeds.",
+      "rationale": "The survey notes that publishing a ledger and defining eligibility prospectively have not been validated as protections against selection. This experiment tests whether post hoc eligibility-rule search creates a winner's-curse effect even when every underlying training trajectory is retained.",
+      "novelty": 9.5,
+      "feasibility": 9.0,
+      "info_gain": 9.6,
+      "chosen": true,
+      "outcome": "supported"
+    }
+  ],
+  "design": {
+    "summary": "Generate 48 deterministic paired synthetic grokking trajectories, publish a complete pre-analysis reference-seed ledger, search 12 reference-checkpoint eligibility rules on 24 selection seeds, and measure whether the resulting apparent RMST improvement shrinks when the chosen rule is frozen and evaluated on 24 held-out seeds.",
+    "protocol": "1. Use Python 3.11 or later with numpy, pandas, and matplotlib; do not use network resources or external data. Create output files attempted_reference_ledger.csv, all_trajectories.csv.gz, rule_results.csv, summary_metrics.json, and eligibility_winners_curse.png.\n2. Define checkpoint steps as t = [100, 200, ..., 5000], the restriction horizon tau = 5000, and sigmoid(x) = 1/(1+exp(-x)). Define prospective splits before generating or examining outcomes: seed IDs 0-23 are the rule-selection split and seed IDs 24-47 are the held-out split.\n3. For each seed ID i from 0 through 47, initialize an independent numpy.random.Generator with numpy.random.default_rng(730000+i). Draw d, m, g, and h in that order using rng.normal(size=4). Set reference memorization location M_ref = exp(log(700) + 0.25*d + 0.12*m), reference post-memorization delay D_ref = exp(log(2200) + 0.50*d + 0.35*g), and reference validation-transition location G_ref = M_ref + D_ref. Model the doubled-learning-rate arm with M_double = M_ref/(2**0.65), D_double = D_ref*exp(-0.35 + 0.35*h), and G_double = M_double + D_double. Thus the two arms share seed-level difficulty but can have heterogeneous learning-rate responses.\n4. Generate checkpoint trajectories in this exact draw order: draw 50 reference training noises from Normal(0,0.012), then 50 reference validation noises from Normal(0,0.012), then 50 doubled-rate training noises, then 50 doubled-rate validation noises. For arm a in {reference, double}, calculate train_accuracy_a(t) = clip(0.05 + 0.94*sigmoid((t-M_a)/120) + train_noise_a(t), 0, 1) and validation_accuracy_a(t) = clip(0.10 + 0.88*sigmoid((t-G_a)/180) + validation_noise_a(t), 0, 1). Save all 48*2*50 rows to all_trajectories.csv.gz with seed ID, prospective split, arm, checkpoint, train accuracy, and validation accuracy.\n5. Define an arm as grokked when it has validation accuracy at least 0.90 at three consecutive checkpoints. Its observed grokking time is the first checkpoint in the earliest qualifying three-checkpoint run. If no such run exists, mark it non-grokking and set its restricted time to tau=5000. Apply this outcome definition identically to both arms.\n6. Define reference-based pair eligibility without using any doubled-rate values. The fixed broad rule B is: at least one reference checkpoint t with 400 <= t <= 3000, reference train accuracy >= 0.80, and reference validation accuracy <= 0.50. Define the 12 searchable rules as every combination of deadline D in [1200,1800,2400], training threshold A in [0.90,0.97], and validation ceiling V in [0.20,0.40], where a pair is eligible if at least one reference checkpoint satisfies 400 <= t <= D, train accuracy >= A, and validation accuracy <= V. Enumerate rules in this tie-breaking order: D ascending, then A ascending, then V ascending.\n7. Before calculating any intervention effect or defining any analysis sample, write attempted_reference_ledger.csv with exactly one row for every seed ID 0-47. Include seed ID, prospective split, M_ref, G_ref, reference grok status, reference observed grok time or the literal string CENSORED, reference restricted time, broad-rule eligibility and earliest qualifying checkpoint, and eligibility plus earliest qualifying checkpoint for each of the 12 searchable rules. Use FALSE and NA for rules with no eligible checkpoint. Assert that the ledger has 48 unique seed IDs; retain non-grokking seeds and seeds ineligible under every rule. This saved ledger is the immutable record of all attempted references.\n8. For each split s and rule r, form paired samples using only seeds eligible under r according to their reference trajectory. Calculate RMST_ref(r,s) as the arithmetic mean of reference restricted times and RMST_double(r,s) as the arithmetic mean of doubled-rate restricted times for the same seed IDs. Define the relative intervention reduction E(r,s) = [RMST_ref(r,s)-RMST_double(r,s)]/RMST_ref(r,s). Also calculate the eligible-pair count and reference and doubled-rate non-grok counts. Calculate these quantities for the broad rule and all 12 searchable rules.\n9. On the selection split only, treat a searchable rule as valid if it has at least 6 eligible pairs. Select r_star as the valid searchable rule with the largest E(r,selection), resolving exact ties by the enumeration order in step 6. If no rule is valid, record the hypothesis as refuted. Freeze r_star without modification and apply it to the held-out split. If r_star has fewer than 6 eligible held-out pairs, record the hypothesis as refuted rather than changing the rule or threshold.\n10. Define selection excess D_selection = E(r_star,selection)-E(B,selection), held-out excess D_holdout = E(r_star,heldout)-E(B,heldout), and excess-retention fraction R = D_holdout/D_selection. If D_selection <= 0, set R to positive infinity for decision purposes. Define proportional selection uplift U = E(r_star,selection)/E(B,selection)-1; if E(B,selection) <= 0, set U to negative infinity for decision purposes.\n11. Mark the hypothesis SUPPORTED if and only if all of the following hold: both broad-rule split samples and both r_star split samples contain at least 6 pairs; E(B,selection) > 0; E(r_star,selection) >= 1.30*E(B,selection), equivalently U >= 0.30; D_selection > 0; and D_holdout <= 0.50*D_selection, equivalently R <= 0.50. Mark it REFUTED if any condition fails. Do not introduce an inconclusive category and do not use confidence intervals in this primary decision.\n12. Save rule_results.csv with one row for every broad/searchable-rule by split combination and all counts and RMST quantities. Save summary_metrics.json containing r_star, its thresholds, the four broad/chosen effects, U, D_selection, D_holdout, R, ledger row count, all sample sizes, and the SUPPORTED or REFUTED decision.\n13. Create eligibility_winners_curse.png at 1800 by 900 pixels. In the left panel, plot E(r,selection) and E(r,heldout) as paired points joined by a thin line for the broad rule and all 12 searchable rules, highlighting B and r_star and drawing a vertical separator between B and the searchable rules. In the right panel, draw bars for D_selection and D_holdout, add a horizontal line at zero and a dashed line at 0.5*D_selection, and annotate U, R, the selected rule thresholds, and eligible sample sizes. Use a fixed plotting order and no random visual jitter.",
+    "metrics": [
+      "Ledger coverage: number of unique attempted reference seeds in attempted_reference_ledger.csv divided by 48; it must equal 1.0, with non-grokking and rule-ineligible seeds retained.",
+      "Rule-specific restricted mean grokking time: for arm a, rule r, and split s, RMST_a(r,s) is the mean of min(observed grok time,5000) over reference-eligible paired seeds.",
+      "Relative intervention reduction: E(r,s) = [RMST_ref(r,s)-RMST_double(r,s)]/RMST_ref(r,s), with positive values indicating faster grokking under the doubled learning rate.",
+      "Post-hoc selection uplift: U = E(r_star,selection)/E(B,selection)-1; the first hypothesis threshold is U >= 0.30.",
+      "Selection and held-out excess: D_selection = E(r_star,selection)-E(B,selection) and D_holdout = E(r_star,heldout)-E(B,heldout).",
+      "Excess-retention fraction: R = D_holdout/D_selection when D_selection > 0; at least half the excess disappears when R <= 0.50.",
+      "Eligibility and censoring counts: eligible pair count plus reference and doubled-rate non-grok counts for every rule and split, including a minimum of 6 pairs for the selected rule in each split.",
+      "Primary binary decision: SUPPORTED only when E(B,selection)>0, U>=0.30, D_selection>0, R<=0.50, and all required sample-size conditions hold; otherwise REFUTED."
+    ],
+    "time_budget_minutes": 5,
+    "expected_if_true": "The selected rule has a positive selection-split effect at least 1.30 times the broad-rule effect, while its held-out excess over the broad rule is no more than half its selection-split excess: U >= 0.30, D_selection > 0, and R <= 0.50, with at least 6 eligible pairs in each required sample and all 48 attempted references present in the ledger.",
+    "expected_if_false": "The hypothesis is refuted if the post-hoc rule fails to increase the selection-split effect by 30%, if more than half of the selected rule's excess persists on held-out seeds, if the broad selection effect is nonpositive, if the selected excess is nonpositive, if required samples contain fewer than 6 pairs, or if the ledger does not contain all 48 attempted reference seeds."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T22:22:23+00:00",
+      "finished_at": "2026-07-19T22:27:23+00:00",
+      "codex_exit": 0,
+      "timed_out": true,
+      "verdict": "supported",
+      "notes": "The chosen rule increased the selection-split effect from 0.2158 to 0.2870, giving U = 0.3301 and a positive excess of 0.0712, which meets the required 30% uplift. On held-out seeds, the excess fell to 0.0023 with R = 0.0323, well below the 0.50 limit. Both chosen-rule samples contained 11 eligible pairs, and the ledger covered all 48 attempted reference seeds despite the wall-clock timeout."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
+  "error": ""
+}

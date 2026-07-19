@@ -1,0 +1,143 @@
+
+===== codex exec start 2026-07-19T16:14:08 model=gpt-5.6-sol timeout_minutes=15 workspace=/Users/gdeml/git/researchAI/projects/topic-when-the-complete-experiment-is-repeated-a/workspace =====
+Reading additional input from stdin...
+OpenAI Codex v0.144.1
+--------
+workdir: /Users/gdeml/git/researchAI/projects/topic-when-the-complete-experiment-is-repeated-a/workspace
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR] (network access enabled)
+reasoning effort: high
+reasoning summaries: none
+session id: 019f7ca8-8b37-7b81-bce6-3981621c5cc2
+--------
+user
+You are an autonomous coding agent running non-interactively inside a sandboxed
+workspace. Implement and RUN the experiment below to completion, entirely within
+the current working directory. You have no one to ask questions of — make
+reasonable decisions and proceed.
+
+## Experiment
+Topic: Topic When the complete experiment is repeated across many independently selected master seeds, what are the sampling distributions and pass probabilities of all five preregistered conditions? _(auto-enqueued follow-up from topic-across-many-independently-generated-and-pr)_
+Goal: Repeat a hierarchical five-condition synthetic Bernoulli benchmark over 5,000 independent master-seed streams, estimate the full joint pass distribution, and compare the observed all-pass probability and pairwise phi correlations with independence and a marginally matched negative control.
+
+Protocol to implement:
+1. Use Python 3.11 or later with only numpy, scipy, and matplotlib. Set OMP_NUM_THREADS=1, OPENBLAS_NUM_THREADS=1, and MKL_NUM_THREADS=1 before importing numpy. Record the Python and package versions in a text file named versions.txt.
+2. Define five preregistered conditions C1 through C5. Every condition consists of n=200 Bernoulli trials and passes when its number of successes is at least 140. Let a=log(0.7/0.3), beta=1.2, and condition offsets d=(-0.35,-0.175,0.0,0.175,0.35). For latent environment value theta, condition c has trial success probability q_c(theta)=expit(a+d_c+beta*theta), where expit(x)=1/(1+exp(-x)). C1 is therefore the hardest condition and C5 the easiest.
+3. Create N=5000 independently reproducible master-seed streams with numpy.random.SeedSequence(20250308).spawn(5000). For each resulting master SeedSequence, call master.spawn(2) to obtain one child stream for the primary coupled experiment and one for the negative control. Instantiate every stream with numpy.random.Generator(numpy.random.PCG64DXSM(child_seed)). Do not use any other random-number source.
+4. For the primary coupled experiment under each master seed, draw one shared theta from Normal(0,1). Compute the five q_c(theta), draw K_c independently conditional on theta using rng.binomial(200,q_c), and set pass indicator I_c=1 when K_c>=140 and 0 otherwise. Store theta, all five K_c values, and all five I_c values. This one row is the complete experiment for that master seed.
+5. For the marginally matched independence negative control under the same master seed, use its separate control stream to draw five independent values theta_c from Normal(0,1). For each condition compute q_c(theta_c), draw K_c independently from Binomial(200,q_c(theta_c)), and apply the identical K_c>=140 pass rule. This control preserves each condition's marginal generator but removes the shared seed-level environment. Store its five pass indicators separately. The control is diagnostic and is not part of the primary support/refutation rule.
+6. For both primary and control matrices, estimate each marginal pass probability p_hat_c=N^(-1) sum_s I_sc; the all-five pass probability p_hat_all=N^(-1) sum_s product_c I_sc; the independence reconstruction p_hat_ind=product_c p_hat_c; and the signed dependence gap Delta=p_hat_all-p_hat_ind. Also tabulate the empirical probabilities of all 32 binary pass patterns in lexicographic C1-to-C5 order and the distribution of S=sum_c I_c for S=0,1,...,5. Save these tables as joint_pattern_probabilities.csv and pass_count_distribution.csv, with separate primary and control columns.
+7. Compute two-sided 95% Clopper-Pearson intervals for every marginal pass probability and the all-five probability using scipy.stats.beta: for k successes out of N, the lower endpoint is 0 when k=0 and otherwise beta.ppf(0.025,k,N-k+1); the upper endpoint is 1 when k=N and otherwise beta.ppf(0.975,k+1,N-k).
+8. Compute the Pearson/phi correlation for each of the 10 condition pairs from their two binary vectors. For each pair, perform an exact two-sided permutation test conditional on its margins. If n1 and n2 are the numbers passing the two conditions and x is their observed joint-pass count, enumerate every feasible overlap z from max(0,n1+n2-N) through min(n1,n2). Under permutation, Z follows scipy.stats.hypergeom(M=N,n=n1,N=n2). Compute phi(z) from the corresponding 2x2 table and define the raw p-value as the sum of hypergeometric probabilities for all z satisfying abs(phi(z))>=abs(phi(x))-1e-15. If either binary vector has zero variance, define phi=0 and p=1. Apply Holm adjustment across the 10 raw p-values: sort ascending; for sorted position j starting at 1 compute (11-j)*p_(j), take the cumulative maximum in sorted order, cap at 1, and map back to the original pairs.
+9. Estimate sampling distributions by a paired nonparametric bootstrap over master-seed rows. Use a separate Generator(PCG64DXSM(SeedSequence(8675309))) and B=10000 bootstrap replicates. In each replicate sample 5000 row indices with replacement and recompute the five marginal probabilities, p_hat_all, p_hat_ind, Delta, all 10 phi correlations, and the six probabilities P(S=k). Process replicates in batches if needed. Report the 2.5th, 50th, and 97.5th percentiles for every bootstrapped metric. Resample complete rows, never individual conditions, so the dependence structure is retained. Repeat the bootstrap separately for the negative control using Generator(PCG64DXSM(SeedSequence(8675310))).
+10. Save primary_metrics.csv and control_metrics.csv containing point estimates and confidence intervals; pairwise_phi_tests.csv containing pair names, phi, raw exact-permutation p-values, and Holm-adjusted p-values; and bootstrap_summary.csv containing the requested bootstrap percentiles. Save the raw 5000-by-5 primary and control indicator matrices as pass_indicators.npz.
+11. Create dependence_results.png at 180 dpi as a 2-by-2 figure: panel A is a primary 5-by-5 phi-correlation heat map with numeric phi annotations and an asterisk on off-diagonal cells whose Holm-adjusted p-value is below 0.01; panel B shows bars for the five primary marginal pass probabilities plus p_hat_all and p_hat_ind, with Clopper-Pearson error bars where applicable; panel C is a histogram of the 10000 primary bootstrap Delta values with vertical lines at -0.05, 0, +0.05, and the observed Delta; panel D overlays the primary and control empirical distributions of S, the number of conditions passed.
+12. Declare the hypothesis SUPPORTED if and only if both primary-data requirements hold: abs(Delta)>=0.05, and at least one of the 10 pairs simultaneously has abs(phi)>=0.20 and Holm-adjusted exact-permutation p<0.01. Otherwise declare it REFUTED. Write the decision and the exact values determining it to decision.txt. Do not use the negative control, bootstrap intervals, or expected direction of Delta as additional decision gates.
+
+Metrics to compute: Five marginal pass probabilities: p_hat_c is the fraction of the 5000 primary master seeds for which condition c has at least 140 successes out of 200, reported with exact 95% Clopper-Pearson intervals and bootstrap percentiles., All-five joint pass probability: p_hat_all is the fraction of primary master seeds on which all five indicators equal 1., Independence reconstruction: p_hat_ind is the product of the five primary marginal pass probabilities., Dependence gap: Delta=p_hat_all-p_hat_ind; the first hypothesis requirement is abs(Delta)>=0.05., Pairwise dependence: all 10 binary phi correlations, each with an exact conditional permutation p-value and Holm adjustment; the second requirement is at least one pair with abs(phi)>=0.20 and adjusted p<0.01., Full joint sampling distribution: empirical probability of each of the 32 possible five-bit pass patterns., Number-passed distribution: empirical and bootstrap probabilities P(S=k) for k=0 through 5, where S is the number of conditions passing under one master seed., Marginally matched negative-control metrics: the same marginals, joint probability, independence product, dependence gap, phi correlations, and number-passed distribution after replacing the shared theta with independent theta_c values.
+Expected if hypothesis holds: The primary coupled experiment will have an absolute all-pass dependence gap of at least 0.05 and at least one condition pair with absolute phi at least 0.20 and Holm-adjusted exact-permutation p below 0.01; the primary pass-pattern and number-passed distributions should show excess co-passing and/or co-failing relative to the product model, while the marginally matched control should have Delta near zero and phi correlations near zero.
+Expected if hypothesis fails: The hypothesis is refuted if the primary absolute dependence gap is below 0.05, or if no pair simultaneously reaches absolute phi 0.20 and Holm-adjusted exact-permutation p below 0.01; in that case the observed all-pass rate is adequately approximated by the product of marginal rates and/or no preregistered pair shows the required dependence.
+Wall-clock budget: about 15 minutes. Keep the experiment inside it; if
+something is slow, reduce sample sizes rather than exceeding the budget.
+
+## Mandatory workspace conventions
+1. Create a Python virtual environment INSIDE this workspace: `python3 -m venv .venv`
+   and install dependencies into it (`.venv/bin/pip install ...`). Do not install
+   anything globally. Assume an Apple-Silicon Mac.
+2. Write all source code as files in this workspace (e.g. `experiment.py`), not as
+   throwaway one-liners. The code must be runnable again by a human.
+3. Use fixed random seeds so the run is deterministic.
+4. Actually EXECUTE the experiment with the venv Python and let it finish.
+5. Save the quantitative results to `results.json` in the workspace root. It MUST
+   be a FLAT JSON object of scalar values (numbers, strings, booleans) — one key
+   per metric, no deep nesting. Include the headline numbers that decide the
+   hypothesis. Example: {"accuracy_a": 0.91, "accuracy_b": 0.87, "p_value": 0.002, "n": 1000}
+6. Save every figure as a PNG under `figures/` (create the directory). Give files
+   descriptive names.
+7. Print a concise final summary to stdout: what you ran, the key numbers, and
+   whether they point toward supporting or refuting the hypothesis.
+
+Do not fabricate results — every number in results.json must come from code that
+actually ran. If a step fails, debug it and retry; if it is truly impossible
+within the budget, write results.json with an "error" field explaining why and
+still print your summary.
+
+warning: Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/gdeml/.codex/config.toml.
+codex
+I’ll implement the full deterministic benchmark, including exact tests, paired bootstraps, all requested artifacts, and a rerunnable script. I’ll first inspect the workspace conventions, then create the local environment, run the experiment, and validate the outputs against the protocol.
+  → Inspect workspace instructions and existing files
+  • Create local virtual environment and install pinned dependencies
+  • Implement the deterministic experiment and artifact generation
+  • Run the full 5,000-seed experiment and 10,000-replicate bootstraps
+  • Validate outputs, rerun determinism checks as appropriate, and report results
+exec
+/bin/zsh -lc "pwd && rg --files -g 'AGENTS.md' -g '"'!*.pyc'"' -g '"'!__pycache__'"' . .. 2>/dev/null | head -50 && rg --files -g '"'!*.pyc'"' -g '"'!__pycache__'"' . | head -100 && rg -n \"complete experiment|5000|bootstrap|Bernoulli\" /Users/gdeml/.codex/memories/MEMORY.md | head -40" in /Users/gdeml/git/researchAI/projects/topic-when-the-complete-experiment-is-repeated-a/workspace
+ succeeded in 0ms:
+/Users/gdeml/git/researchAI/projects/topic-when-the-complete-experiment-is-repeated-a/workspace
+141:scope: Product planning, repository bootstrap, reference-system implementation, and QUIC transport hardening for the multipathNetworking project.
+199:- Git bootstrap for this repo already happened on `main` with a minimal `.gitignore` and initial commit `6cb1810`; the first doc-only tree was clean after commit [Task 2]
+205:- Health listens on TCP 8081 and QUIC on UDP 4433. The editable install/bootstrap path that worked was `.venv/bin/python -m pip install -c requirements.lock -e .` [Task 4]
+210:- Symptom: git operations fail with `Operation not permitted` or `.git/index.lock` errors -> cause: `.git` metadata mutation may require stronger permissions in this environment -> fix: treat repo bootstrap/staging/commit as a separate verification branch and retry with the permissions that allow `.git` writes [Task 2] [Task 3]
+213:- Symptom: QUIC loopback or packaging validation fails after a transport change -> cause: missing editable reinstall, wrong DATAGRAM size assumptions, or blocked UDP localhost binds -> fix: reinstall through the pinned bootstrap path, verify encoded frame size against the true transport limit, and separate Docker-daemon absence from actual transport regressions [Task 4]
+
+The workspace is empty and contains no additional AGENTS.md instructions; memory had no experiment-specific prior decisions to carry forward.
+  ✓ Inspect workspace instructions and existing files
+  → Create local virtual environment and install pinned dependencies
+  • Implement the deterministic experiment and artifact generation
+  • Run the full 5,000-seed experiment and 10,000-replicate bootstraps
+  • Validate outputs, rerun determinism checks as appropriate, and report results
+exec
+/bin/zsh -lc 'python3 --version && python3 -m venv .venv && .venv/bin/python -m pip install --upgrade pip && .venv/bin/pip install numpy scipy matplotlib' in /Users/gdeml/git/researchAI/projects/topic-when-the-complete-experiment-is-repeated-a/workspace
+ succeeded in 9306ms:
+WARNING: The directory '/Users/gdeml/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Requirement already satisfied: pip in ./.venv/lib/python3.14/site-packages (26.1.2)
+WARNING: The directory '/Users/gdeml/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Collecting numpy
+  Downloading numpy-2.5.1-cp314-cp314-macosx_14_0_arm64.whl.metadata (6.6 kB)
+Collecting scipy
+  Downloading scipy-1.18.0-cp314-cp314-macosx_14_0_arm64.whl.metadata (62 kB)
+Collecting matplotlib
+  Downloading matplotlib-3.11.1-cp314-cp314-macosx_11_0_arm64.whl.metadata (80 kB)
+Collecting contourpy>=1.0.1 (from matplotlib)
+  Downloading contourpy-1.3.3-cp314-cp314-macosx_11_0_arm64.whl.metadata (5.5 kB)
+Collecting cycler>=0.10 (from matplotlib)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib)
+  Downloading fonttools-4.63.0-cp314-cp314-macosx_10_15_universal2.whl.metadata (118 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib)
+  Downloading kiwisolver-1.5.0-cp314-cp314-macosx_11_0_arm64.whl.metadata (5.1 kB)
+Collecting packaging>=20.0 (from matplotlib)
+  Downloading packaging-26.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow>=9 (from matplotlib)
+  Downloading pillow-12.3.0-cp314-cp314-macosx_11_0_arm64.whl.metadata (9.1 kB)
+Collecting pyparsing>=3 (from matplotlib)
+  Downloading pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
+Collecting python-dateutil>=2.7 (from matplotlib)
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting six>=1.5 (from python-dateutil>=2.7->matplotlib)
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Downloading numpy-2.5.1-cp314-cp314-macosx_14_0_arm64.whl (5.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.3/5.3 MB 74.4 MB/s  0:00:00
+Downloading scipy-1.18.0-cp314-cp314-macosx_14_0_arm64.whl (20.4 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 20.4/20.4 MB 100.1 MB/s  0:00:00
+Downloading matplotlib-3.11.1-cp314-cp314-macosx_11_0_arm64.whl (9.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 107.1 MB/s  0:00:00
+Downloading contourpy-1.3.3-cp314-cp314-macosx_11_0_arm64.whl (273 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.63.0-cp314-cp314-macosx_10_15_universal2.whl (2.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 109.2 MB/s  0:00:00
+Downloading kiwisolver-1.5.0-cp314-cp314-macosx_11_0_arm64.whl (64 kB)
+Downloading packaging-26.2-py3-none-any.whl (100 kB)
+Downloading pillow-12.3.0-cp314-cp314-macosx_11_0_arm64.whl (4.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 87.1 MB/s  0:00:00
+Downloading pyparsing-3.3.2-py3-none-any.whl (122 kB)
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Installing collected packages: six, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, scipy, python-dateutil, contourpy, matplotlib
+
+Successfully installed contourpy-1.3.3 cycler-0.12.1 fonttools-4.63.0 kiwisolver-1.5.0 matplotlib-3.11.1 numpy-2.5.1 packaging-26.2 pillow-12.3.0 pyparsing-3.3.2 python-dateutil-2.9.0.post0 scipy-1.18.0 six-1.17.0
+
+codex
+The isolated environment is ready with Python 3.14.6, NumPy 2.5.1, SciPy 1.18.0, and Matplotlib 3.11.1. I’m now encoding the seed hierarchy and the bootstrap in batches so the full preregistered sample sizes fit comfortably within the time and memory budget.

@@ -183,3 +183,35 @@
 - **Verdict:** supported
 - **Key numbers:** altered_candidate_count=80; altered_common_validation_denominator=80; altered_common_validation_pass_count=80; altered_inventory_preservation_count=80; altered_inventory_preservation_denominator=80; altered_inventory_preservation_rate=1.0; altered_mutation_shape_valid_count=80; altered_mutation_shape_valid_denominator=80
 - **What I'd do differently:** Next time, repeat the experiment across independent runs and analyze each substitution class separately rather than pooling all 80 candidates, verifying that AUTH_RELATIONSHIP rejection is robust and not driven by one mutation family.
+
+## 2026-07-19 — topic-empirical-ai-ml-research-pick-one-open-con
+
+- **Topic:** Topic Empirical AI/ML research. Pick one open, concrete question about the behavior of machine-learning models — for example: training dynamics and generalization (grokking, double descent), in-context learning in small transformers, calibration of model confidence, prompt/format sensitivity of language models, tokenization effects, or optimizer behavior — that can be investigated rigorously with small-scale experiments runnable on a single machine (CPU or Apple-Silicon MPS), and study it end-to-end.
+- **Hypothesis:** At a memorized cross-entropy checkpoint, adding a rank-one class-common component to the output matrix that doubles total squared parameter norm while leaving every softmax probability unchanged, then decaying only that component until total norm crosses the threshold fitted from ordinary AdamW runs, will change the sustained-95%-test-accuracy grokking step by less than 10% relative to an unmodified no-decay fork across four matched seeds.
+- **Verdict:** broken
+- **Key numbers:** (none)
+- **What I'd do differently:** Next time, enforce a preflight workspace budget, disable package/checkpoint caching, save only scalar trajectories, and write failure results.json immediately before running the complete four-seed protocol and audits.
+
+## 2026-07-19 — topic-can-a-feasibility-study-report-every-attem
+
+- **Topic:** Topic Can a feasibility study report every attempted reference seed, including non-grokking runs and runs without eligible checkpoints, before defining the main intervention sample? _(auto-enqueued follow-up from topic-empirical-ai-ml-research-pick-one-open-con)_
+- **Hypothesis:** For 48 paired reference and doubled-learning-rate trajectories split into 24 rule-selection and 24 held-out seeds, choosing post hoc from 12 threshold-based checkpoint-eligibility rules to maximize the apparent intervention reduction in restricted mean grokking time will yield a selected-sample effect at least 30% larger than that of a fixed broad rule on the selection seeds, but at least half of this excess will disappear when the chosen rule is applied unchanged to the held-out seeds.
+- **Verdict:** supported
+- **Key numbers:** broad_heldout_double_non_grok_count=3; broad_heldout_effect=0.18833535844471438; broad_heldout_n=24; broad_heldout_n_at_least_6=True; broad_heldout_reference_non_grok_count=6; broad_selection_double_non_grok_count=3; broad_selection_effect=0.21577726218097448; broad_selection_effect_positive=True
+- **What I'd do differently:** Next time, pre-register and publish a complete seed-level ledger—including non-grokking runs and runs lacking eligible checkpoints—before defining the intervention sample, then apply identical eligibility rules to selection and held-out seeds.
+
+## 2026-07-19 — topic-across-many-independently-generated-and-pr
+
+- **Topic:** Topic Across many independently generated and prospectively defined 48-seed blocks, what are the distributions of selected-rule uplift, held-out retention, selected-rule identity, eligible sample size, and threshold-decision rate? _(auto-enqueued follow-up from topic-can-a-feasibility-study-report-every-attem)_
+- **Hypothesis:** For a deterministic sequence of 1,000 independently generated seeds analyzed as consecutive 48-seed windows, stride-1 overlapping windows will yield lag-1 autocorrelation above 0.90 for selected-rule uplift and above 0.80 for threshold decisions, whereas disjoint 48-seed blocks will have absolute lag-1 autocorrelation below 0.10 for both outcomes; treating the overlapping windows as independent will underestimate the Monte Carlo standard error of the threshold-decision rate by at least a factor of three.
+- **Verdict:** refuted
+- **Key numbers:** block_size=48; bootstrap_rate_maximum=0.8940188877229801; bootstrap_rate_mean=0.5621825813221405; bootstrap_rate_minimum=0.20776495278069254; bootstrap_seed=8675309; criteria__abs_disjoint_decision_autocorrelation_lt_0_10=False; criteria__abs_disjoint_uplift_autocorrelation_lt_0_10=False; criteria__overlap_decision_autocorrelation_gt_0_80=True
+- **What I'd do differently:** Next time, generate each 48-seed block with independent randomized seeds and independently permute block order before testing disjoint-block autocorrelation, preventing ordering artifacts from confounding the independence assessment.
+
+## 2026-07-19 — topic-under-independently-generated-20-block-seq
+
+- **Topic:** Topic Under independently generated 20-block sequences, what is the null distribution of the lag-1 sample autocorrelation computed by `numpy.corrcoef(z[:-1], z[1:])[0, 1]` for selected uplift and binary threshold decisions? _(auto-enqueued follow-up from topic-across-many-independently-generated-and-pr)_
+- **Hypothesis:** Across 200,000 experiments containing 32 independent Gaussian candidate sequences of length 20, selecting the candidate with the largest sequence mean will leave the lag-1-correlation distribution within Kolmogorov-Smirnov distance 0.01 of that for a fixed candidate, whereas selecting the candidate with the largest observed lag-1 correlation will make P(r > 0.40) exceed 0.50.
+- **Verdict:** refuted
+- **Key numbers:** batch_size=5000; bit_generator=PCG64; correlation_validation_max_abs_diff=2.220446049250313e-16; correlation_validation_sequences=256; decision=REFUTED; exceedance_condition_passed=False; figure_path=figures/lag1_selection_null.png; hypothesis_supported=False
+- **What I'd do differently:** Next time, calibrate the selection rule and r > 0.40 threshold using pilot simulations, then pre-specify criteria jointly and verify both with adequate Monte Carlo precision before running the full experiment.

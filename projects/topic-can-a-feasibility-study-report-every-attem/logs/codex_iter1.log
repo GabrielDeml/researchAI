@@ -1,0 +1,2702 @@
+
+===== codex exec start 2026-07-19T15:22:23 model=gpt-5.6-sol timeout_minutes=5 workspace=/Users/gdeml/git/researchAI/projects/topic-can-a-feasibility-study-report-every-attem/workspace =====
+Reading additional input from stdin...
+OpenAI Codex v0.144.1
+--------
+workdir: /Users/gdeml/git/researchAI/projects/topic-can-a-feasibility-study-report-every-attem/workspace
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR] (network access enabled)
+reasoning effort: high
+reasoning summaries: none
+session id: 019f7c79-2b21-7ee3-84eb-bc96d4f84d19
+--------
+user
+You are an autonomous coding agent running non-interactively inside a sandboxed
+workspace. Implement and RUN the experiment below to completion, entirely within
+the current working directory. You have no one to ask questions of — make
+reasonable decisions and proceed.
+
+## Experiment
+Topic: Topic Can a feasibility study report every attempted reference seed, including non-grokking runs and runs without eligible checkpoints, before defining the main intervention sample? _(auto-enqueued follow-up from topic-empirical-ai-ml-research-pick-one-open-con)_
+Goal: Generate 48 deterministic paired synthetic grokking trajectories, publish a complete pre-analysis reference-seed ledger, search 12 reference-checkpoint eligibility rules on 24 selection seeds, and measure whether the resulting apparent RMST improvement shrinks when the chosen rule is frozen and evaluated on 24 held-out seeds.
+
+Protocol to implement:
+1. Use Python 3.11 or later with numpy, pandas, and matplotlib; do not use network resources or external data. Create output files attempted_reference_ledger.csv, all_trajectories.csv.gz, rule_results.csv, summary_metrics.json, and eligibility_winners_curse.png.
+2. Define checkpoint steps as t = [100, 200, ..., 5000], the restriction horizon tau = 5000, and sigmoid(x) = 1/(1+exp(-x)). Define prospective splits before generating or examining outcomes: seed IDs 0-23 are the rule-selection split and seed IDs 24-47 are the held-out split.
+3. For each seed ID i from 0 through 47, initialize an independent numpy.random.Generator with numpy.random.default_rng(730000+i). Draw d, m, g, and h in that order using rng.normal(size=4). Set reference memorization location M_ref = exp(log(700) + 0.25*d + 0.12*m), reference post-memorization delay D_ref = exp(log(2200) + 0.50*d + 0.35*g), and reference validation-transition location G_ref = M_ref + D_ref. Model the doubled-learning-rate arm with M_double = M_ref/(2**0.65), D_double = D_ref*exp(-0.35 + 0.35*h), and G_double = M_double + D_double. Thus the two arms share seed-level difficulty but can have heterogeneous learning-rate responses.
+4. Generate checkpoint trajectories in this exact draw order: draw 50 reference training noises from Normal(0,0.012), then 50 reference validation noises from Normal(0,0.012), then 50 doubled-rate training noises, then 50 doubled-rate validation noises. For arm a in {reference, double}, calculate train_accuracy_a(t) = clip(0.05 + 0.94*sigmoid((t-M_a)/120) + train_noise_a(t), 0, 1) and validation_accuracy_a(t) = clip(0.10 + 0.88*sigmoid((t-G_a)/180) + validation_noise_a(t), 0, 1). Save all 48*2*50 rows to all_trajectories.csv.gz with seed ID, prospective split, arm, checkpoint, train accuracy, and validation accuracy.
+5. Define an arm as grokked when it has validation accuracy at least 0.90 at three consecutive checkpoints. Its observed grokking time is the first checkpoint in the earliest qualifying three-checkpoint run. If no such run exists, mark it non-grokking and set its restricted time to tau=5000. Apply this outcome definition identically to both arms.
+6. Define reference-based pair eligibility without using any doubled-rate values. The fixed broad rule B is: at least one reference checkpoint t with 400 <= t <= 3000, reference train accuracy >= 0.80, and reference validation accuracy <= 0.50. Define the 12 searchable rules as every combination of deadline D in [1200,1800,2400], training threshold A in [0.90,0.97], and validation ceiling V in [0.20,0.40], where a pair is eligible if at least one reference checkpoint satisfies 400 <= t <= D, train accuracy >= A, and validation accuracy <= V. Enumerate rules in this tie-breaking order: D ascending, then A ascending, then V ascending.
+7. Before calculating any intervention effect or defining any analysis sample, write attempted_reference_ledger.csv with exactly one row for every seed ID 0-47. Include seed ID, prospective split, M_ref, G_ref, reference grok status, reference observed grok time or the literal string CENSORED, reference restricted time, broad-rule eligibility and earliest qualifying checkpoint, and eligibility plus earliest qualifying checkpoint for each of the 12 searchable rules. Use FALSE and NA for rules with no eligible checkpoint. Assert that the ledger has 48 unique seed IDs; retain non-grokking seeds and seeds ineligible under every rule. This saved ledger is the immutable record of all attempted references.
+8. For each split s and rule r, form paired samples using only seeds eligible under r according to their reference trajectory. Calculate RMST_ref(r,s) as the arithmetic mean of reference restricted times and RMST_double(r,s) as the arithmetic mean of doubled-rate restricted times for the same seed IDs. Define the relative intervention reduction E(r,s) = [RMST_ref(r,s)-RMST_double(r,s)]/RMST_ref(r,s). Also calculate the eligible-pair count and reference and doubled-rate non-grok counts. Calculate these quantities for the broad rule and all 12 searchable rules.
+9. On the selection split only, treat a searchable rule as valid if it has at least 6 eligible pairs. Select r_star as the valid searchable rule with the largest E(r,selection), resolving exact ties by the enumeration order in step 6. If no rule is valid, record the hypothesis as refuted. Freeze r_star without modification and apply it to the held-out split. If r_star has fewer than 6 eligible held-out pairs, record the hypothesis as refuted rather than changing the rule or threshold.
+10. Define selection excess D_selection = E(r_star,selection)-E(B,selection), held-out excess D_holdout = E(r_star,heldout)-E(B,heldout), and excess-retention fraction R = D_holdout/D_selection. If D_selection <= 0, set R to positive infinity for decision purposes. Define proportional selection uplift U = E(r_star,selection)/E(B,selection)-1; if E(B,selection) <= 0, set U to negative infinity for decision purposes.
+11. Mark the hypothesis SUPPORTED if and only if all of the following hold: both broad-rule split samples and both r_star split samples contain at least 6 pairs; E(B,selection) > 0; E(r_star,selection) >= 1.30*E(B,selection), equivalently U >= 0.30; D_selection > 0; and D_holdout <= 0.50*D_selection, equivalently R <= 0.50. Mark it REFUTED if any condition fails. Do not introduce an inconclusive category and do not use confidence intervals in this primary decision.
+12. Save rule_results.csv with one row for every broad/searchable-rule by split combination and all counts and RMST quantities. Save summary_metrics.json containing r_star, its thresholds, the four broad/chosen effects, U, D_selection, D_holdout, R, ledger row count, all sample sizes, and the SUPPORTED or REFUTED decision.
+13. Create eligibility_winners_curse.png at 1800 by 900 pixels. In the left panel, plot E(r,selection) and E(r,heldout) as paired points joined by a thin line for the broad rule and all 12 searchable rules, highlighting B and r_star and drawing a vertical separator between B and the searchable rules. In the right panel, draw bars for D_selection and D_holdout, add a horizontal line at zero and a dashed line at 0.5*D_selection, and annotate U, R, the selected rule thresholds, and eligible sample sizes. Use a fixed plotting order and no random visual jitter.
+
+Metrics to compute: Ledger coverage: number of unique attempted reference seeds in attempted_reference_ledger.csv divided by 48; it must equal 1.0, with non-grokking and rule-ineligible seeds retained., Rule-specific restricted mean grokking time: for arm a, rule r, and split s, RMST_a(r,s) is the mean of min(observed grok time,5000) over reference-eligible paired seeds., Relative intervention reduction: E(r,s) = [RMST_ref(r,s)-RMST_double(r,s)]/RMST_ref(r,s), with positive values indicating faster grokking under the doubled learning rate., Post-hoc selection uplift: U = E(r_star,selection)/E(B,selection)-1; the first hypothesis threshold is U >= 0.30., Selection and held-out excess: D_selection = E(r_star,selection)-E(B,selection) and D_holdout = E(r_star,heldout)-E(B,heldout)., Excess-retention fraction: R = D_holdout/D_selection when D_selection > 0; at least half the excess disappears when R <= 0.50., Eligibility and censoring counts: eligible pair count plus reference and doubled-rate non-grok counts for every rule and split, including a minimum of 6 pairs for the selected rule in each split., Primary binary decision: SUPPORTED only when E(B,selection)>0, U>=0.30, D_selection>0, R<=0.50, and all required sample-size conditions hold; otherwise REFUTED.
+Expected if hypothesis holds: The selected rule has a positive selection-split effect at least 1.30 times the broad-rule effect, while its held-out excess over the broad rule is no more than half its selection-split excess: U >= 0.30, D_selection > 0, and R <= 0.50, with at least 6 eligible pairs in each required sample and all 48 attempted references present in the ledger.
+Expected if hypothesis fails: The hypothesis is refuted if the post-hoc rule fails to increase the selection-split effect by 30%, if more than half of the selected rule's excess persists on held-out seeds, if the broad selection effect is nonpositive, if the selected excess is nonpositive, if required samples contain fewer than 6 pairs, or if the ledger does not contain all 48 attempted reference seeds.
+Wall-clock budget: about 5 minutes. Keep the experiment inside it; if
+something is slow, reduce sample sizes rather than exceeding the budget.
+
+## Mandatory workspace conventions
+1. Create a Python virtual environment INSIDE this workspace: `python3 -m venv .venv`
+   and install dependencies into it (`.venv/bin/pip install ...`). Do not install
+   anything globally. Assume an Apple-Silicon Mac.
+2. Write all source code as files in this workspace (e.g. `experiment.py`), not as
+   throwaway one-liners. The code must be runnable again by a human.
+3. Use fixed random seeds so the run is deterministic.
+4. Actually EXECUTE the experiment with the venv Python and let it finish.
+5. Save the quantitative results to `results.json` in the workspace root. It MUST
+   be a FLAT JSON object of scalar values (numbers, strings, booleans) — one key
+   per metric, no deep nesting. Include the headline numbers that decide the
+   hypothesis. Example: {"accuracy_a": 0.91, "accuracy_b": 0.87, "p_value": 0.002, "n": 1000}
+6. Save every figure as a PNG under `figures/` (create the directory). Give files
+   descriptive names.
+7. Print a concise final summary to stdout: what you ran, the key numbers, and
+   whether they point toward supporting or refuting the hypothesis.
+
+Do not fabricate results — every number in results.json must come from code that
+actually ran. If a step fails, debug it and retry; if it is truly impossible
+within the budget, write results.json with an "error" field explaining why and
+still print your summary.
+
+warning: Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/gdeml/.codex/config.toml.
+codex
+I’ll implement this as a reproducible Python script, create the required in-workspace environment, run it end to end, and verify every required artifact and decision metric. I’ll first inspect the workspace and the project-specific run conventions, then build and execute the experiment.
+  → Inspect workspace and relevant project memory/conventions
+  • Create the workspace venv and install required packages
+  • Implement the deterministic experiment and artifact generation
+  • Run the experiment and debug any failures
+  • Validate schemas, counts, dimensions, determinism, and final metrics
+exec
+/bin/zsh -lc "pwd && rg --files -g '"'!*__pycache__*'"' | sed -n '1,120p' && rg -n \"attempted_reference|feasibility|topic-can-a-feasibility|researchAI\" /Users/gdeml/.codex/memories/MEMORY.md | sed -n '1,100p'" in /Users/gdeml/git/researchAI/projects/topic-can-a-feasibility-study-report-every-attem/workspace
+ succeeded in 0ms:
+/Users/gdeml/git/researchAI/projects/topic-can-a-feasibility-study-report-every-attem/workspace
+1:# Task Group: /Users/gdeml/git/researchAI autonomous research harness design, operations, and publishing
+3:applies_to: cwd=/Users/gdeml/git/researchAI; reuse_rule=safe for this repo and closely related local harness work on this Mac, but live dashboard state, branch status, locks, and publishing configuration must be rechecked before acting
+5:## Task 1: explore Claude Code, Codex plugin setup, and the initial researchAI harness plan, partial context
+9:- extensions/chronicle/resources/2026-07-18T20-41-00-DZhN-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-41-00-DZhN-10min-memory-summary.md, updated_at=2026-07-18T20:41:00+00:00, thread_id=None, harness architecture and dashboard plan) [chronicle memory]
+10:- extensions/chronicle/resources/2026-07-18T20-31-00-pzzX-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-31-00-pzzX-10min-memory-summary.md, updated_at=2026-07-18T20:31:00+00:00, thread_id=None, PLAN.md and model-routing context) [chronicle memory]
+11:- extensions/chronicle/resources/2026-07-18T20-21-00-nTtG-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-21-00-nTtG-10min-memory-summary.md, updated_at=2026-07-18T20:21:00+00:00, thread_id=None, Codex plugin install and setup) [chronicle memory]
+12:- extensions/chronicle/resources/2026-07-18T20-11-00-pcgc-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-11-00-pcgc-10min-memory-summary.md, updated_at=2026-07-18T20:11:00+00:00, thread_id=None, pivot from multipathNetworking into new researchAI folder) [chronicle memory]
+16:- researchAI, Claude Code, codex@openai-codex, /codex:setup, PLAN.md, CLIProxyAPI, sol, tera, luna, 127.0.0.1:8780, localhost:8317, queue/, projects/<slug>/, harness/llm.py, harness/literature.py
+22:- extensions/chronicle/resources/2026-07-18T21-57-00-Ahpc-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T21-57-00-Ahpc-10min-memory-summary.md, updated_at=2026-07-18T21:57:00+00:00, thread_id=None, drain mode validation and checkpoint resume) [chronicle memory]
+23:- extensions/chronicle/resources/2026-07-18T21-47-00-iUyA-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T21-47-00-iUyA-10min-memory-summary.md, updated_at=2026-07-18T21:47:00+00:00, thread_id=None, on-demand Mac operation and drain command) [chronicle memory]
+24:- extensions/chronicle/resources/2026-07-18T21-37-00-ftrx-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T21-37-00-ftrx-10min-memory-summary.md, updated_at=2026-07-18T21:37:00+00:00, thread_id=None, adversarial review and harness fixes) [chronicle memory]
+25:- extensions/chronicle/resources/2026-07-18T20-57-00-doui-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T20-57-00-doui-10min-memory-summary.md, updated_at=2026-07-18T20:57:00+00:00, thread_id=None, foundation committed and teammate lanes running) [chronicle memory]
+35:- extensions/chronicle/resources/2026-07-18T22-27-00-AQGT-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-27-00-AQGT-10min-memory-summary.md, updated_at=2026-07-18T22:27:00+00:00, thread_id=None, dashboard review of genetic-algorithms-2 and follow-up questions) [chronicle memory]
+36:- extensions/chronicle/resources/2026-07-18T22-17-00-cDPj-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-17-00-cDPj-10min-memory-summary.md, updated_at=2026-07-18T22:17:00+00:00, thread_id=None, results branch publishing and dashboard validation) [chronicle memory]
+37:- extensions/chronicle/resources/2026-07-18T22-07-00-ZYVE-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-07-00-ZYVE-10min-memory-summary.md, updated_at=2026-07-18T22:07:00+00:00, thread_id=None, runner lock and public repo creation) [chronicle memory]
+41:- results.publish, results.branch, .results-worktree, scripts/setup_results_branch.sh, GabrielDeml/researchAI, logs/codex_iter1.log, genetic-algorithms-2, REFUTED, 127.0.0.1:8780/#history, auto-genetic-algorithms-can-the-optimization-comparison-be-re
+47:- extensions/chronicle/resources/2026-07-18T22-57-00-TQZO-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-57-00-TQZO-10min-memory-summary.md, updated_at=2026-07-18T22:57:00+00:00, thread_id=None, queue and writeup-stage reproducibility follow-up) [chronicle memory]
+48:- extensions/chronicle/resources/2026-07-18T22-47-00-uiux-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-47-00-uiux-10min-memory-summary.md, updated_at=2026-07-18T22:47:00+00:00, thread_id=None, literature-search explanation and Kagi/Medium browsing) [chronicle memory]
+49:- extensions/chronicle/resources/2026-07-18T22-37-00-yCUN-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-18T22-37-00-yCUN-10min-memory-summary.md, updated_at=2026-07-18T22:37:00+00:00, thread_id=None, live review-stage report and tmux/auto-publishing context) [chronicle memory]
+59:- extensions/chronicle/resources/2026-07-19T09-11-00-hSbW-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-11-00-hSbW-10min-memory-summary.md, updated_at=2026-07-19T09:11:00+00:00, thread_id=None, self-improve and self-update edits in harness/config.py) [chronicle memory]
+69:- extensions/chronicle/resources/2026-07-19T09-51-00-IjrQ-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-51-00-IjrQ-10min-memory-summary.md, updated_at=2026-07-19T09:51:00+00:00, thread_id=None, command-history recap and blocked finish of remote setup) [chronicle memory]
+70:- extensions/chronicle/resources/2026-07-19T09-41-00-XfNE-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-41-00-XfNE-10min-memory-summary.md, updated_at=2026-07-19T09:41:00+00:00, thread_id=None, remote `ulg` install and service-file setup) [chronicle memory]
+71:- extensions/chronicle/resources/2026-07-19T09-31-00-IPgB-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-31-00-IPgB-10min-memory-summary.md, updated_at=2026-07-19T09:31:00+00:00, thread_id=None, self-improve engine completion and remote-install start) [chronicle memory]
+72:- extensions/chronicle/resources/2026-07-19T09-21-00-PqmL-10min-memory-summary.md (cwd=/Users/gdeml/git/researchAI, rollout_path=/Users/gdeml/.codex/memories/extensions/chronicle/resources/2026-07-19T09-21-00-PqmL-10min-memory-summary.md, updated_at=2026-07-19T09:21:00+00:00, thread_id=None, `harness/selfcheck.py` and follow-on self-improve work) [chronicle memory]
+92:- `uv run python -m harness drain` is the on-demand queue-processing mode in this repo: it resumes crashed work, processes queued `queue/*.md` items serially, skips auto-topic self-ideation, and exits instead of idling. It must be run from `/Users/gdeml/git/researchAI`; the same command from `/Users/gdeml/git/multipathNetworking` failed with `No module named harness` [Task 2] [chronicle memory]
+98:- The visible remote target for 24/7 deployment is `gabe@ulg`: setup installed `uv`, Codex CLI, and `CLIProxyAPI`, synced `~/researchAI`, ran `uv sync` plus `uv run python -m harness selfcheck`, created `.results-worktree` via `scripts/setup_results_branch.sh`, and staged user-level service files `cliproxyapi.service`, `researchai-supervisor.service`, and `researchai-dashboard.service` [Task 6] [chronicle memory]
+103:- Symptom: queue items exist in the dashboard but no work happens -> cause: the supervisor loop is down and the queue is only a to-do list -> fix: run `uv run python -m harness drain` or `uv run python -m harness supervise` from `/Users/gdeml/git/researchAI`, not from another repo [Task 2] [chronicle memory]
+154:- Plan iOS Speedify clone, NEPacketTunnelProvider, NETunnelProviderManager, Bonded VPN, physical-device feasibility spike, docs/02-ios-client-architecture.md, docs/03-bonding-protocol.md, App Review 5.4, QUIC DATAGRAM
+197:- The planning baseline is a Bonded VPN-style product with an iOS container app, `NEPacketTunnelProvider` extension, bonding/scheduling engine, and relay/exit-server fleet; the first mandatory milestone is a physical-device feasibility spike proving simultaneous Wi-Fi and cellular outer connections from the tunnel extension [Task 1]
+
+exec
+/bin/zsh -lc "find . -maxdepth 2 -type f -print | sort | sed -n '1,120p'
+python3 --version" in /Users/gdeml/git/researchAI/projects/topic-can-a-feasibility-study-report-every-attem/workspace
+ succeeded in 0ms:
+Python 3.14.6
+
+codex
+The workspace is clean and has Python 3.14.6 available, which satisfies the protocol. I found no existing files or local instructions to preserve, so I’m proceeding with a self-contained script and the exact fixed seed/split specification.
+Workspace is empty and Python 3.14.6 satisfies the Python 3.11+ requirement.
+  ✓ Inspect workspace and relevant project memory/conventions
+  → Create the workspace venv and install required packages
+  • Implement the deterministic experiment and artifact generation
+  • Run the experiment and debug any failures
+  • Validate schemas, counts, dimensions, determinism, and final metrics
+exec
+/bin/zsh -lc 'python3 -m venv .venv && .venv/bin/python -m pip install --upgrade pip && .venv/bin/pip install numpy pandas matplotlib' in /Users/gdeml/git/researchAI/projects/topic-can-a-feasibility-study-report-every-attem/workspace
+ succeeded in 9640ms:
+WARNING: The directory '/Users/gdeml/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Requirement already satisfied: pip in ./.venv/lib/python3.14/site-packages (26.1.2)
+WARNING: The directory '/Users/gdeml/Library/Caches/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Collecting numpy
+  Downloading numpy-2.5.1-cp314-cp314-macosx_14_0_arm64.whl.metadata (6.6 kB)
+Collecting pandas
+  Downloading pandas-3.0.3-cp314-cp314-macosx_11_0_arm64.whl.metadata (79 kB)
+Collecting matplotlib
+  Downloading matplotlib-3.11.1-cp314-cp314-macosx_11_0_arm64.whl.metadata (80 kB)
+Collecting python-dateutil>=2.8.2 (from pandas)
+  Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+Collecting contourpy>=1.0.1 (from matplotlib)
+  Downloading contourpy-1.3.3-cp314-cp314-macosx_11_0_arm64.whl.metadata (5.5 kB)
+Collecting cycler>=0.10 (from matplotlib)
+  Downloading cycler-0.12.1-py3-none-any.whl.metadata (3.8 kB)
+Collecting fonttools>=4.28.2 (from matplotlib)
+  Downloading fonttools-4.63.0-cp314-cp314-macosx_10_15_universal2.whl.metadata (118 kB)
+Collecting kiwisolver>=1.3.1 (from matplotlib)
+  Downloading kiwisolver-1.5.0-cp314-cp314-macosx_11_0_arm64.whl.metadata (5.1 kB)
+Collecting packaging>=20.0 (from matplotlib)
+  Downloading packaging-26.2-py3-none-any.whl.metadata (3.5 kB)
+Collecting pillow>=9 (from matplotlib)
+  Downloading pillow-12.3.0-cp314-cp314-macosx_11_0_arm64.whl.metadata (9.1 kB)
+Collecting pyparsing>=3 (from matplotlib)
+  Downloading pyparsing-3.3.2-py3-none-any.whl.metadata (5.8 kB)
+Collecting six>=1.5 (from python-dateutil>=2.8.2->pandas)
+  Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+Downloading numpy-2.5.1-cp314-cp314-macosx_14_0_arm64.whl (5.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 5.3/5.3 MB 74.7 MB/s  0:00:00
+Downloading pandas-3.0.3-cp314-cp314-macosx_11_0_arm64.whl (9.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.9/9.9 MB 109.6 MB/s  0:00:00
+Downloading matplotlib-3.11.1-cp314-cp314-macosx_11_0_arm64.whl (9.3 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.3/9.3 MB 101.6 MB/s  0:00:00
+Downloading contourpy-1.3.3-cp314-cp314-macosx_11_0_arm64.whl (273 kB)
+Downloading cycler-0.12.1-py3-none-any.whl (8.3 kB)
+Downloading fonttools-4.63.0-cp314-cp314-macosx_10_15_universal2.whl (2.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.9/2.9 MB 111.7 MB/s  0:00:00
+Downloading kiwisolver-1.5.0-cp314-cp314-macosx_11_0_arm64.whl (64 kB)
+Downloading packaging-26.2-py3-none-any.whl (100 kB)
+Downloading pillow-12.3.0-cp314-cp314-macosx_11_0_arm64.whl (4.8 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.8/4.8 MB 81.6 MB/s  0:00:00
+Downloading pyparsing-3.3.2-py3-none-any.whl (122 kB)
+Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+Installing collected packages: six, pyparsing, pillow, packaging, numpy, kiwisolver, fonttools, cycler, python-dateutil, contourpy, pandas, matplotlib
+
+Successfully installed contourpy-1.3.3 cycler-0.12.1 fonttools-4.63.0 kiwisolver-1.5.0 matplotlib-3.11.1 numpy-2.5.1 packaging-26.2 pandas-3.0.3 pillow-12.3.0 pyparsing-3.3.2 python-dateutil-2.9.0.post0 six-1.17.0
+
+codex
+The environment is ready with workspace-local NumPy, pandas, and Matplotlib. I’m now encoding the protocol with explicit assertions for draw order, ledger coverage, 4,800 trajectory rows, 26 rule/split result rows, the minimum-pair decision gates, and strict JSON scalar output. The ledger write is deliberately placed before any intervention-effect calculation.
+apply patch
+patch: completed
+/Users/gdeml/git/researchAI/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py
+diff --git a/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py b/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a139d26faaf57458e461eb14ca583d0f1635a826
+--- /dev/null
++++ b/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py
+@@ -0,0 +1,611 @@
++#!/usr/bin/env python3
++"""Deterministic synthetic grokking eligibility winner's-curse experiment."""
++
++from __future__ import annotations
++
++import json
++import math
++import shutil
++from dataclasses import dataclass
++from itertools import product
++from pathlib import Path
++from typing import Any
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy as np
++import pandas as pd
++
++
++ROOT = Path(__file__).resolve().parent
++FIGURES = ROOT / "figures"
++CHECKPOINTS = np.arange(100, 5001, 100, dtype=int)
++TAU = 5000
++N_SEEDS = 48
++SELECTION_IDS = tuple(range(24))
++HELDOUT_IDS = tuple(range(24, 48))
++
++
++@dataclass(frozen=True)
++class Rule:
++    rule_id: str
++    kind: str
++    order: int
++    deadline: int
++    train_threshold: float
++    validation_ceiling: float
++
++
++BROAD_RULE = Rule("B", "broad", -1, 3000, 0.80, 0.50)
++SEARCHABLE_RULES = tuple(
++    Rule(
++        rule_id=f"R{order + 1:02d}",
++        kind="searchable",
++        order=order,
++        deadline=deadline,
++        train_threshold=train_threshold,
++        validation_ceiling=validation_ceiling,
++    )
++    for order, (deadline, train_threshold, validation_ceiling) in enumerate(
++        product((1200, 1800, 2400), (0.90, 0.97), (0.20, 0.40))
++    )
++)
++ALL_RULES = (BROAD_RULE,) + SEARCHABLE_RULES
++
++
++def split_for_seed(seed_id: int) -> str:
++    """Prospective split assignment, fixed before trajectory generation."""
++    return "selection" if seed_id in SELECTION_IDS else "heldout"
++
++
++def sigmoid(x: np.ndarray) -> np.ndarray:
++    return 1.0 / (1.0 + np.exp(-x))
++
++
++def grok_outcome(validation_accuracy: np.ndarray) -> dict[str, Any]:
++    qualifying = validation_accuracy >= 0.90
++    starts = np.flatnonzero(
++        qualifying[:-2] & qualifying[1:-1] & qualifying[2:]
++    )
++    if starts.size:
++        observed = int(CHECKPOINTS[int(starts[0])])
++        return {"grokked": True, "observed_time": observed, "restricted_time": observed}
++    return {"grokked": False, "observed_time": None, "restricted_time": TAU}
++
++
++def eligibility(reference_rows: pd.DataFrame, rule: Rule) -> tuple[bool, int | None]:
++    qualifying = reference_rows.loc[
++        reference_rows["checkpoint"].between(400, rule.deadline)
++        & (reference_rows["train_accuracy"] >= rule.train_threshold)
++        & (reference_rows["validation_accuracy"] <= rule.validation_ceiling),
++        "checkpoint",
++    ]
++    if qualifying.empty:
++        return False, None
++    return True, int(qualifying.iloc[0])
++
++
++def json_scalar(value: Any) -> Any:
++    """Return a strict-JSON scalar, spelling non-finite decision sentinels."""
++    if isinstance(value, (np.bool_, bool)):
++        return bool(value)
++    if isinstance(value, (np.integer, int)):
++        return int(value)
++    if isinstance(value, (np.floating, float)):
++        numeric = float(value)
++        if math.isnan(numeric):
++            return "NaN"
++        if math.isinf(numeric):
++            return "Infinity" if numeric > 0 else "-Infinity"
++        return numeric
++    if value is None or isinstance(value, str):
++        return value
++    raise TypeError(f"Not a JSON scalar: {type(value).__name__}")
++
++
++def write_json(path: Path, payload: dict[str, Any]) -> None:
++    with path.open("w", encoding="utf-8") as handle:
++        json.dump(payload, handle, indent=2, sort_keys=True, allow_nan=False)
++        handle.write("\n")
++
++
++def generate_trajectories() -> tuple[pd.DataFrame, pd.DataFrame, dict[tuple[int, str], dict[str, Any]]]:
++    trajectory_rows: list[dict[str, Any]] = []
++    parameter_rows: list[dict[str, Any]] = []
++    outcomes: dict[tuple[int, str], dict[str, Any]] = {}
++
++    for seed_id in range(N_SEEDS):
++        rng = np.random.default_rng(730000 + seed_id)
++        d, m, g, h = rng.normal(size=4)
++
++        m_ref = math.exp(math.log(700.0) + 0.25 * d + 0.12 * m)
++        d_ref = math.exp(math.log(2200.0) + 0.50 * d + 0.35 * g)
++        g_ref = m_ref + d_ref
++        m_double = m_ref / (2.0**0.65)
++        d_double = d_ref * math.exp(-0.35 + 0.35 * h)
++        g_double = m_double + d_double
++
++        # Protocol-mandated draw order: ref train, ref validation, double train,
++        # then double validation, with exactly 50 draws in each block.
++        ref_train_noise = rng.normal(0.0, 0.012, size=50)
++        ref_validation_noise = rng.normal(0.0, 0.012, size=50)
++        double_train_noise = rng.normal(0.0, 0.012, size=50)
++        double_validation_noise = rng.normal(0.0, 0.012, size=50)
++
++        parameter_rows.append(
++            {
++                "seed_id": seed_id,
++                "prospective_split": split_for_seed(seed_id),
++                "M_ref": m_ref,
++                "G_ref": g_ref,
++            }
++        )
++
++        arms = (
++            ("reference", m_ref, g_ref, ref_train_noise, ref_validation_noise),
++            ("double", m_double, g_double, double_train_noise, double_validation_noise),
++        )
++        for arm, memorization, transition, train_noise, validation_noise in arms:
++            train_accuracy = np.clip(
++                0.05 + 0.94 * sigmoid((CHECKPOINTS - memorization) / 120.0) + train_noise,
++                0.0,
++                1.0,
++            )
++            validation_accuracy = np.clip(
++                0.10 + 0.88 * sigmoid((CHECKPOINTS - transition) / 180.0)
++                + validation_noise,
++                0.0,
++                1.0,
++            )
++            outcomes[(seed_id, arm)] = grok_outcome(validation_accuracy)
++            for checkpoint, train_value, validation_value in zip(
++                CHECKPOINTS, train_accuracy, validation_accuracy, strict=True
++            ):
++                trajectory_rows.append(
++                    {
++                        "seed_id": seed_id,
++                        "prospective_split": split_for_seed(seed_id),
++                        "arm": arm,
++                        "checkpoint": int(checkpoint),
++                        "train_accuracy": float(train_value),
++                        "validation_accuracy": float(validation_value),
++                    }
++                )
++
++    trajectories = pd.DataFrame(trajectory_rows)
++    parameters = pd.DataFrame(parameter_rows)
++    assert len(trajectories) == N_SEEDS * 2 * len(CHECKPOINTS) == 4800
++    assert len(parameters) == N_SEEDS
++    assert set(parameters.loc[parameters["prospective_split"] == "selection", "seed_id"]) == set(SELECTION_IDS)
++    assert set(parameters.loc[parameters["prospective_split"] == "heldout", "seed_id"]) == set(HELDOUT_IDS)
++    return trajectories, parameters, outcomes
++
++
++def build_and_write_ledger(
++    trajectories: pd.DataFrame,
++    parameters: pd.DataFrame,
++    outcomes: dict[tuple[int, str], dict[str, Any]],
++) -> tuple[pd.DataFrame, dict[tuple[int, str], bool]]:
++    ledger_rows: list[dict[str, Any]] = []
++    eligibility_map: dict[tuple[int, str], bool] = {}
++
++    for seed_id in range(N_SEEDS):
++        params = parameters.loc[parameters["seed_id"] == seed_id].iloc[0]
++        reference = trajectories.loc[
++            (trajectories["seed_id"] == seed_id) & (trajectories["arm"] == "reference")
++        ].sort_values("checkpoint")
++        reference_outcome = outcomes[(seed_id, "reference")]
++        row: dict[str, Any] = {
++            "seed_id": seed_id,
++            "prospective_split": params["prospective_split"],
++            "M_ref": float(params["M_ref"]),
++            "G_ref": float(params["G_ref"]),
++            "reference_grok_status": "GROKKED" if reference_outcome["grokked"] else "NON_GROKKING",
++            "reference_observed_grok_time": (
++                str(reference_outcome["observed_time"])
++                if reference_outcome["grokked"]
++                else "CENSORED"
++            ),
++            "reference_restricted_time": int(reference_outcome["restricted_time"]),
++        }
++        for rule in ALL_RULES:
++            eligible, earliest = eligibility(reference, rule)
++            eligibility_map[(seed_id, rule.rule_id)] = eligible
++            prefix = "broad_rule" if rule.rule_id == "B" else rule.rule_id
++            row[f"{prefix}_eligible"] = "TRUE" if eligible else "FALSE"
++            row[f"{prefix}_earliest_checkpoint"] = str(earliest) if eligible else "NA"
++        ledger_rows.append(row)
++
++    ledger = pd.DataFrame(ledger_rows)
++    assert len(ledger) == N_SEEDS
++    assert ledger["seed_id"].nunique() == N_SEEDS
++    assert set(ledger["seed_id"]) == set(range(N_SEEDS))
++    expected_reference_non_grok = sum(
++        not outcomes[(seed_id, "reference")]["grokked"] for seed_id in range(N_SEEDS)
++    )
++    assert int((ledger["reference_grok_status"] == "NON_GROKKING").sum()) == expected_reference_non_grok
++
++    eligibility_columns = [
++        "broad_rule_eligible",
++        *(f"{rule.rule_id}_eligible" for rule in SEARCHABLE_RULES),
++    ]
++    all_rule_ineligible = (ledger[eligibility_columns] == "FALSE").all(axis=1)
++    assert int(all_rule_ineligible.sum()) == sum(
++        not any(eligibility_map[(seed_id, rule.rule_id)] for rule in ALL_RULES)
++        for seed_id in range(N_SEEDS)
++    )
++
++    # Immutable attempted-reference record: this occurs before any paired sample
++    # is formed and before any intervention effect is calculated.
++    ledger.to_csv(ROOT / "attempted_reference_ledger.csv", index=False)
++    return ledger, eligibility_map
++
++
++def calculate_rule_results(
++    outcomes: dict[tuple[int, str], dict[str, Any]],
++    eligibility_map: dict[tuple[int, str], bool],
++) -> pd.DataFrame:
++    result_rows: list[dict[str, Any]] = []
++    for rule in ALL_RULES:
++        for split, split_ids in (("selection", SELECTION_IDS), ("heldout", HELDOUT_IDS)):
++            eligible_ids = [
++                seed_id for seed_id in split_ids if eligibility_map[(seed_id, rule.rule_id)]
++            ]
++            reference_times = np.array(
++                [outcomes[(seed_id, "reference")]["restricted_time"] for seed_id in eligible_ids],
++                dtype=float,
++            )
++            double_times = np.array(
++                [outcomes[(seed_id, "double")]["restricted_time"] for seed_id in eligible_ids],
++                dtype=float,
++            )
++            if eligible_ids:
++                rmst_reference = float(reference_times.mean())
++                rmst_double = float(double_times.mean())
++                effect = (rmst_reference - rmst_double) / rmst_reference
++            else:
++                rmst_reference = math.nan
++                rmst_double = math.nan
++                effect = math.nan
++            result_rows.append(
++                {
++                    "rule_id": rule.rule_id,
++                    "rule_type": rule.kind,
++                    "enumeration_order": rule.order,
++                    "deadline": rule.deadline,
++                    "train_threshold": rule.train_threshold,
++                    "validation_ceiling": rule.validation_ceiling,
++                    "split": split,
++                    "eligible_pair_count": len(eligible_ids),
++                    "reference_non_grok_count": sum(
++                        not outcomes[(seed_id, "reference")]["grokked"] for seed_id in eligible_ids
++                    ),
++                    "double_non_grok_count": sum(
++                        not outcomes[(seed_id, "double")]["grokked"] for seed_id in eligible_ids
++                    ),
++                    "RMST_reference": rmst_reference,
++                    "RMST_double": rmst_double,
++                    "relative_intervention_reduction": effect,
++                }
++            )
++
++    results = pd.DataFrame(result_rows)
++    assert len(results) == len(ALL_RULES) * 2 == 26
++    return results
++
++
++def result_row(rule_results: pd.DataFrame, rule_id: str, split: str) -> pd.Series:
++    matches = rule_results.loc[
++        (rule_results["rule_id"] == rule_id) & (rule_results["split"] == split)
++    ]
++    assert len(matches) == 1
++    return matches.iloc[0]
++
++
++def choose_rule(rule_results: pd.DataFrame) -> Rule | None:
++    best_rule: Rule | None = None
++    best_effect = -math.inf
++    for rule in SEARCHABLE_RULES:
++        row = result_row(rule_results, rule.rule_id, "selection")
++        if int(row["eligible_pair_count"]) >= 6:
++            effect = float(row["relative_intervention_reduction"])
++            # Strict greater-than preserves protocol enumeration order on exact ties.
++            if effect > best_effect:
++                best_effect = effect
++                best_rule = rule
++    return best_rule
++
++
++def create_figure(
++    rule_results: pd.DataFrame,
++    selected_rule: Rule,
++    uplift: float,
++    retention: float,
++    selection_excess: float,
++    heldout_excess: float,
++) -> None:
++    FIGURES.mkdir(exist_ok=True)
++    labels = [rule.rule_id for rule in ALL_RULES]
++    x_values = np.arange(len(labels), dtype=float)
++    selected_index = labels.index(selected_rule.rule_id)
++
++    fig, (ax_left, ax_right) = plt.subplots(
++        1, 2, figsize=(18, 9), dpi=100, gridspec_kw={"width_ratios": [1.65, 1.0]}
++    )
++
++    for index, rule in enumerate(ALL_RULES):
++        selection_effect = float(
++            result_row(rule_results, rule.rule_id, "selection")["relative_intervention_reduction"]
++        )
++        heldout_effect = float(
++            result_row(rule_results, rule.rule_id, "heldout")["relative_intervention_reduction"]
++        )
++        highlighted = rule.rule_id in {"B", selected_rule.rule_id}
++        color = "#c43c39" if rule.rule_id == selected_rule.rule_id else (
++            "#235789" if rule.rule_id == "B" else "#888888"
++        )
++        ax_left.plot(
++            [index - 0.13, index + 0.13],
++            [selection_effect, heldout_effect],
++            color=color,
++            linewidth=2.4 if highlighted else 0.8,
++            alpha=1.0 if highlighted else 0.65,
++            zorder=2,
++        )
++        ax_left.scatter(
++            index - 0.13,
++            selection_effect,
++            marker="o",
++            s=95 if highlighted else 42,
++            color=color,
++            edgecolor="white",
++            linewidth=0.8,
++            zorder=3,
++        )
++        ax_left.scatter(
++            index + 0.13,
++            heldout_effect,
++            marker="s",
++            s=95 if highlighted else 42,
++            color=color,
++            edgecolor="white",
++            linewidth=0.8,
++            zorder=3,
++        )
++
++    ax_left.axvline(0.5, color="black", linewidth=1.0)
++    ax_left.axhline(0.0, color="black", linewidth=0.8, alpha=0.6)
++    ax_left.set_xticks(x_values, labels)
++    ax_left.set_xlabel("Reference-checkpoint eligibility rule")
++    ax_left.set_ylabel("Relative RMST reduction, E")
++    ax_left.set_title("Rule effects on prospective selection and held-out splits")
++    ax_left.grid(axis="y", alpha=0.22)
++    ax_left.scatter([], [], marker="o", color="#666666", label="Selection")
++    ax_left.scatter([], [], marker="s", color="#666666", label="Held-out")
++    ax_left.legend(loc="best", frameon=False)
++    ax_left.text(0.0, 1.01, "Broad", transform=ax_left.get_xaxis_transform(), ha="center")
++    ax_left.text(6.5, 1.01, "Searchable rules", transform=ax_left.get_xaxis_transform(), ha="center")
++
++    bars = ax_right.bar(
++        [0, 1],
++        [selection_excess, heldout_excess],
++        color=["#c43c39", "#4c78a8"],
++        width=0.62,
++    )
++    ax_right.axhline(0.0, color="black", linewidth=1.0)
++    ax_right.axhline(
++        0.5 * selection_excess,
++        color="#7a3e9d",
++        linestyle="--",
++        linewidth=1.5,
++        label=r"$0.5D_{selection}$",
++    )
++    ax_right.set_xticks([0, 1], [r"$D_{selection}$", r"$D_{heldout}$"])
++    ax_right.set_ylabel("Excess over broad-rule effect")
++    ax_right.set_title("Selection excess and held-out retention")
++    ax_right.grid(axis="y", alpha=0.22)
++    ax_right.legend(loc="best", frameon=False)
++    for bar, value in zip(bars, (selection_excess, heldout_excess), strict=True):
++        vertical_offset = 5 if value >= 0 else -17
++        ax_right.annotate(
++            f"{value:.3f}",
++            (bar.get_x() + bar.get_width() / 2, value),
++            xytext=(0, vertical_offset),
++            textcoords="offset points",
++            ha="center",
++            va="bottom" if value >= 0 else "top",
++            fontsize=11,
++        )
++
++    selection_n = int(result_row(rule_results, selected_rule.rule_id, "selection")["eligible_pair_count"])
++    heldout_n = int(result_row(rule_results, selected_rule.rule_id, "heldout")["eligible_pair_count"])
++    annotation = (
++        f"Selected {selected_rule.rule_id}: D≤{selected_rule.deadline}, "
++        f"A≥{selected_rule.train_threshold:.2f}, V≤{selected_rule.validation_ceiling:.2f}\n"
++        f"U = {uplift:.3f}    R = {retention:.3f}\n"
++        f"Eligible pairs: selection n={selection_n}, held-out n={heldout_n}"
++    )
++    ax_right.text(
++        0.04,
++        0.97,
++        annotation,
++        transform=ax_right.transAxes,
++        va="top",
++        ha="left",
++        bbox={"boxstyle": "round,pad=0.5", "facecolor": "white", "edgecolor": "#bbbbbb", "alpha": 0.92},
++    )
++
++    fig.suptitle("Eligibility-rule winner's curse in paired synthetic grokking trajectories", fontsize=16)
++    fig.tight_layout(rect=(0, 0, 1, 0.96))
++    figure_path = FIGURES / "eligibility_winners_curse.png"
++    fig.savefig(figure_path, dpi=100, metadata={"Software": "experiment.py"})
++    plt.close(fig)
++    shutil.copyfile(figure_path, ROOT / "eligibility_winners_curse.png")
++
++
++def main() -> None:
++    trajectories, parameters, outcomes = generate_trajectories()
++    trajectories.to_csv(
++        ROOT / "all_trajectories.csv.gz",
++        index=False,
++        compression={"method": "gzip", "compresslevel": 9, "mtime": 0},
++    )
++
++    # The ledger is finalized before calculate_rule_results forms paired samples.
++    ledger, eligibility_map = build_and_write_ledger(trajectories, parameters, outcomes)
++    rule_results = calculate_rule_results(outcomes, eligibility_map)
++    rule_results.to_csv(ROOT / "rule_results.csv", index=False)
++
++    selected_rule = choose_rule(rule_results)
++    if selected_rule is None:
++        raise RuntimeError("No searchable rule has at least 6 eligible selection pairs")
++
++    broad_selection = result_row(rule_results, "B", "selection")
++    broad_heldout = result_row(rule_results, "B", "heldout")
++    chosen_selection = result_row(rule_results, selected_rule.rule_id, "selection")
++    chosen_heldout = result_row(rule_results, selected_rule.rule_id, "heldout")
++
++    e_broad_selection = float(broad_selection["relative_intervention_reduction"])
++    e_broad_heldout = float(broad_heldout["relative_intervention_reduction"])
++    e_chosen_selection = float(chosen_selection["relative_intervention_reduction"])
++    e_chosen_heldout = float(chosen_heldout["relative_intervention_reduction"])
++    selection_excess = e_chosen_selection - e_broad_selection
++    heldout_excess = e_chosen_heldout - e_broad_heldout
++    retention = heldout_excess / selection_excess if selection_excess > 0 else math.inf
++    uplift = e_chosen_selection / e_broad_selection - 1.0 if e_broad_selection > 0 else -math.inf
++
++    broad_selection_n = int(broad_selection["eligible_pair_count"])
++    broad_heldout_n = int(broad_heldout["eligible_pair_count"])
++    chosen_selection_n = int(chosen_selection["eligible_pair_count"])
++    chosen_heldout_n = int(chosen_heldout["eligible_pair_count"])
++
++    conditions = {
++        "broad_selection_n_at_least_6": broad_selection_n >= 6,
++        "broad_heldout_n_at_least_6": broad_heldout_n >= 6,
++        "chosen_selection_n_at_least_6": chosen_selection_n >= 6,
++        "chosen_heldout_n_at_least_6": chosen_heldout_n >= 6,
++        "broad_selection_effect_positive": e_broad_selection > 0,
++        "selection_uplift_at_least_30_percent": e_chosen_selection >= 1.30 * e_broad_selection,
++        "selection_excess_positive": selection_excess > 0,
++        "heldout_retention_at_most_half": heldout_excess <= 0.50 * selection_excess,
++    }
++    decision = "SUPPORTED" if all(conditions.values()) else "REFUTED"
++
++    sample_sizes = {
++        f"{row.rule_id}_{row.split}": int(row.eligible_pair_count)
++        for row in rule_results.itertuples(index=False)
++    }
++    summary_metrics = {
++        "r_star": selected_rule.rule_id,
++        "r_star_thresholds": {
++            "deadline": selected_rule.deadline,
++            "train_threshold": selected_rule.train_threshold,
++            "validation_ceiling": selected_rule.validation_ceiling,
++        },
++        "effects": {
++            "broad_selection": e_broad_selection,
++            "broad_heldout": e_broad_heldout,
++            "chosen_selection": e_chosen_selection,
++            "chosen_heldout": e_chosen_heldout,
++        },
++        "U": uplift,
++        "D_selection": selection_excess,
++        "D_holdout": heldout_excess,
++        "R": retention,
++        "ledger_row_count": len(ledger),
++        "ledger_unique_seed_count": int(ledger["seed_id"].nunique()),
++        "ledger_coverage": float(ledger["seed_id"].nunique() / N_SEEDS),
++        "all_sample_sizes": sample_sizes,
++        "broad_selection_n": broad_selection_n,
++        "broad_heldout_n": broad_heldout_n,
++        "chosen_selection_n": chosen_selection_n,
++        "chosen_heldout_n": chosen_heldout_n,
++        "decision_conditions": conditions,
++        "decision": decision,
++    }
++    # Values are finite for this deterministic run; scalar conversion remains
++    # robust to protocol-defined infinities in alternate re-runs.
++    strict_summary = {
++        key: (
++            {nested_key: json_scalar(nested_value) for nested_key, nested_value in value.items()}
++            if isinstance(value, dict) and all(not isinstance(v, dict) for v in value.values())
++            else value
++        )
++        for key, value in summary_metrics.items()
++    }
++    write_json(ROOT / "summary_metrics.json", strict_summary)
++
++    create_figure(
++        rule_results,
++        selected_rule,
++        uplift,
++        retention,
++        selection_excess,
++        heldout_excess,
++    )
++
++    eligibility_columns = [f"{rule.rule_id}_eligible" for rule in SEARCHABLE_RULES]
++    all_searchable_ineligible_count = int((ledger[eligibility_columns] == "FALSE").all(axis=1).sum())
++    reference_non_grok_count = int((ledger["reference_grok_status"] == "NON_GROKKING").sum())
++    results = {
++        "seed_count": N_SEEDS,
++        "trajectory_row_count": len(trajectories),
++        "ledger_row_count": len(ledger),
++        "ledger_unique_seed_count": int(ledger["seed_id"].nunique()),
++        "ledger_coverage": float(ledger["seed_id"].nunique() / N_SEEDS),
++        "ledger_reference_non_grok_count": reference_non_grok_count,
++        "ledger_all_searchable_rules_ineligible_count": all_searchable_ineligible_count,
++        "rule_result_row_count": len(rule_results),
++        "r_star": selected_rule.rule_id,
++        "r_star_deadline": selected_rule.deadline,
++        "r_star_train_threshold": selected_rule.train_threshold,
++        "r_star_validation_ceiling": selected_rule.validation_ceiling,
++        "broad_selection_effect": e_broad_selection,
++        "broad_heldout_effect": e_broad_heldout,
++        "chosen_selection_effect": e_chosen_selection,
++        "chosen_heldout_effect": e_chosen_heldout,
++        "post_hoc_selection_uplift_U": uplift,
++        "selection_excess_D_selection": selection_excess,
++        "heldout_excess_D_holdout": heldout_excess,
++        "excess_retention_fraction_R": retention,
++        "broad_selection_n": broad_selection_n,
++        "broad_heldout_n": broad_heldout_n,
++        "chosen_selection_n": chosen_selection_n,
++        "chosen_heldout_n": chosen_heldout_n,
++        "broad_selection_reference_non_grok_count": int(broad_selection["reference_non_grok_count"]),
++        "broad_selection_double_non_grok_count": int(broad_selection["double_non_grok_count"]),
++        "broad_heldout_reference_non_grok_count": int(broad_heldout["reference_non_grok_count"]),
++        "broad_heldout_double_non_grok_count": int(broad_heldout["double_non_grok_count"]),
++        "chosen_selection_reference_non_grok_count": int(chosen_selection["reference_non_grok_count"]),
++        "chosen_selection_double_non_grok_count": int(chosen_selection["double_non_grok_count"]),
++        "chosen_heldout_reference_non_grok_count": int(chosen_heldout["reference_non_grok_count"]),
++        "chosen_heldout_double_non_grok_count": int(chosen_heldout["double_non_grok_count"]),
++        **conditions,
++        "decision": decision,
++    }
++    assert all(not isinstance(value, (dict, list, tuple)) for value in results.values())
++    write_json(ROOT / "results.json", {key: json_scalar(value) for key, value in results.items()})
++
++    print(
++        "Ran 48 deterministic paired trajectories and evaluated 12 searchable eligibility rules "
++        "against the broad rule."
++    )
++    print(
++        f"Selected {selected_rule.rule_id} (D={selected_rule.deadline}, "
++        f"A={selected_rule.train_threshold:.2f}, V={selected_rule.validation_ceiling:.2f}); "
++        f"E broad/chosen selection={e_broad_selection:.4f}/{e_chosen_selection:.4f}, "
++        f"E broad/chosen held-out={e_broad_heldout:.4f}/{e_chosen_heldout:.4f}."
++    )
++    print(
++        f"U={uplift:.4f}, D_selection={selection_excess:.4f}, "
++        f"D_holdout={heldout_excess:.4f}, R={retention:.4f}; "
++        f"eligible n broad={broad_selection_n}/{broad_heldout_n}, "
++        f"chosen={chosen_selection_n}/{chosen_heldout_n}."
++    )
++    print(f"Decision: {decision}.")
++
++
++if __name__ == "__main__":
++    main()
+
+diff --git a/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py b/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a139d26faaf57458e461eb14ca583d0f1635a826
+--- /dev/null
++++ b/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py
+@@ -0,0 +1,611 @@
++#!/usr/bin/env python3
++"""Deterministic synthetic grokking eligibility winner's-curse experiment."""
++
++from __future__ import annotations
++
++import json
++import math
++import shutil
++from dataclasses import dataclass
++from itertools import product
++from pathlib import Path
++from typing import Any
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy as np
++import pandas as pd
++
++
++ROOT = Path(__file__).resolve().parent
++FIGURES = ROOT / "figures"
++CHECKPOINTS = np.arange(100, 5001, 100, dtype=int)
++TAU = 5000
++N_SEEDS = 48
++SELECTION_IDS = tuple(range(24))
++HELDOUT_IDS = tuple(range(24, 48))
++
++
++@dataclass(frozen=True)
++class Rule:
++    rule_id: str
++    kind: str
++    order: int
++    deadline: int
++    train_threshold: float
++    validation_ceiling: float
++
++
++BROAD_RULE = Rule("B", "broad", -1, 3000, 0.80, 0.50)
++SEARCHABLE_RULES = tuple(
++    Rule(
++        rule_id=f"R{order + 1:02d}",
++        kind="searchable",
++        order=order,
++        deadline=deadline,
++        train_threshold=train_threshold,
++        validation_ceiling=validation_ceiling,
++    )
++    for order, (deadline, train_threshold, validation_ceiling) in enumerate(
++        product((1200, 1800, 2400), (0.90, 0.97), (0.20, 0.40))
++    )
++)
++ALL_RULES = (BROAD_RULE,) + SEARCHABLE_RULES
++
++
++def split_for_seed(seed_id: int) -> str:
++    """Prospective split assignment, fixed before trajectory generation."""
++    return "selection" if seed_id in SELECTION_IDS else "heldout"
++
++
++def sigmoid(x: np.ndarray) -> np.ndarray:
++    return 1.0 / (1.0 + np.exp(-x))
++
++
++def grok_outcome(validation_accuracy: np.ndarray) -> dict[str, Any]:
++    qualifying = validation_accuracy >= 0.90
++    starts = np.flatnonzero(
++        qualifying[:-2] & qualifying[1:-1] & qualifying[2:]
++    )
++    if starts.size:
++        observed = int(CHECKPOINTS[int(starts[0])])
++        return {"grokked": True, "observed_time": observed, "restricted_time": observed}
++    return {"grokked": False, "observed_time": None, "restricted_time": TAU}
++
++
++def eligibility(reference_rows: pd.DataFrame, rule: Rule) -> tuple[bool, int | None]:
++    qualifying = reference_rows.loc[
++        reference_rows["checkpoint"].between(400, rule.deadline)
++        & (reference_rows["train_accuracy"] >= rule.train_threshold)
++        & (reference_rows["validation_accuracy"] <= rule.validation_ceiling),
++        "checkpoint",
++    ]
++    if qualifying.empty:
++        return False, None
++    return True, int(qualifying.iloc[0])
++
++
++def json_scalar(value: Any) -> Any:
++    """Return a strict-JSON scalar, spelling non-finite decision sentinels."""
++    if isinstance(value, (np.bool_, bool)):
++        return bool(value)
++    if isinstance(value, (np.integer, int)):
++        return int(value)
++    if isinstance(value, (np.floating, float)):
++        numeric = float(value)
++        if math.isnan(numeric):
++            return "NaN"
++        if math.isinf(numeric):
++            return "Infinity" if numeric > 0 else "-Infinity"
++        return numeric
++    if value is None or isinstance(value, str):
++        return value
++    raise TypeError(f"Not a JSON scalar: {type(value).__name__}")
++
++
++def write_json(path: Path, payload: dict[str, Any]) -> None:
++    with path.open("w", encoding="utf-8") as handle:
++        json.dump(payload, handle, indent=2, sort_keys=True, allow_nan=False)
++        handle.write("\n")
++
++
++def generate_trajectories() -> tuple[pd.DataFrame, pd.DataFrame, dict[tuple[int, str], dict[str, Any]]]:
++    trajectory_rows: list[dict[str, Any]] = []
++    parameter_rows: list[dict[str, Any]] = []
++    outcomes: dict[tuple[int, str], dict[str, Any]] = {}
++
++    for seed_id in range(N_SEEDS):
++        rng = np.random.default_rng(730000 + seed_id)
++        d, m, g, h = rng.normal(size=4)
++
++        m_ref = math.exp(math.log(700.0) + 0.25 * d + 0.12 * m)
++        d_ref = math.exp(math.log(2200.0) + 0.50 * d + 0.35 * g)
++        g_ref = m_ref + d_ref
++        m_double = m_ref / (2.0**0.65)
++        d_double = d_ref * math.exp(-0.35 + 0.35 * h)
++        g_double = m_double + d_double
++
++        # Protocol-mandated draw order: ref train, ref validation, double train,
++        # then double validation, with exactly 50 draws in each block.
++        ref_train_noise = rng.normal(0.0, 0.012, size=50)
++        ref_validation_noise = rng.normal(0.0, 0.012, size=50)
++        double_train_noise = rng.normal(0.0, 0.012, size=50)
++        double_validation_noise = rng.normal(0.0, 0.012, size=50)
++
++        parameter_rows.append(
++            {
++                "seed_id": seed_id,
++                "prospective_split": split_for_seed(seed_id),
++                "M_ref": m_ref,
++                "G_ref": g_ref,
++            }
++        )
++
++        arms = (
++            ("reference", m_ref, g_ref, ref_train_noise, ref_validation_noise),
++            ("double", m_double, g_double, double_train_noise, double_validation_noise),
++        )
++        for arm, memorization, transition, train_noise, validation_noise in arms:
++            train_accuracy = np.clip(
++                0.05 + 0.94 * sigmoid((CHECKPOINTS - memorization) / 120.0) + train_noise,
++                0.0,
++                1.0,
++            )
++            validation_accuracy = np.clip(
++                0.10 + 0.88 * sigmoid((CHECKPOINTS - transition) / 180.0)
++                + validation_noise,
++                0.0,
++                1.0,
++            )
++            outcomes[(seed_id, arm)] = grok_outcome(validation_accuracy)
++            for checkpoint, train_value, validation_value in zip(
++                CHECKPOINTS, train_accuracy, validation_accuracy, strict=True
++            ):
++                trajectory_rows.append(
++                    {
++                        "seed_id": seed_id,
++                        "prospective_split": split_for_seed(seed_id),
++                        "arm": arm,
++                        "checkpoint": int(checkpoint),
++                        "train_accuracy": float(train_value),
++                        "validation_accuracy": float(validation_value),
++                    }
++                )
++
++    trajectories = pd.DataFrame(trajectory_rows)
++    parameters = pd.DataFrame(parameter_rows)
++    assert len(trajectories) == N_SEEDS * 2 * len(CHECKPOINTS) == 4800
++    assert len(parameters) == N_SEEDS
++    assert set(parameters.loc[parameters["prospective_split"] == "selection", "seed_id"]) == set(SELECTION_IDS)
++    assert set(parameters.loc[parameters["prospective_split"] == "heldout", "seed_id"]) == set(HELDOUT_IDS)
++    return trajectories, parameters, outcomes
++
++
++def build_and_write_ledger(
++    trajectories: pd.DataFrame,
++    parameters: pd.DataFrame,
++    outcomes: dict[tuple[int, str], dict[str, Any]],
++) -> tuple[pd.DataFrame, dict[tuple[int, str], bool]]:
++    ledger_rows: list[dict[str, Any]] = []
++    eligibility_map: dict[tuple[int, str], bool] = {}
++
++    for seed_id in range(N_SEEDS):
++        params = parameters.loc[parameters["seed_id"] == seed_id].iloc[0]
++        reference = trajectories.loc[
++            (trajectories["seed_id"] == seed_id) & (trajectories["arm"] == "reference")
++        ].sort_values("checkpoint")
++        reference_outcome = outcomes[(seed_id, "reference")]
++        row: dict[str, Any] = {
++            "seed_id": seed_id,
++            "prospective_split": params["prospective_split"],
++            "M_ref": float(params["M_ref"]),
++            "G_ref": float(params["G_ref"]),
++            "reference_grok_status": "GROKKED" if reference_outcome["grokked"] else "NON_GROKKING",
++            "reference_observed_grok_time": (
++                str(reference_outcome["observed_time"])
++                if reference_outcome["grokked"]
++                else "CENSORED"
++            ),
++            "reference_restricted_time": int(reference_outcome["restricted_time"]),
++        }
++        for rule in ALL_RULES:
++            eligible, earliest = eligibility(reference, rule)
++            eligibility_map[(seed_id, rule.rule_id)] = eligible
++            prefix = "broad_rule" if rule.rule_id == "B" else rule.rule_id
++            row[f"{prefix}_eligible"] = "TRUE" if eligible else "FALSE"
++            row[f"{prefix}_earliest_checkpoint"] = str(earliest) if eligible else "NA"
++        ledger_rows.append(row)
++
++    ledger = pd.DataFrame(ledger_rows)
++    assert len(ledger) == N_SEEDS
++    assert ledger["seed_id"].nunique() == N_SEEDS
++    assert set(ledger["seed_id"]) == set(range(N_SEEDS))
++    expected_reference_non_grok = sum(
++        not outcomes[(seed_id, "reference")]["grokked"] for seed_id in range(N_SEEDS)
++    )
++    assert int((ledger["reference_grok_status"] == "NON_GROKKING").sum()) == expected_reference_non_grok
++
++    eligibility_columns = [
++        "broad_rule_eligible",
++        *(f"{rule.rule_id}_eligible" for rule in SEARCHABLE_RULES),
++    ]
++    all_rule_ineligible = (ledger[eligibility_columns] == "FALSE").all(axis=1)
++    assert int(all_rule_ineligible.sum()) == sum(
++        not any(eligibility_map[(seed_id, rule.rule_id)] for rule in ALL_RULES)
++        for seed_id in range(N_SEEDS)
++    )
++
++    # Immutable attempted-reference record: this occurs before any paired sample
++    # is formed and before any intervention effect is calculated.
++    ledger.to_csv(ROOT / "attempted_reference_ledger.csv", index=False)
++    return ledger, eligibility_map
++
++
++def calculate_rule_results(
++    outcomes: dict[tuple[int, str], dict[str, Any]],
++    eligibility_map: dict[tuple[int, str], bool],
++) -> pd.DataFrame:
++    result_rows: list[dict[str, Any]] = []
++    for rule in ALL_RULES:
++        for split, split_ids in (("selection", SELECTION_IDS), ("heldout", HELDOUT_IDS)):
++            eligible_ids = [
++                seed_id for seed_id in split_ids if eligibility_map[(seed_id, rule.rule_id)]
++            ]
++            reference_times = np.array(
++                [outcomes[(seed_id, "reference")]["restricted_time"] for seed_id in eligible_ids],
++                dtype=float,
++            )
++            double_times = np.array(
++                [outcomes[(seed_id, "double")]["restricted_time"] for seed_id in eligible_ids],
++                dtype=float,
++            )
++            if eligible_ids:
++                rmst_reference = float(reference_times.mean())
++                rmst_double = float(double_times.mean())
++                effect = (rmst_reference - rmst_double) / rmst_reference
++            else:
++                rmst_reference = math.nan
++                rmst_double = math.nan
++                effect = math.nan
++            result_rows.append(
++                {
++                    "rule_id": rule.rule_id,
++                    "rule_type": rule.kind,
++                    "enumeration_order": rule.order,
++                    "deadline": rule.deadline,
++                    "train_threshold": rule.train_threshold,
++                    "validation_ceiling": rule.validation_ceiling,
++                    "split": split,
++                    "eligible_pair_count": len(eligible_ids),
++                    "reference_non_grok_count": sum(
++                        not outcomes[(seed_id, "reference")]["grokked"] for seed_id in eligible_ids
++                    ),
++                    "double_non_grok_count": sum(
++                        not outcomes[(seed_id, "double")]["grokked"] for seed_id in eligible_ids
++                    ),
++                    "RMST_reference": rmst_reference,
++                    "RMST_double": rmst_double,
++                    "relative_intervention_reduction": effect,
++                }
++            )
++
++    results = pd.DataFrame(result_rows)
++    assert len(results) == len(ALL_RULES) * 2 == 26
++    return results
++
++
++def result_row(rule_results: pd.DataFrame, rule_id: str, split: str) -> pd.Series:
++    matches = rule_results.loc[
++        (rule_results["rule_id"] == rule_id) & (rule_results["split"] == split)
++    ]
++    assert len(matches) == 1
++    return matches.iloc[0]
++
++
++def choose_rule(rule_results: pd.DataFrame) -> Rule | None:
++    best_rule: Rule | None = None
++    best_effect = -math.inf
++    for rule in SEARCHABLE_RULES:
++        row = result_row(rule_results, rule.rule_id, "selection")
++        if int(row["eligible_pair_count"]) >= 6:
++            effect = float(row["relative_intervention_reduction"])
++            # Strict greater-than preserves protocol enumeration order on exact ties.
++            if effect > best_effect:
++                best_effect = effect
++                best_rule = rule
++    return best_rule
++
++
++def create_figure(
++    rule_results: pd.DataFrame,
++    selected_rule: Rule,
++    uplift: float,
++    retention: float,
++    selection_excess: float,
++    heldout_excess: float,
++) -> None:
++    FIGURES.mkdir(exist_ok=True)
++    labels = [rule.rule_id for rule in ALL_RULES]
++    x_values = np.arange(len(labels), dtype=float)
++    selected_index = labels.index(selected_rule.rule_id)
++
++    fig, (ax_left, ax_right) = plt.subplots(
++        1, 2, figsize=(18, 9), dpi=100, gridspec_kw={"width_ratios": [1.65, 1.0]}
++    )
++
++    for index, rule in enumerate(ALL_RULES):
++        selection_effect = float(
++            result_row(rule_results, rule.rule_id, "selection")["relative_intervention_reduction"]
++        )
++        heldout_effect = float(
++            result_row(rule_results, rule.rule_id, "heldout")["relative_intervention_reduction"]
++        )
++        highlighted = rule.rule_id in {"B", selected_rule.rule_id}
++        color = "#c43c39" if rule.rule_id == selected_rule.rule_id else (
++            "#235789" if rule.rule_id == "B" else "#888888"
++        )
++        ax_left.plot(
++            [index - 0.13, index + 0.13],
++            [selection_effect, heldout_effect],
++            color=color,
++            linewidth=2.4 if highlighted else 0.8,
++            alpha=1.0 if highlighted else 0.65,
++            zorder=2,
++        )
++        ax_left.scatter(
++            index - 0.13,
++            selection_effect,
++            marker="o",
++            s=95 if highlighted else 42,
++            color=color,
++            edgecolor="white",
++            linewidth=0.8,
++            zorder=3,
++        )
++        ax_left.scatter(
++            index + 0.13,
++            heldout_effect,
++            marker="s",
++            s=95 if highlighted else 42,
++            color=color,
++            edgecolor="white",
++            linewidth=0.8,
++            zorder=3,
++        )
++
++    ax_left.axvline(0.5, color="black", linewidth=1.0)
++    ax_left.axhline(0.0, color="black", linewidth=0.8, alpha=0.6)
++    ax_left.set_xticks(x_values, labels)
++    ax_left.set_xlabel("Reference-checkpoint eligibility rule")
++    ax_left.set_ylabel("Relative RMST reduction, E")
++    ax_left.set_title("Rule effects on prospective selection and held-out splits")
++    ax_left.grid(axis="y", alpha=0.22)
++    ax_left.scatter([], [], marker="o", color="#666666", label="Selection")
++    ax_left.scatter([], [], marker="s", color="#666666", label="Held-out")
++    ax_left.legend(loc="best", frameon=False)
++    ax_left.text(0.0, 1.01, "Broad", transform=ax_left.get_xaxis_transform(), ha="center")
++    ax_left.text(6.5, 1.01, "Searchable rules", transform=ax_left.get_xaxis_transform(), ha="center")
++
++    bars = ax_right.bar(
++        [0, 1],
++        [selection_excess, heldout_excess],
++        color=["#c43c39", "#4c78a8"],
++        width=0.62,
++    )
++    ax_right.axhline(0.0, color="black", linewidth=1.0)
++    ax_right.axhline(
++        0.5 * selection_excess,
++        color="#7a3e9d",
++        linestyle="--",
++        linewidth=1.5,
++        label=r"$0.5D_{selection}$",
++    )
++    ax_right.set_xticks([0, 1], [r"$D_{selection}$", r"$D_{heldout}$"])
++    ax_right.set_ylabel("Excess over broad-rule effect")
++    ax_right.set_title("Selection excess and held-out retention")
++    ax_right.grid(axis="y", alpha=0.22)
++    ax_right.legend(loc="best", frameon=False)
++    for bar, value in zip(bars, (selection_excess, heldout_excess), strict=True):
++        vertical_offset = 5 if value >= 0 else -17
++        ax_right.annotate(
++            f"{value:.3f}",
++            (bar.get_x() + bar.get_width() / 2, value),
++            xytext=(0, vertical_offset),
++            textcoords="offset points",
++            ha="center",
++            va="bottom" if value >= 0 else "top",
++            fontsize=11,
++        )
++
++    selection_n = int(result_row(rule_results, selected_rule.rule_id, "selection")["eligible_pair_count"])
++    heldout_n = int(result_row(rule_results, selected_rule.rule_id, "heldout")["eligible_pair_count"])
++    annotation = (
++        f"Selected {selected_rule.rule_id}: D≤{selected_rule.deadline}, "
++        f"A≥{selected_rule.train_threshold:.2f}, V≤{selected_rule.validation_ceiling:.2f}\n"
++        f"U = {uplift:.3f}    R = {retention:.3f}\n"
++        f"Eligible pairs: selection n={selection_n}, held-out n={heldout_n}"
++    )
++    ax_right.text(
++        0.04,
++        0.97,
++        annotation,
++        transform=ax_right.transAxes,
++        va="top",
++        ha="left",
++        bbox={"boxstyle": "round,pad=0.5", "facecolor": "white", "edgecolor": "#bbbbbb", "alpha": 0.92},
++    )
++
++    fig.suptitle("Eligibility-rule winner's curse in paired synthetic grokking trajectories", fontsize=16)
++    fig.tight_layout(rect=(0, 0, 1, 0.96))
++    figure_path = FIGURES / "eligibility_winners_curse.png"
++    fig.savefig(figure_path, dpi=100, metadata={"Software": "experiment.py"})
++    plt.close(fig)
++    shutil.copyfile(figure_path, ROOT / "eligibility_winners_curse.png")
++
++
++def main() -> None:
++    trajectories, parameters, outcomes = generate_trajectories()
++    trajectories.to_csv(
++        ROOT / "all_trajectories.csv.gz",
++        index=False,
++        compression={"method": "gzip", "compresslevel": 9, "mtime": 0},
++    )
++
++    # The ledger is finalized before calculate_rule_results forms paired samples.
++    ledger, eligibility_map = build_and_write_ledger(trajectories, parameters, outcomes)
++    rule_results = calculate_rule_results(outcomes, eligibility_map)
++    rule_results.to_csv(ROOT / "rule_results.csv", index=False)
++
++    selected_rule = choose_rule(rule_results)
++    if selected_rule is None:
++        raise RuntimeError("No searchable rule has at least 6 eligible selection pairs")
++
++    broad_selection = result_row(rule_results, "B", "selection")
++    broad_heldout = result_row(rule_results, "B", "heldout")
++    chosen_selection = result_row(rule_results, selected_rule.rule_id, "selection")
++    chosen_heldout = result_row(rule_results, selected_rule.rule_id, "heldout")
++
++    e_broad_selection = float(broad_selection["relative_intervention_reduction"])
++    e_broad_heldout = float(broad_heldout["relative_intervention_reduction"])
++    e_chosen_selection = float(chosen_selection["relative_intervention_reduction"])
++    e_chosen_heldout = float(chosen_heldout["relative_intervention_reduction"])
++    selection_excess = e_chosen_selection - e_broad_selection
++    heldout_excess = e_chosen_heldout - e_broad_heldout
++    retention = heldout_excess / selection_excess if selection_excess > 0 else math.inf
++    uplift = e_chosen_selection / e_broad_selection - 1.0 if e_broad_selection > 0 else -math.inf
++
++    broad_selection_n = int(broad_selection["eligible_pair_count"])
++    broad_heldout_n = int(broad_heldout["eligible_pair_count"])
++    chosen_selection_n = int(chosen_selection["eligible_pair_count"])
++    chosen_heldout_n = int(chosen_heldout["eligible_pair_count"])
++
++    conditions = {
++        "broad_selection_n_at_least_6": broad_selection_n >= 6,
++        "broad_heldout_n_at_least_6": broad_heldout_n >= 6,
++        "chosen_selection_n_at_least_6": chosen_selection_n >= 6,
++        "chosen_heldout_n_at_least_6": chosen_heldout_n >= 6,
++        "broad_selection_effect_positive": e_broad_selection > 0,
++        "selection_uplift_at_least_30_percent": e_chosen_selection >= 1.30 * e_broad_selection,
++        "selection_excess_positive": selection_excess > 0,
++        "heldout_retention_at_most_half": heldout_excess <= 0.50 * selection_excess,
++    }
++    decision = "SUPPORTED" if all(conditions.values()) else "REFUTED"
++
++    sample_sizes = {
++        f"{row.rule_id}_{row.split}": int(row.eligible_pair_count)
++        for row in rule_results.itertuples(index=False)
++    }
++    summary_metrics = {
++        "r_star": selected_rule.rule_id,
++        "r_star_thresholds": {
++            "deadline": selected_rule.deadline,
++            "train_threshold": selected_rule.train_threshold,
++            "validation_ceiling": selected_rule.validation_ceiling,
++        },
++        "effects": {
++            "broad_selection": e_broad_selection,
++            "broad_heldout": e_broad_heldout,
++            "chosen_selection": e_chosen_selection,
++            "chosen_heldout": e_chosen_heldout,
++        },
++        "U": uplift,
++        "D_selection": selection_excess,
++        "D_holdout": heldout_excess,
++        "R": retention,
++        "ledger_row_count": len(ledger),
++        "ledger_unique_seed_count": int(ledger["seed_id"].nunique()),
++        "ledger_coverage": float(ledger["seed_id"].nunique() / N_SEEDS),
++        "all_sample_sizes": sample_sizes,
++        "broad_selection_n": broad_selection_n,
++        "broad_heldout_n": broad_heldout_n,
++        "chosen_selection_n": chosen_selection_n,
++        "chosen_heldout_n": chosen_heldout_n,
++        "decision_conditions": conditions,
++        "decision": decision,
++    }
++    # Values are finite for this deterministic run; scalar conversion remains
++    # robust to protocol-defined infinities in alternate re-runs.
++    strict_summary = {
++        key: (
++            {nested_key: json_scalar(nested_value) for nested_key, nested_value in value.items()}
++            if isinstance(value, dict) and all(not isinstance(v, dict) for v in value.values())
++            else value
++        )
++        for key, value in summary_metrics.items()
++    }
++    write_json(ROOT / "summary_metrics.json", strict_summary)
++
++    create_figure(
++        rule_results,
++        selected_rule,
++        uplift,
++        retention,
++        selection_excess,
++        heldout_excess,
++    )
++
++    eligibility_columns = [f"{rule.rule_id}_eligible" for rule in SEARCHABLE_RULES]
++    all_searchable_ineligible_count = int((ledger[eligibility_columns] == "FALSE").all(axis=1).sum())
++    reference_non_grok_count = int((ledger["reference_grok_status"] == "NON_GROKKING").sum())
++    results = {
++        "seed_count": N_SEEDS,
++        "trajectory_row_count": len(trajectories),
++        "ledger_row_count": len(ledger),
++        "ledger_unique_seed_count": int(ledger["seed_id"].nunique()),
++        "ledger_coverage": float(ledger["seed_id"].nunique() / N_SEEDS),
++        "ledger_reference_non_grok_count": reference_non_grok_count,
++        "ledger_all_searchable_rules_ineligible_count": all_searchable_ineligible_count,
++        "rule_result_row_count": len(rule_results),
++        "r_star": selected_rule.rule_id,
++        "r_star_deadline": selected_rule.deadline,
++        "r_star_train_threshold": selected_rule.train_threshold,
++        "r_star_validation_ceiling": selected_rule.validation_ceiling,
++        "broad_selection_effect": e_broad_selection,
++        "broad_heldout_effect": e_broad_heldout,
++        "chosen_selection_effect": e_chosen_selection,
++        "chosen_heldout_effect": e_chosen_heldout,
++        "post_hoc_selection_uplift_U": uplift,
++        "selection_excess_D_selection": selection_excess,
++        "heldout_excess_D_holdout": heldout_excess,
++        "excess_retention_fraction_R": retention,
++        "broad_selection_n": broad_selection_n,
++        "broad_heldout_n": broad_heldout_n,
++        "chosen_selection_n": chosen_selection_n,
++        "chosen_heldout_n": chosen_heldout_n,
++        "broad_selection_reference_non_grok_count": int(broad_selection["reference_non_grok_count"]),
++        "broad_selection_double_non_grok_count": int(broad_selection["double_non_grok_count"]),
++        "broad_heldout_reference_non_grok_count": int(broad_heldout["reference_non_grok_count"]),
++        "broad_heldout_double_non_grok_count": int(broad_heldout["double_non_grok_count"]),
++        "chosen_selection_reference_non_grok_count": int(chosen_selection["reference_non_grok_count"]),
++        "chosen_selection_double_non_grok_count": int(chosen_selection["double_non_grok_count"]),
++        "chosen_heldout_reference_non_grok_count": int(chosen_heldout["reference_non_grok_count"]),
++        "chosen_heldout_double_non_grok_count": int(chosen_heldout["double_non_grok_count"]),
++        **conditions,
++        "decision": decision,
++    }
++    assert all(not isinstance(value, (dict, list, tuple)) for value in results.values())
++    write_json(ROOT / "results.json", {key: json_scalar(value) for key, value in results.items()})
++
++    print(
++        "Ran 48 deterministic paired trajectories and evaluated 12 searchable eligibility rules "
++        "against the broad rule."
++    )
++    print(
++        f"Selected {selected_rule.rule_id} (D={selected_rule.deadline}, "
++        f"A={selected_rule.train_threshold:.2f}, V={selected_rule.validation_ceiling:.2f}); "
++        f"E broad/chosen selection={e_broad_selection:.4f}/{e_chosen_selection:.4f}, "
++        f"E broad/chosen held-out={e_broad_heldout:.4f}/{e_chosen_heldout:.4f}."
++    )
++    print(
++        f"U={uplift:.4f}, D_selection={selection_excess:.4f}, "
++        f"D_holdout={heldout_excess:.4f}, R={retention:.4f}; "
++        f"eligible n broad={broad_selection_n}/{broad_heldout_n}, "
++        f"chosen={chosen_selection_n}/{chosen_heldout_n}."
++    )
++    print(f"Decision: {decision}.")
++
++
++if __name__ == "__main__":
++    main()
+
+2026-07-19T22:25:52.533417Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `supports_reasoning_summaries` at line 88 column 5
+The reproducible experiment script is implemented with protocol-order ledger generation and all required outputs.
+  ✓ Inspect workspace and relevant project memory/conventions
+  ✓ Create the workspace venv and install required packages
+  ✓ Implement the deterministic experiment and artifact generation
+  → Run the experiment and debug any failures
+  • Validate schemas, counts, dimensions, determinism, and final metrics
+exec
+/bin/zsh -lc '.venv/bin/python -m py_compile experiment.py && .venv/bin/python experiment.py' in /Users/gdeml/git/researchAI/projects/topic-can-a-feasibility-study-report-every-attem/workspace
+diff --git a/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py b/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a139d26faaf57458e461eb14ca583d0f1635a826
+--- /dev/null
++++ b/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py
+@@ -0,0 +1,611 @@
++#!/usr/bin/env python3
++"""Deterministic synthetic grokking eligibility winner's-curse experiment."""
++
++from __future__ import annotations
++
++import json
++import math
++import shutil
++from dataclasses import dataclass
++from itertools import product
++from pathlib import Path
++from typing import Any
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy as np
++import pandas as pd
++
++
++ROOT = Path(__file__).resolve().parent
++FIGURES = ROOT / "figures"
++CHECKPOINTS = np.arange(100, 5001, 100, dtype=int)
++TAU = 5000
++N_SEEDS = 48
++SELECTION_IDS = tuple(range(24))
++HELDOUT_IDS = tuple(range(24, 48))
++
++
++@dataclass(frozen=True)
++class Rule:
++    rule_id: str
++    kind: str
++    order: int
++    deadline: int
++    train_threshold: float
++    validation_ceiling: float
++
++
++BROAD_RULE = Rule("B", "broad", -1, 3000, 0.80, 0.50)
++SEARCHABLE_RULES = tuple(
++    Rule(
++        rule_id=f"R{order + 1:02d}",
++        kind="searchable",
++        order=order,
++        deadline=deadline,
++        train_threshold=train_threshold,
++        validation_ceiling=validation_ceiling,
++    )
++    for order, (deadline, train_threshold, validation_ceiling) in enumerate(
++        product((1200, 1800, 2400), (0.90, 0.97), (0.20, 0.40))
++    )
++)
++ALL_RULES = (BROAD_RULE,) + SEARCHABLE_RULES
++
++
++def split_for_seed(seed_id: int) -> str:
++    """Prospective split assignment, fixed before trajectory generation."""
++    return "selection" if seed_id in SELECTION_IDS else "heldout"
++
++
++def sigmoid(x: np.ndarray) -> np.ndarray:
++    return 1.0 / (1.0 + np.exp(-x))
++
++
++def grok_outcome(validation_accuracy: np.ndarray) -> dict[str, Any]:
++    qualifying = validation_accuracy >= 0.90
++    starts = np.flatnonzero(
++        qualifying[:-2] & qualifying[1:-1] & qualifying[2:]
++    )
++    if starts.size:
++        observed = int(CHECKPOINTS[int(starts[0])])
++        return {"grokked": True, "observed_time": observed, "restricted_time": observed}
++    return {"grokked": False, "observed_time": None, "restricted_time": TAU}
++
++
++def eligibility(reference_rows: pd.DataFrame, rule: Rule) -> tuple[bool, int | None]:
++    qualifying = reference_rows.loc[
++        reference_rows["checkpoint"].between(400, rule.deadline)
++        & (reference_rows["train_accuracy"] >= rule.train_threshold)
++        & (reference_rows["validation_accuracy"] <= rule.validation_ceiling),
++        "checkpoint",
++    ]
++    if qualifying.empty:
++        return False, None
++    return True, int(qualifying.iloc[0])
++
++
++def json_scalar(value: Any) -> Any:
++    """Return a strict-JSON scalar, spelling non-finite decision sentinels."""
++    if isinstance(value, (np.bool_, bool)):
++        return bool(value)
++    if isinstance(value, (np.integer, int)):
++        return int(value)
++    if isinstance(value, (np.floating, float)):
++        numeric = float(value)
++        if math.isnan(numeric):
++            return "NaN"
++        if math.isinf(numeric):
++            return "Infinity" if numeric > 0 else "-Infinity"
++        return numeric
++    if value is None or isinstance(value, str):
++        return value
++    raise TypeError(f"Not a JSON scalar: {type(value).__name__}")
++
++
++def write_json(path: Path, payload: dict[str, Any]) -> None:
++    with path.open("w", encoding="utf-8") as handle:
++        json.dump(payload, handle, indent=2, sort_keys=True, allow_nan=False)
++        handle.write("\n")
++
++
++def generate_trajectories() -> tuple[pd.DataFrame, pd.DataFrame, dict[tuple[int, str], dict[str, Any]]]:
++    trajectory_rows: list[dict[str, Any]] = []
++    parameter_rows: list[dict[str, Any]] = []
++    outcomes: dict[tuple[int, str], dict[str, Any]] = {}
++
++    for seed_id in range(N_SEEDS):
++        rng = np.random.default_rng(730000 + seed_id)
++        d, m, g, h = rng.normal(size=4)
++
++        m_ref = math.exp(math.log(700.0) + 0.25 * d + 0.12 * m)
++        d_ref = math.exp(math.log(2200.0) + 0.50 * d + 0.35 * g)
++        g_ref = m_ref + d_ref
++        m_double = m_ref / (2.0**0.65)
++        d_double = d_ref * math.exp(-0.35 + 0.35 * h)
++        g_double = m_double + d_double
++
++        # Protocol-mandated draw order: ref train, ref validation, double train,
++        # then double validation, with exactly 50 draws in each block.
++        ref_train_noise = rng.normal(0.0, 0.012, size=50)
++        ref_validation_noise = rng.normal(0.0, 0.012, size=50)
++        double_train_noise = rng.normal(0.0, 0.012, size=50)
++        double_validation_noise = rng.normal(0.0, 0.012, size=50)
++
++        parameter_rows.append(
++            {
++                "seed_id": seed_id,
++                "prospective_split": split_for_seed(seed_id),
++                "M_ref": m_ref,
++                "G_ref": g_ref,
++            }
++        )
++
++        arms = (
++            ("reference", m_ref, g_ref, ref_train_noise, ref_validation_noise),
++            ("double", m_double, g_double, double_train_noise, double_validation_noise),
++        )
++        for arm, memorization, transition, train_noise, validation_noise in arms:
++            train_accuracy = np.clip(
++                0.05 + 0.94 * sigmoid((CHECKPOINTS - memorization) / 120.0) + train_noise,
++                0.0,
++                1.0,
++            )
++            validation_accuracy = np.clip(
++                0.10 + 0.88 * sigmoid((CHECKPOINTS - transition) / 180.0)
++                + validation_noise,
++                0.0,
++                1.0,
++            )
++            outcomes[(seed_id, arm)] = grok_outcome(validation_accuracy)
++            for checkpoint, train_value, validation_value in zip(
++                CHECKPOINTS, train_accuracy, validation_accuracy, strict=True
++            ):
++                trajectory_rows.append(
++                    {
++                        "seed_id": seed_id,
++                        "prospective_split": split_for_seed(seed_id),
++                        "arm": arm,
++                        "checkpoint": int(checkpoint),
++                        "train_accuracy": float(train_value),
++                        "validation_accuracy": float(validation_value),
++                    }
++                )
++
++    trajectories = pd.DataFrame(trajectory_rows)
++    parameters = pd.DataFrame(parameter_rows)
++    assert len(trajectories) == N_SEEDS * 2 * len(CHECKPOINTS) == 4800
++    assert len(parameters) == N_SEEDS
++    assert set(parameters.loc[parameters["prospective_split"] == "selection", "seed_id"]) == set(SELECTION_IDS)
++    assert set(parameters.loc[parameters["prospective_split"] == "heldout", "seed_id"]) == set(HELDOUT_IDS)
++    return trajectories, parameters, outcomes
++
++
++def build_and_write_ledger(
++    trajectories: pd.DataFrame,
++    parameters: pd.DataFrame,
++    outcomes: dict[tuple[int, str], dict[str, Any]],
++) -> tuple[pd.DataFrame, dict[tuple[int, str], bool]]:
++    ledger_rows: list[dict[str, Any]] = []
++    eligibility_map: dict[tuple[int, str], bool] = {}
++
++    for seed_id in range(N_SEEDS):
++        params = parameters.loc[parameters["seed_id"] == seed_id].iloc[0]
++        reference = trajectories.loc[
++            (trajectories["seed_id"] == seed_id) & (trajectories["arm"] == "reference")
++        ].sort_values("checkpoint")
++        reference_outcome = outcomes[(seed_id, "reference")]
++        row: dict[str, Any] = {
++            "seed_id": seed_id,
++            "prospective_split": params["prospective_split"],
++            "M_ref": float(params["M_ref"]),
++            "G_ref": float(params["G_ref"]),
++            "reference_grok_status": "GROKKED" if reference_outcome["grokked"] else "NON_GROKKING",
++            "reference_observed_grok_time": (
++                str(reference_outcome["observed_time"])
++                if reference_outcome["grokked"]
++                else "CENSORED"
++            ),
++            "reference_restricted_time": int(reference_outcome["restricted_time"]),
++        }
++        for rule in ALL_RULES:
++            eligible, earliest = eligibility(reference, rule)
++            eligibility_map[(seed_id, rule.rule_id)] = eligible
++            prefix = "broad_rule" if rule.rule_id == "B" else rule.rule_id
++            row[f"{prefix}_eligible"] = "TRUE" if eligible else "FALSE"
++            row[f"{prefix}_earliest_checkpoint"] = str(earliest) if eligible else "NA"
++        ledger_rows.append(row)
++
++    ledger = pd.DataFrame(ledger_rows)
++    assert len(ledger) == N_SEEDS
++    assert ledger["seed_id"].nunique() == N_SEEDS
++    assert set(ledger["seed_id"]) == set(range(N_SEEDS))
++    expected_reference_non_grok = sum(
++        not outcomes[(seed_id, "reference")]["grokked"] for seed_id in range(N_SEEDS)
++    )
++    assert int((ledger["reference_grok_status"] == "NON_GROKKING").sum()) == expected_reference_non_grok
++
++    eligibility_columns = [
++        "broad_rule_eligible",
++        *(f"{rule.rule_id}_eligible" for rule in SEARCHABLE_RULES),
++    ]
++    all_rule_ineligible = (ledger[eligibility_columns] == "FALSE").all(axis=1)
++    assert int(all_rule_ineligible.sum()) == sum(
++        not any(eligibility_map[(seed_id, rule.rule_id)] for rule in ALL_RULES)
++        for seed_id in range(N_SEEDS)
++    )
++
++    # Immutable attempted-reference record: this occurs before any paired sample
++    # is formed and before any intervention effect is calculated.
++    ledger.to_csv(ROOT / "attempted_reference_ledger.csv", index=False)
++    return ledger, eligibility_map
++
++
++def calculate_rule_results(
++    outcomes: dict[tuple[int, str], dict[str, Any]],
++    eligibility_map: dict[tuple[int, str], bool],
++) -> pd.DataFrame:
++    result_rows: list[dict[str, Any]] = []
++    for rule in ALL_RULES:
++        for split, split_ids in (("selection", SELECTION_IDS), ("heldout", HELDOUT_IDS)):
++            eligible_ids = [
++                seed_id for seed_id in split_ids if eligibility_map[(seed_id, rule.rule_id)]
++            ]
++            reference_times = np.array(
++                [outcomes[(seed_id, "reference")]["restricted_time"] for seed_id in eligible_ids],
++                dtype=float,
++            )
++            double_times = np.array(
++                [outcomes[(seed_id, "double")]["restricted_time"] for seed_id in eligible_ids],
++                dtype=float,
++            )
++            if eligible_ids:
++                rmst_reference = float(reference_times.mean())
++                rmst_double = float(double_times.mean())
++                effect = (rmst_reference - rmst_double) / rmst_reference
++            else:
++                rmst_reference = math.nan
++                rmst_double = math.nan
++                effect = math.nan
++            result_rows.append(
++                {
++                    "rule_id": rule.rule_id,
++                    "rule_type": rule.kind,
++                    "enumeration_order": rule.order,
++                    "deadline": rule.deadline,
++                    "train_threshold": rule.train_threshold,
++                    "validation_ceiling": rule.validation_ceiling,
++                    "split": split,
++                    "eligible_pair_count": len(eligible_ids),
++                    "reference_non_grok_count": sum(
++                        not outcomes[(seed_id, "reference")]["grokked"] for seed_id in eligible_ids
++                    ),
++                    "double_non_grok_count": sum(
++                        not outcomes[(seed_id, "double")]["grokked"] for seed_id in eligible_ids
++                    ),
++                    "RMST_reference": rmst_reference,
++                    "RMST_double": rmst_double,
++                    "relative_intervention_reduction": effect,
++                }
++            )
++
++    results = pd.DataFrame(result_rows)
++    assert len(results) == len(ALL_RULES) * 2 == 26
++    return results
++
++
++def result_row(rule_results: pd.DataFrame, rule_id: str, split: str) -> pd.Series:
++    matches = rule_results.loc[
++        (rule_results["rule_id"] == rule_id) & (rule_results["split"] == split)
++    ]
++    assert len(matches) == 1
++    return matches.iloc[0]
++
++
++def choose_rule(rule_results: pd.DataFrame) -> Rule | None:
++    best_rule: Rule | None = None
++    best_effect = -math.inf
++    for rule in SEARCHABLE_RULES:
++        row = result_row(rule_results, rule.rule_id, "selection")
++        if int(row["eligible_pair_count"]) >= 6:
++            effect = float(row["relative_intervention_reduction"])
++            # Strict greater-than preserves protocol enumeration order on exact ties.
++            if effect > best_effect:
++                best_effect = effect
++                best_rule = rule
++    return best_rule
++
++
++def create_figure(
++    rule_results: pd.DataFrame,
++    selected_rule: Rule,
++    uplift: float,
++    retention: float,
++    selection_excess: float,
++    heldout_excess: float,
++) -> None:
++    FIGURES.mkdir(exist_ok=True)
++    labels = [rule.rule_id for rule in ALL_RULES]
++    x_values = np.arange(len(labels), dtype=float)
++    selected_index = labels.index(selected_rule.rule_id)
++
++    fig, (ax_left, ax_right) = plt.subplots(
++        1, 2, figsize=(18, 9), dpi=100, gridspec_kw={"width_ratios": [1.65, 1.0]}
++    )
++
++    for index, rule in enumerate(ALL_RULES):
++        selection_effect = float(
++            result_row(rule_results, rule.rule_id, "selection")["relative_intervention_reduction"]
++        )
++        heldout_effect = float(
++            result_row(rule_results, rule.rule_id, "heldout")["relative_intervention_reduction"]
++        )
++        highlighted = rule.rule_id in {"B", selected_rule.rule_id}
++        color = "#c43c39" if rule.rule_id == selected_rule.rule_id else (
++            "#235789" if rule.rule_id == "B" else "#888888"
++        )
++        ax_left.plot(
++            [index - 0.13, index + 0.13],
++            [selection_effect, heldout_effect],
++            color=color,
++            linewidth=2.4 if highlighted else 0.8,
++            alpha=1.0 if highlighted else 0.65,
++            zorder=2,
++        )
++        ax_left.scatter(
++            index - 0.13,
++            selection_effect,
++            marker="o",
++            s=95 if highlighted else 42,
++            color=color,
++            edgecolor="white",
++            linewidth=0.8,
++            zorder=3,
++        )
++        ax_left.scatter(
++            index + 0.13,
++            heldout_effect,
++            marker="s",
++            s=95 if highlighted else 42,
++            color=color,
++            edgecolor="white",
++            linewidth=0.8,
++            zorder=3,
++        )
++
++    ax_left.axvline(0.5, color="black", linewidth=1.0)
++    ax_left.axhline(0.0, color="black", linewidth=0.8, alpha=0.6)
++    ax_left.set_xticks(x_values, labels)
++    ax_left.set_xlabel("Reference-checkpoint eligibility rule")
++    ax_left.set_ylabel("Relative RMST reduction, E")
++    ax_left.set_title("Rule effects on prospective selection and held-out splits")
++    ax_left.grid(axis="y", alpha=0.22)
++    ax_left.scatter([], [], marker="o", color="#666666", label="Selection")
++    ax_left.scatter([], [], marker="s", color="#666666", label="Held-out")
++    ax_left.legend(loc="best", frameon=False)
++    ax_left.text(0.0, 1.01, "Broad", transform=ax_left.get_xaxis_transform(), ha="center")
++    ax_left.text(6.5, 1.01, "Searchable rules", transform=ax_left.get_xaxis_transform(), ha="center")
++
++    bars = ax_right.bar(
++        [0, 1],
++        [selection_excess, heldout_excess],
++        color=["#c43c39", "#4c78a8"],
++        width=0.62,
++    )
++    ax_right.axhline(0.0, color="black", linewidth=1.0)
++    ax_right.axhline(
++        0.5 * selection_excess,
++        color="#7a3e9d",
++        linestyle="--",
++        linewidth=1.5,
++        label=r"$0.5D_{selection}$",
++    )
++    ax_right.set_xticks([0, 1], [r"$D_{selection}$", r"$D_{heldout}$"])
++    ax_right.set_ylabel("Excess over broad-rule effect")
++    ax_right.set_title("Selection excess and held-out retention")
++    ax_right.grid(axis="y", alpha=0.22)
++    ax_right.legend(loc="best", frameon=False)
++    for bar, value in zip(bars, (selection_excess, heldout_excess), strict=True):
++        vertical_offset = 5 if value >= 0 else -17
++        ax_right.annotate(
++            f"{value:.3f}",
++            (bar.get_x() + bar.get_width() / 2, value),
++            xytext=(0, vertical_offset),
++            textcoords="offset points",
++            ha="center",
++            va="bottom" if value >= 0 else "top",
++            fontsize=11,
++        )
++
++    selection_n = int(result_row(rule_results, selected_rule.rule_id, "selection")["eligible_pair_count"])
++    heldout_n = int(result_row(rule_results, selected_rule.rule_id, "heldout")["eligible_pair_count"])
++    annotation = (
++        f"Selected {selected_rule.rule_id}: D≤{selected_rule.deadline}, "
++        f"A≥{selected_rule.train_threshold:.2f}, V≤{selected_rule.validation_ceiling:.2f}\n"
++        f"U = {uplift:.3f}    R = {retention:.3f}\n"
++        f"Eligible pairs: selection n={selection_n}, held-out n={heldout_n}"
++    )
++    ax_right.text(
++        0.04,
++        0.97,
++        annotation,
++        transform=ax_right.transAxes,
++        va="top",
++        ha="left",
++        bbox={"boxstyle": "round,pad=0.5", "facecolor": "white", "edgecolor": "#bbbbbb", "alpha": 0.92},
++    )
++
++    fig.suptitle("Eligibility-rule winner's curse in paired synthetic grokking trajectories", fontsize=16)
++    fig.tight_layout(rect=(0, 0, 1, 0.96))
++    figure_path = FIGURES / "eligibility_winners_curse.png"
++    fig.savefig(figure_path, dpi=100, metadata={"Software": "experiment.py"})
++    plt.close(fig)
++    shutil.copyfile(figure_path, ROOT / "eligibility_winners_curse.png")
++
++
++def main() -> None:
++    trajectories, parameters, outcomes = generate_trajectories()
++    trajectories.to_csv(
++        ROOT / "all_trajectories.csv.gz",
++        index=False,
++        compression={"method": "gzip", "compresslevel": 9, "mtime": 0},
++    )
++
++    # The ledger is finalized before calculate_rule_results forms paired samples.
++    ledger, eligibility_map = build_and_write_ledger(trajectories, parameters, outcomes)
++    rule_results = calculate_rule_results(outcomes, eligibility_map)
++    rule_results.to_csv(ROOT / "rule_results.csv", index=False)
++
++    selected_rule = choose_rule(rule_results)
++    if selected_rule is None:
++        raise RuntimeError("No searchable rule has at least 6 eligible selection pairs")
++
++    broad_selection = result_row(rule_results, "B", "selection")
++    broad_heldout = result_row(rule_results, "B", "heldout")
++    chosen_selection = result_row(rule_results, selected_rule.rule_id, "selection")
++    chosen_heldout = result_row(rule_results, selected_rule.rule_id, "heldout")
++
++    e_broad_selection = float(broad_selection["relative_intervention_reduction"])
++    e_broad_heldout = float(broad_heldout["relative_intervention_reduction"])
++    e_chosen_selection = float(chosen_selection["relative_intervention_reduction"])
++    e_chosen_heldout = float(chosen_heldout["relative_intervention_reduction"])
++    selection_excess = e_chosen_selection - e_broad_selection
++    heldout_excess = e_chosen_heldout - e_broad_heldout
++    retention = heldout_excess / selection_excess if selection_excess > 0 else math.inf
++    uplift = e_chosen_selection / e_broad_selection - 1.0 if e_broad_selection > 0 else -math.inf
++
++    broad_selection_n = int(broad_selection["eligible_pair_count"])
++    broad_heldout_n = int(broad_heldout["eligible_pair_count"])
++    chosen_selection_n = int(chosen_selection["eligible_pair_count"])
++    chosen_heldout_n = int(chosen_heldout["eligible_pair_count"])
++
++    conditions = {
++        "broad_selection_n_at_least_6": broad_selection_n >= 6,
++        "broad_heldout_n_at_least_6": broad_heldout_n >= 6,
++        "chosen_selection_n_at_least_6": chosen_selection_n >= 6,
++        "chosen_heldout_n_at_least_6": chosen_heldout_n >= 6,
++        "broad_selection_effect_positive": e_broad_selection > 0,
++        "selection_uplift_at_least_30_percent": e_chosen_selection >= 1.30 * e_broad_selection,
++        "selection_excess_positive": selection_excess > 0,
++        "heldout_retention_at_most_half": heldout_excess <= 0.50 * selection_excess,
++    }
++    decision = "SUPPORTED" if all(conditions.values()) else "REFUTED"
++
++    sample_sizes = {
++        f"{row.rule_id}_{row.split}": int(row.eligible_pair_count)
++        for row in rule_results.itertuples(index=False)
++    }
++    summary_metrics = {
++        "r_star": selected_rule.rule_id,
++        "r_star_thresholds": {
++            "deadline": selected_rule.deadline,
++            "train_threshold": selected_rule.train_threshold,
++            "validation_ceiling": selected_rule.validation_ceiling,
++        },
++        "effects": {
++            "broad_selection": e_broad_selection,
++            "broad_heldout": e_broad_heldout,
++            "chosen_selection": e_chosen_selection,
++            "chosen_heldout": e_chosen_heldout,
++        },
++        "U": uplift,
++        "D_selection": selection_excess,
++        "D_holdout": heldout_excess,
++        "R": retention,
++        "ledger_row_count": len(ledger),
++        "ledger_unique_seed_count": int(ledger["seed_id"].nunique()),
++        "ledger_coverage": float(ledger["seed_id"].nunique() / N_SEEDS),
++        "all_sample_sizes": sample_sizes,
++        "broad_selection_n": broad_selection_n,
++        "broad_heldout_n": broad_heldout_n,
++        "chosen_selection_n": chosen_selection_n,
++        "chosen_heldout_n": chosen_heldout_n,
++        "decision_conditions": conditions,
++        "decision": decision,
++    }
++    # Values are finite for this deterministic run; scalar conversion remains
++    # robust to protocol-defined infinities in alternate re-runs.
++    strict_summary = {
++        key: (
++            {nested_key: json_scalar(nested_value) for nested_key, nested_value in value.items()}
++            if isinstance(value, dict) and all(not isinstance(v, dict) for v in value.values())
++            else value
++        )
++        for key, value in summary_metrics.items()
++    }
++    write_json(ROOT / "summary_metrics.json", strict_summary)
++
++    create_figure(
++        rule_results,
++        selected_rule,
++        uplift,
++        retention,
++        selection_excess,
++        heldout_excess,
++    )
++
++    eligibility_columns = [f"{rule.rule_id}_eligible" for rule in SEARCHABLE_RULES]
++    all_searchable_ineligible_count = int((ledger[eligibility_columns] == "FALSE").all(axis=1).sum())
++    reference_non_grok_count = int((ledger["reference_grok_status"] == "NON_GROKKING").sum())
++    results = {
++        "seed_count": N_SEEDS,
++        "trajectory_row_count": len(trajectories),
++        "ledger_row_count": len(ledger),
++        "ledger_unique_seed_count": int(ledger["seed_id"].nunique()),
++        "ledger_coverage": float(ledger["seed_id"].nunique() / N_SEEDS),
++        "ledger_reference_non_grok_count": reference_non_grok_count,
++        "ledger_all_searchable_rules_ineligible_count": all_searchable_ineligible_count,
++        "rule_result_row_count": len(rule_results),
++        "r_star": selected_rule.rule_id,
++        "r_star_deadline": selected_rule.deadline,
++        "r_star_train_threshold": selected_rule.train_threshold,
++        "r_star_validation_ceiling": selected_rule.validation_ceiling,
++        "broad_selection_effect": e_broad_selection,
++        "broad_heldout_effect": e_broad_heldout,
++        "chosen_selection_effect": e_chosen_selection,
++        "chosen_heldout_effect": e_chosen_heldout,
++        "post_hoc_selection_uplift_U": uplift,
++        "selection_excess_D_selection": selection_excess,
++        "heldout_excess_D_holdout": heldout_excess,
++        "excess_retention_fraction_R": retention,
++        "broad_selection_n": broad_selection_n,
++        "broad_heldout_n": broad_heldout_n,
++        "chosen_selection_n": chosen_selection_n,
++        "chosen_heldout_n": chosen_heldout_n,
++        "broad_selection_reference_non_grok_count": int(broad_selection["reference_non_grok_count"]),
++        "broad_selection_double_non_grok_count": int(broad_selection["double_non_grok_count"]),
++        "broad_heldout_reference_non_grok_count": int(broad_heldout["reference_non_grok_count"]),
++        "broad_heldout_double_non_grok_count": int(broad_heldout["double_non_grok_count"]),
++        "chosen_selection_reference_non_grok_count": int(chosen_selection["reference_non_grok_count"]),
++        "chosen_selection_double_non_grok_count": int(chosen_selection["double_non_grok_count"]),
++        "chosen_heldout_reference_non_grok_count": int(chosen_heldout["reference_non_grok_count"]),
++        "chosen_heldout_double_non_grok_count": int(chosen_heldout["double_non_grok_count"]),
++        **conditions,
++        "decision": decision,
++    }
++    assert all(not isinstance(value, (dict, list, tuple)) for value in results.values())
++    write_json(ROOT / "results.json", {key: json_scalar(value) for key, value in results.items()})
++
++    print(
++        "Ran 48 deterministic paired trajectories and evaluated 12 searchable eligibility rules "
++        "against the broad rule."
++    )
++    print(
++        f"Selected {selected_rule.rule_id} (D={selected_rule.deadline}, "
++        f"A={selected_rule.train_threshold:.2f}, V={selected_rule.validation_ceiling:.2f}); "
++        f"E broad/chosen selection={e_broad_selection:.4f}/{e_chosen_selection:.4f}, "
++        f"E broad/chosen held-out={e_broad_heldout:.4f}/{e_chosen_heldout:.4f}."
++    )
++    print(
++        f"U={uplift:.4f}, D_selection={selection_excess:.4f}, "
++        f"D_holdout={heldout_excess:.4f}, R={retention:.4f}; "
++        f"eligible n broad={broad_selection_n}/{broad_heldout_n}, "
++        f"chosen={chosen_selection_n}/{chosen_heldout_n}."
++    )
++    print(f"Decision: {decision}.")
++
++
++if __name__ == "__main__":
++    main()
+
+2026-07-19T22:26:09.291664Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `supports_reasoning_summaries` at line 88 column 5
+diff --git a/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py b/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py
+new file mode 100644
+index 0000000000000000000000000000000000000000..a139d26faaf57458e461eb14ca583d0f1635a826
+--- /dev/null
++++ b/projects/topic-can-a-feasibility-study-report-every-attem/workspace/experiment.py
+@@ -0,0 +1,611 @@
++#!/usr/bin/env python3
++"""Deterministic synthetic grokking eligibility winner's-curse experiment."""
++
++from __future__ import annotations
++
++import json
++import math
++import shutil
++from dataclasses import dataclass
++from itertools import product
++from pathlib import Path
++from typing import Any
++
++import matplotlib
++
++matplotlib.use("Agg")
++import matplotlib.pyplot as plt
++import numpy as np
++import pandas as pd
++
++
++ROOT = Path(__file__).resolve().parent
++FIGURES = ROOT / "figures"
++CHECKPOINTS = np.arange(100, 5001, 100, dtype=int)
++TAU = 5000
++N_SEEDS = 48
++SELECTION_IDS = tuple(range(24))
++HELDOUT_IDS = tuple(range(24, 48))
++
++
++@dataclass(frozen=True)
++class Rule:
++    rule_id: str
++    kind: str
++    order: int
++    deadline: int
++    train_threshold: float
++    validation_ceiling: float
++
++
++BROAD_RULE = Rule("B", "broad", -1, 3000, 0.80, 0.50)
++SEARCHABLE_RULES = tuple(
++    Rule(
++        rule_id=f"R{order + 1:02d}",
++        kind="searchable",
++        order=order,
++        deadline=deadline,
++        train_threshold=train_threshold,
++        validation_ceiling=validation_ceiling,
++    )
++    for order, (deadline, train_threshold, validation_ceiling) in enumerate(
++        product((1200, 1800, 2400), (0.90, 0.97), (0.20, 0.40))
++    )
++)
++ALL_RULES = (BROAD_RULE,) + SEARCHABLE_RULES
++
++
++def split_for_seed(seed_id: int) -> str:
++    """Prospective split assignment, fixed before trajectory generation."""
++    return "selection" if seed_id in SELECTION_IDS else "heldout"
++
++
++def sigmoid(x: np.ndarray) -> np.ndarray:
++    return 1.0 / (1.0 + np.exp(-x))
++
++
++def grok_outcome(validation_accuracy: np.ndarray) -> dict[str, Any]:
++    qualifying = validation_accuracy >= 0.90
++    starts = np.flatnonzero(
++        qualifying[:-2] & qualifying[1:-1] & qualifying[2:]
++    )
++    if starts.size:
++        observed = int(CHECKPOINTS[int(starts[0])])
++        return {"grokked": True, "observed_time": observed, "restricted_time": observed}
++    return {"grokked": False, "observed_time": None, "restricted_time": TAU}
++
++
++def eligibility(reference_rows: pd.DataFrame, rule: Rule) -> tuple[bool, int | None]:
++    qualifying = reference_rows.loc[
++        reference_rows["checkpoint"].between(400, rule.deadline)
++        & (reference_rows["train_accuracy"] >= rule.train_threshold)
++        & (reference_rows["validation_accuracy"] <= rule.validation_ceiling),
++        "checkpoint",
++    ]
++    if qualifying.empty:
++        return False, None
++    return True, int(qualifying.iloc[0])
++
++
++def json_scalar(value: Any) -> Any:
++    """Return a strict-JSON scalar, spelling non-finite decision sentinels."""
++    if isinstance(value, (np.bool_, bool)):
++        return bool(value)
++    if isinstance(value, (np.integer, int)):
++        return int(value)
++    if isinstance(value, (np.floating, float)):
++        numeric = float(value)
++        if math.isnan(numeric):
++            return "NaN"
++        if math.isinf(numeric):
++            return "Infinity" if numeric > 0 else "-Infinity"
++        return numeric
++    if value is None or isinstance(value, str):
++        return value
++    raise TypeError(f"Not a JSON scalar: {type(value).__name__}")
++
++
++def write_json(path: Path, payload: dict[str, Any]) -> None:
++    with path.open("w", encoding="utf-8") as handle:
++        json.dump(payload, handle, indent=2, sort_keys=True, allow_nan=False)
++        handle.write("\n")
++
++
++def generate_trajectories() -> tuple[pd.DataFrame, pd.DataFrame, dict[tuple[int, str], dict[str, Any]]]:
++    trajectory_rows: list[dict[str, Any]] = []
++    parameter_rows: list[dict[str, Any]] = []
++    outcomes: dict[tuple[int, str], dict[str, Any]] = {}
++
++    for seed_id in range(N_SEEDS):
++        rng = np.random.default_rng(730000 + seed_id)
++        d, m, g, h = rng.normal(size=4)
++
++        m_ref = math.exp(math.log(700.0) + 0.25 * d + 0.12 * m)
++        d_ref = math.exp(math.log(2200.0) + 0.50 * d + 0.35 * g)
++        g_ref = m_ref + d_ref
++        m_double = m_ref / (2.0**0.65)
++        d_double = d_ref * math.exp(-0.35 + 0.35 * h)
++        g_double = m_double + d_double
++
++        # Protocol-mandated draw order: ref train, ref validation, double train,
++        # then double validation, with exactly 50 draws in each block.
++        ref_train_noise = rng.normal(0.0, 0.012, size=50)
++        ref_validation_noise = rng.normal(0.0, 0.012, size=50)
++        double_train_noise = rng.normal(0.0, 0.012, size=50)
++        double_validation_noise = rng.normal(0.0, 0.012, size=50)
++
++        parameter_rows.append(
++            {
++                "seed_id": seed_id,
++                "prospective_split": split_for_seed(seed_id),
++                "M_ref": m_ref,
++                "G_ref": g_ref,
++            }
++        )
++
++        arms = (
++            ("reference", m_ref, g_ref, ref_train_noise, ref_validation_noise),
++            ("double", m_double, g_double, double_train_noise, double_validation_noise),
++        )
++        for arm, memorization, transition, train_noise, validation_noise in arms:
++            train_accuracy = np.clip(
++                0.05 + 0.94 * sigmoid((CHECKPOINTS - memorization) / 120.0) + train_noise,
++                0.0,
++                1.0,
++            )
++            validation_accuracy = np.clip(
++                0.10 + 0.88 * sigmoid((CHECKPOINTS - transition) / 180.0)
++                + validation_noise,
++                0.0,
++                1.0,
++            )
++            outcomes[(seed_id, arm)] = grok_outcome(validation_accuracy)
++            for checkpoint, train_value, validation_value in zip(
++                CHECKPOINTS, train_accuracy, validation_accuracy, strict=True
++            ):
++                trajectory_rows.append(
++                    {
++                        "seed_id": seed_id,
++                        "prospective_split": split_for_seed(seed_id),
++                        "arm": arm,
++                        "checkpoint": int(checkpoint),
++                        "train_accuracy": float(train_value),
++                        "validation_accuracy": float(validation_value),
++                    }
++                )
++
++    trajectories = pd.DataFrame(trajectory_rows)
++    parameters = pd.DataFrame(parameter_rows)
++    assert len(trajectories) == N_SEEDS * 2 * len(CHECKPOINTS) == 4800
++    assert len(parameters) == N_SEEDS
++    assert set(parameters.loc[parameters["prospective_split"] == "selection", "seed_id"]) == set(SELECTION_IDS)
++    assert set(parameters.loc[parameters["prospective_split"] == "heldout", "seed_id"]) == set(HELDOUT_IDS)
++    return trajectories, parameters, outcomes
++
++
++def build_and_write_ledger(
++    trajectories: pd.DataFrame,
++    parameters: pd.DataFrame,
++    outcomes: dict[tuple[int, str], dict[str, Any]],
++) -> tuple[pd.DataFrame, dict[tuple[int, str], bool]]:
++    ledger_rows: list[dict[str, Any]] = []
++    eligibility_map: dict[tuple[int, str], bool] = {}
++
++    for seed_id in range(N_SEEDS):
++        params = parameters.loc[parameters["seed_id"] == seed_id].iloc[0]
++        reference = trajectories.loc[
++            (trajectories["seed_id"] == seed_id) & (trajectories["arm"] == "reference")
++        ].sort_values("checkpoint")
++        reference_outcome = outcomes[(seed_id, "reference")]
++        row: dict[str, Any] = {
++            "seed_id": seed_id,
++            "prospective_split": params["prospective_split"],
++            "M_ref": float(params["M_ref"]),
++            "G_ref": float(params["G_ref"]),
++            "reference_grok_status": "GROKKED" if reference_outcome["grokked"] else "NON_GROKKING",
++            "reference_observed_grok_time": (
++                str(reference_outcome["observed_time"])
++                if reference_outcome["grokked"]
++                else "CENSORED"
++            ),
++            "reference_restricted_time": int(reference_outcome["restricted_time"]),
++        }
++        for rule in ALL_RULES:
++            eligible, earliest = eligibility(reference, rule)
++            eligibility_map[(seed_id, rule.rule_id)] = eligible
++            prefix = "broad_rule" if rule.rule_id == "B" else rule.rule_id
++            row[f"{prefix}_eligible"] = "TRUE" if eligible else "FALSE"
++            row[f"{prefix}_earliest_checkpoint"] = str(earliest) if eligible else "NA"
++        ledger_rows.append(row)
++
++    ledger = pd.DataFrame(ledger_rows)
++    assert len(ledger) == N_SEEDS
++    assert ledger["seed_id"].nunique() == N_SEEDS
++    assert set(ledger["seed_id"]) == set(range(N_SEEDS))
++    expected_reference_non_grok = sum(
++        not outcomes[(seed_id, "reference")]["grokked"] for seed_id in range(N_SEEDS)
++    )
++    assert int((ledger["reference_grok_status"] == "NON_GROKKING").sum()) == expected_reference_non_grok
++
++    eligibility_columns = [
++        "broad_rule_eligible",
++        *(f"{rule.rule_id}_eligible" for rule in SEARCHABLE_RULES),
++    ]
++    all_rule_ineligible = (ledger[eligibility_columns] == "FALSE").all(axis=1)
++    assert int(all_rule_ineligible.sum()) == sum(
++        not any(eligibility_map[(seed_id, rule.rule_id)] for rule in ALL_RULES)
++        for seed_id in range(N_SEEDS)
++    )
++
++    # Immutable attempted-reference record: this occurs before any paired sample
++    # is formed and before any intervention effect is calculated.
++    ledger.to_csv(ROOT / "attempted_reference_ledger.csv", index=False)
++    return ledger, eligibility_map
++
++
++def calculate_rule_results(
++    outcomes: dict[tuple[int, str], dict[str, Any]],
++    eligibility_map: dict[tuple[int, str], bool],
++) -> pd.DataFrame:
++    result_rows: list[dict[str, Any]] = []
++    for rule in ALL_RULES:
++        for split, split_ids in (("selection", SELECTION_IDS), ("heldout", HELDOUT_IDS)):
++            eligible_ids = [
++                seed_id for seed_id in split_ids if eligibility_map[(seed_id, rule.rule_id)]
++            ]
++            reference_times = np.array(
++                [outcomes[(seed_id, "reference")]["restricted_time"] for seed_id in eligible_ids],
++                dtype=float,
++            )
++            double_times = np.array(
++                [outcomes[(seed_id, "double")]["restricted_time"] for seed_id in eligible_ids],
++                dtype=float,
++            )
++            if eligible_ids:
++                rmst_reference = float(reference_times.mean())
++                rmst_double = float(double_times.mean())
++                effect = (rmst_reference - rmst_double) / rmst_reference
++            else:
++                rmst_reference = math.nan
++                rmst_double = math.nan
++                effect = math.nan
++            result_rows.append(
++                {
++                    "rule_id": rule.rule_id,
++                    "rule_type": rule.kind,
++                    "enumeration_order": rule.order,
++                    "deadline": rule.deadline,
++                    "train_threshold": rule.train_threshold,
++                    "validation_ceiling": rule.validation_ceiling,
++                    "split": split,
++                    "eligible_pair_count": len(eligible_ids),
++                    "reference_non_grok_count": sum(
++                        not outcomes[(seed_id, "reference")]["grokked"] for seed_id in eligible_ids
++                    ),
++                    "double_non_grok_count": sum(
++                        not outcomes[(seed_id, "double")]["grokked"] for seed_id in eligible_ids
++                    ),
++                    "RMST_reference": rmst_reference,
++                    "RMST_double": rmst_double,
++                    "relative_intervention_reduction": effect,
++                }
++            )
++
++    results = pd.DataFrame(result_rows)
++    assert len(results) == len(ALL_RULES) * 2 == 26
++    return results
++
++
++def result_row(rule_results: pd.DataFrame, rule_id: str, split: str) -> pd.Series:
++    matches = rule_results.loc[
++        (rule_results["rule_id"] == rule_id) & (rule_results["split"] == split)
++    ]
++    assert len(matches) == 1
++    return matches.iloc[0]
++
++
++def choose_rule(rule_results: pd.DataFrame) -> Rule | None:
++    best_rule: Rule | None = None
++    best_effect = -math.inf
++    for rule in SEARCHABLE_RULES:
++        row = result_row(rule_results, rule.rule_id, "selection")
++        if int(row["eligible_pair_count"]) >= 6:
++            effect = float(row["relative_intervention_reduction"])
++            # Strict greater-than preserves protocol enumeration order on exact ties.
++            if effect > best_effect:
++                best_effect = effect
++                best_rule = rule
++    return best_rule
++
++
++def create_figure(
++    rule_results: pd.DataFrame,
++    selected_rule: Rule,
++    uplift: float,
++    retention: float,
++    selection_excess: float,
++    heldout_excess: float,
++) -> None:
++    FIGURES.mkdir(exist_ok=True)
++    labels = [rule.rule_id for rule in ALL_RULES]
++    x_values = np.arange(len(labels), dtype=float)
++    selected_index = labels.index(selected_rule.rule_id)
++
++    fig, (ax_left, ax_right) = plt.subplots(
++        1, 2, figsize=(18, 9), dpi=100, gridspec_kw={"width_ratios": [1.65, 1.0]}
++    )
++
++    for index, rule in enumerate(ALL_RULES):
++        selection_effect = float(
++            result_row(rule_results, rule.rule_id, "selection")["relative_intervention_reduction"]
++        )
++        heldout_effect = float(
++            result_row(rule_results, rule.rule_id, "heldout")["relative_intervention_reduction"]
++        )
++        highlighted = rule.rule_id in {"B", selected_rule.rule_id}
++        color = "#c43c39" if rule.rule_id == selected_rule.rule_id else (
++            "#235789" if rule.rule_id == "B" else "#888888"
++        )
++        ax_left.plot(
++            [index - 0.13, index + 0.13],
++            [selection_effect, heldout_effect],
++            color=color,
++            linewidth=2.4 if highlighted else 0.8,
++            alpha=1.0 if highlighted else 0.65,
++            zorder=2,
++        )
++        ax_left.scatter(
++            index - 0.13,
++            selection_effect,
++            marker="o",
++            s=95 if highlighted else 42,
++            color=color,
++            edgecolor="white",
++            linewidth=0.8,
++            zorder=3,
++        )
++        ax_left.scatter(
++            index + 0.13,
++            heldout_effect,
++            marker="s",
++            s=95 if highlighted else 42,
++            color=color,
++            edgecolor="white",
++            linewidth=0.8,
++            zorder=3,
++        )
++
++    ax_left.axvline(0.5, color="black", linewidth=1.0)
++    ax_left.axhline(0.0, color="black", linewidth=0.8, alpha=0.6)
++    ax_left.set_xticks(x_values, labels)
++    ax_left.set_xlabel("Reference-checkpoint eligibility rule")
++    ax_left.set_ylabel("Relative RMST reduction, E")
++    ax_left.set_title("Rule effects on prospective selection and held-out splits")
++    ax_left.grid(axis="y", alpha=0.22)
++    ax_left.scatter([], [], marker="o", color="#666666", label="Selection")
++    ax_left.scatter([], [], marker="s", color="#666666", label="Held-out")
++    ax_left.legend(loc="best", frameon=False)
++    ax_left.text(0.0, 1.01, "Broad", transform=ax_left.get_xaxis_transform(), ha="center")
++    ax_left.text(6.5, 1.01, "Searchable rules", transform=ax_left.get_xaxis_transform(), ha="center")
++
++    bars = ax_right.bar(
++        [0, 1],
++        [selection_excess, heldout_excess],
++        color=["#c43c39", "#4c78a8"],
++        width=0.62,
++    )
++    ax_right.axhline(0.0, color="black", linewidth=1.0)
++    ax_right.axhline(
++        0.5 * selection_excess,
++        color="#7a3e9d",
++        linestyle="--",
++        linewidth=1.5,
++        label=r"$0.5D_{selection}$",
++    )
++    ax_right.set_xticks([0, 1], [r"$D_{selection}$", r"$D_{heldout}$"])
++    ax_right.set_ylabel("Excess over broad-rule effect")
++    ax_right.set_title("Selection excess and held-out retention")
++    ax_right.grid(axis="y", alpha=0.22)
++    ax_right.legend(loc="best", frameon=False)
++    for bar, value in zip(bars, (selection_excess, heldout_excess), strict=True):
++        vertical_offset = 5 if value >= 0 else -17
++        ax_right.annotate(
++            f"{value:.3f}",
++            (bar.get_x() + bar.get_width() / 2, value),
++            xytext=(0, vertical_offset),
++            textcoords="offset points",
++            ha="center",
++            va="bottom" if value >= 0 else "top",
++            fontsize=11,
++        )
++
++    selection_n = int(result_row(rule_results, selected_rule.rule_id, "selection")["eligible_pair_count"])
++    heldout_n = int(result_row(rule_results, selected_rule.rule_id, "heldout")["eligible_pair_count"])
++    annotation = (
++        f"Selected {selected_rule.rule_id}: D≤{selected_rule.deadline}, "
++        f"A≥{selected_rule.train_threshold:.2f}, V≤{selected_rule.validation_ceiling:.2f}\n"
++        f"U = {uplift:.3f}    R = {retention:.3f}\n"
++        f"Eligible pairs: selection n={selection_n}, held-out n={heldout_n}"
++    )
++    ax_right.text(
++        0.04,
++        0.97,
++        annotation,
++        transform=ax_right.transAxes,
++        va="top",
++        ha="left",
++        bbox={"boxstyle": "round,pad=0.5", "facecolor": "white", "edgecolor": "#bbbbbb", "alpha": 0.92},
++    )
++
++    fig.suptitle("Eligibility-rule winner's curse in paired synthetic grokking trajectories", fontsize=16)
++    fig.tight_layout(rect=(0, 0, 1, 0.96))
++    figure_path = FIGURES / "eligibility_winners_curse.png"
++    fig.savefig(figure_path, dpi=100, metadata={"Software": "experiment.py"})
++    plt.close(fig)
++    shutil.copyfile(figure_path, ROOT / "eligibility_winners_curse.png")
++
++
++def main() -> None:
++    trajectories, parameters, outcomes = generate_trajectories()
++    trajectories.to_csv(
++        ROOT / "all_trajectories.csv.gz",
++        index=False,
++        compression={"method": "gzip", "compresslevel": 9, "mtime": 0},
++    )
++
++    # The ledger is finalized before calculate_rule_results forms paired samples.
++    ledger, eligibility_map = build_and_write_ledger(trajectories, parameters, outcomes)
++    rule_results = calculate_rule_results(outcomes, eligibility_map)
++    rule_results.to_csv(ROOT / "rule_results.csv", index=False)
++
++    selected_rule = choose_rule(rule_results)
++    if selected_rule is None:
++        raise RuntimeError("No searchable rule has at least 6 eligible selection pairs")
++
++    broad_selection = result_row(rule_results, "B", "selection")
++    broad_heldout = result_row(rule_results, "B", "heldout")
++    chosen_selection = result_row(rule_results, selected_rule.rule_id, "selection")
++    chosen_heldout = result_row(rule_results, selected_rule.rule_id, "heldout")
++
++    e_broad_selection = float(broad_selection["relative_intervention_reduction"])
++    e_broad_heldout = float(broad_heldout["relative_intervention_reduction"])
++    e_chosen_selection = float(chosen_selection["relative_intervention_reduction"])
++    e_chosen_heldout = float(chosen_heldout["relative_intervention_reduction"])
++    selection_excess = e_chosen_selection - e_broad_selection
++    heldout_excess = e_chosen_heldout - e_broad_heldout
++    retention = heldout_excess / selection_excess if selection_excess > 0 else math.inf
++    uplift = e_chosen_selection / e_broad_selection - 1.0 if e_broad_selection > 0 else -math.inf
++
++    broad_selection_n = int(broad_selection["eligible_pair_count"])
++    broad_heldout_n = int(broad_heldout["eligible_pair_count"])
++    chosen_selection_n = int(chosen_selection["eligible_pair_count"])
++    chosen_heldout_n = int(chosen_heldout["eligible_pair_count"])
++
++    conditions = {
++        "broad_selection_n_at_least_6": broad_selection_n >= 6,
++        "broad_heldout_n_at_least_6": broad_heldout_n >= 6,
++        "chosen_selection_n_at_least_6": chosen_selection_n >= 6,
++        "chosen_heldout_n_at_least_6": chosen_heldout_n >= 6,
++        "broad_selection_effect_positive": e_broad_selection > 0,
++        "selection_uplift_at_least_30_percent": e_chosen_selection >= 1.30 * e_broad_selection,
++        "selection_excess_positive": selection_excess > 0,
++        "heldout_retention_at_most_half": heldout_excess <= 0.50 * selection_excess,
++    }
++    decision = "SUPPORTED" if all(conditions.values()) else "REFUTED"
++
++    sample_sizes = {
++        f"{row.rule_id}_{row.split}": int(row.eligible_pair_count)
++        for row in rule_results.itertuples(index=False)
++    }
++    summary_metrics = {
++        "r_star": selected_rule.rule_id,
++        "r_star_thresholds": {
++            "deadline": selected_rule.deadline,
++            "train_threshold": selected_rule.train_threshold,
++            "validation_ceiling": selected_rule.validation_ceiling,
++        },
++        "effects": {
++            "broad_selection": e_broad_selection,
++            "broad_heldout": e_broad_heldout,
++            "chosen_selection": e_chosen_selection,
++            "chosen_heldout": e_chosen_heldout,
++        },
++        "U": uplift,
++        "D_selection": selection_excess,
++        "D_holdout": heldout_excess,
++        "R": retention,
++        "ledger_row_count": len(ledger),
++        "ledger_unique_seed_count": int(ledger["seed_id"].nunique()),
++        "ledger_coverage": float(ledger["seed_id"].nunique() / N_SEEDS),
++        "all_sample_sizes": sample_sizes,
++        "broad_selection_n": broad_selection_n,
++        "broad_heldout_n": broad_heldout_n,
++        "chosen_selection_n": chosen_selection_n,
++        "chosen_heldout_n": chosen_heldout_n,
++        "decision_conditions": conditions,
++        "decision": decision,
++    }
++    # Values are finite for this deterministic run; scalar conversion remains
++    # robust to protocol-defined infinities in alternate re-runs.
++    strict_summary = {
++        key: (
++            {nested_key: json_scalar(nested_value) for nested_key, nested_value in value.items()}
++            if isinstance(value, dict) and all(not isinstance(v, dict) for v in value.values())
++            else value
++        )
++        for key, value in summary_metrics.items()
++    }
++    write_json(ROOT / "summary_metrics.json", strict_summary)
++
++    create_figure(
++        rule_results,
++        selected_rule,
++        uplift,
++        retention,
++        selection_excess,
++        heldout_excess,
++    )
++
++    eligibility_columns = [f"{rule.rule_id}_eligible" for rule in SEARCHABLE_RULES]
++    all_searchable_ineligible_count = int((ledger[eligibility_columns] == "FALSE").all(axis=1).sum())
++    reference_non_grok_count = int((ledger["reference_grok_status"] == "NON_GROKKING").sum())
++    results = {
++        "seed_count": N_SEEDS,
++        "trajectory_row_count": len(trajectories),
++        "ledger_row_count": len(ledger),
++        "ledger_unique_seed_count": int(ledger["seed_id"].nunique()),
++        "ledger_coverage": float(ledger["seed_id"].nunique() / N_SEEDS),
++        "ledger_reference_non_grok_count": reference_non_grok_count,
++        "ledger_all_searchable_rules_ineligible_count": all_searchable_ineligible_count,
++        "rule_result_row_count": len(rule_results),
++        "r_star": selected_rule.rule_id,
++        "r_star_deadline": selected_rule.deadline,
++        "r_star_train_threshold": selected_rule.train_threshold,
++        "r_star_validation_ceiling": selected_rule.validation_ceiling,
++        "broad_selection_effect": e_broad_selection,
++        "broad_heldout_effect": e_broad_heldout,
++        "chosen_selection_effect": e_chosen_selection,
++        "chosen_heldout_effect": e_chosen_heldout,
++        "post_hoc_selection_uplift_U": uplift,
++        "selection_excess_D_selection": selection_excess,
++        "heldout_excess_D_holdout": heldout_excess,
++        "excess_retention_fraction_R": retention,
++        "broad_selection_n": broad_selection_n,
++        "broad_heldout_n": broad_heldout_n,
++        "chosen_selection_n": chosen_selection_n,
++        "chosen_heldout_n": chosen_heldout_n,
++        "broad_selection_reference_non_grok_count": int(broad_selection["reference_non_grok_count"]),
++        "broad_selection_double_non_grok_count": int(broad_selection["double_non_grok_count"]),
++        "broad_heldout_reference_non_grok_count": int(broad_heldout["reference_non_grok_count"]),
++        "broad_heldout_double_non_grok_count": int(broad_heldout["double_non_grok_count"]),
++        "chosen_selection_reference_non_grok_count": int(chosen_selection["reference_non_grok_count"]),
++        "chosen_selection_double_non_grok_count": int(chosen_selection["double_non_grok_count"]),
++        "chosen_heldout_reference_non_grok_count": int(chosen_heldout["reference_non_grok_count"]),
++        "chosen_heldout_double_non_grok_count": int(chosen_heldout["double_non_grok_count"]),
++        **conditions,
++        "decision": decision,
++    }
++    assert all(not isinstance(value, (dict, list, tuple)) for value in results.values())
++    write_json(ROOT / "results.json", {key: json_scalar(value) for key, value in results.items()})
++
++    print(
++        "Ran 48 deterministic paired trajectories and evaluated 12 searchable eligibility rules "
++        "against the broad rule."
++    )
++    print(
++        f"Selected {selected_rule.rule_id} (D={selected_rule.deadline}, "
++        f"A={selected_rule.train_threshold:.2f}, V={selected_rule.validation_ceiling:.2f}); "
++        f"E broad/chosen selection={e_broad_selection:.4f}/{e_chosen_selection:.4f}, "
++        f"E broad/chosen held-out={e_broad_heldout:.4f}/{e_chosen_heldout:.4f}."
++    )
++    print(
++        f"U={uplift:.4f}, D_selection={selection_excess:.4f}, "
++        f"D_holdout={heldout_excess:.4f}, R={retention:.4f}; "
++        f"eligible n broad={broad_selection_n}/{broad_heldout_n}, "
++        f"chosen={chosen_selection_n}/{chosen_heldout_n}."
++    )
++    print(f"Decision: {decision}.")
++
++
++if __name__ == "__main__":
++    main()
+
+2026-07-19T22:26:22.427171Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `supports_reasoning_summaries` at line 88 column 5
+ succeeded in 23068ms:
+/Users/gdeml/.matplotlib is not a writable directory
+Matplotlib created a temporary cache directory at /var/folders/wx/2t76kt5d3bx8q341hj7q8kyh0000gn/T/matplotlib-g4gqe7n1 because there was an issue with the default path ({configdir}); it is highly recommended to set the MPLCONFIGDIR environment variable to a writable directory, in particular to speed up the import of Matplotlib and to better support multiprocessing.
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+
+Fontconfig error: No writable cache directories
+	/opt/homebrew/var/cache/fontconfig
+	/Users/gdeml/.cache/fontconfig
+	/Users/gdeml/.fontconfig
+Matplotlib is building the font cache; this may take a moment.
+Ran 48 deterministic paired trajectories and evaluated 12 searchable eligibility rules against the broad rule.
+Selected R03 (D=1200, A=0.97, V=0.20); E broad/chosen selection=0.2158/0.2870, E broad/chosen held-out=0.1883/0.1906.
+U=0.3301, D_selection=0.0712, D_holdout=0.0023, R=0.0323; eligible n broad=24/24, chosen=11/11.
+Decision: SUPPORTED.
+
+codex
+The first full run completed successfully: the selected rule was R03, with a 33.0% selection uplift and only 3.2% excess retention on held-out seeds, yielding `SUPPORTED`. I’m doing a stricter artifact audit now—raw ledger literals, all schemas/counts, recomputed rule selection and decision, image dimensions, and a second deterministic run/hash comparison.
+
+!!!!! TIMEOUT: wall-clock limit exceeded, sending SIGTERM to pgid=46083 and 4 descendant process(es) [46084, 46155, 46156, 46371] !!!!!
+
+===== codex exec end exit=0 timed_out=True killed_for=n/a duration_s=300.1 =====
