@@ -1,0 +1,255 @@
+{
+  "slug": "topic-can-the-optimization-comparison-be-repeate",
+  "topic": "Topic **Can the optimization comparison be repeated in a preregistered, informative regime?** Select the population size, mutation rate, and evaluation budget in advance using a separate calibration procedure so that serial success is measurable but nonsaturated. Then preregister the primary paired success effect, confidence interval, sample size, and decision rule before comparing batch-size-16. _(auto-enqueued follow-up from genetic-algorithms)_",
+  "created_at": "2026-07-19T01:53:25+00:00",
+  "updated_at": "2026-07-19T09:48:06+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Variations of Genetic Algorithms",
+      "authors": [
+        "Alison Jenkins",
+        "Vinika Gupta",
+        "Alexis Myrick",
+        "Mary Lenoir"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1911.00490v1",
+      "source": "arXiv:1911.00490v1"
+    },
+    {
+      "title": "Efficient Parallel Genetic Algorithm for Perturbed Substructure Optimization in Complex Network",
+      "authors": [
+        "Shanqing Yu",
+        "Meng Zhou",
+        "Jintao Zhou",
+        "Minghao Zhao",
+        "Yidan Song",
+        "Yao Lu",
+        "Zeyu Wang",
+        "Qi Xuan"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2412.20980v1",
+      "source": "arXiv:2412.20980v1"
+    },
+    {
+      "title": "Evolutionary algorithms",
+      "authors": [
+        "Anton V. Eremeev"
+      ],
+      "year": 2015,
+      "url": "http://arxiv.org/abs/1511.06987v5",
+      "source": "arXiv:1511.06987v5"
+    },
+    {
+      "title": "EOS: a Parallel, Self-Adaptive, Multi-Population Evolutionary Algorithm for Constrained Global Optimization",
+      "authors": [
+        "Lorenzo Federici",
+        "Boris Benedikter",
+        "Alessandro Zavoli"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2007.04681v2",
+      "source": "arXiv:2007.04681v2"
+    },
+    {
+      "title": "The 2008 election: A preregistered replication analysis",
+      "authors": [
+        "Rayleigh Lei",
+        "Andrew Gelman",
+        "Yair Ghitza"
+      ],
+      "year": 2016,
+      "url": "http://arxiv.org/abs/1607.04157v1",
+      "source": "arXiv:1607.04157v1"
+    },
+    {
+      "title": "Optimal Paired Comparison Block Designs",
+      "authors": [
+        "Eric Nyarko"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1910.06390v1",
+      "source": "arXiv:1910.06390v1"
+    },
+    {
+      "title": "Chunks and Tasks: a programming model for parallelization of dynamic algorithms",
+      "authors": [
+        "Emanuel H. Rubensson",
+        "Elias Rudberg"
+      ],
+      "year": 2012,
+      "url": "http://arxiv.org/abs/1210.7427v1",
+      "source": "arXiv:1210.7427v1"
+    },
+    {
+      "title": "Performance Comparison on Parallel CPU and GPU Algorithms for Unified Gas-Kinetic Scheme",
+      "authors": [
+        "Jizhou Liu",
+        "Fang Q. Hu",
+        "Xiaodong Li"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1810.08137v3",
+      "source": "arXiv:1810.08137v3"
+    },
+    {
+      "title": "Cheating for Problem Solving: A Genetic Algorithm with Social Interactions",
+      "authors": [
+        "Rafeal Lahoz-Beltra",
+        "Gabriela Ochoa",
+        "Uwe Aickelin"
+      ],
+      "year": 2010,
+      "url": "http://arxiv.org/abs/1001.1889v1",
+      "source": "arXiv:1001.1889v1"
+    },
+    {
+      "title": "Phase-Only Planar Antenna Array Synthesis with Fuzzy Genetic Algorithms",
+      "authors": [
+        "Boufeldja Kadri",
+        "Miloud Boussahla",
+        "Fethi Tarik Bendimerad"
+      ],
+      "year": 2010,
+      "url": "http://arxiv.org/abs/1002.1176v1",
+      "source": "arXiv:1002.1176v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "On the 80-bit concatenated trap-4 benchmark, a calibration using seeds 0-39 will choose population size from {32, 64, 96}, mutation rate from {1/80, 2/80, 4/80}, and budget from {8000, 16000, 32000} by minimizing the absolute distance of serial success from 0.50, with deterministic tie-breaking. On 128 preregistered paired seeds starting at 1000, a serial elitist steady-state GA will exceed an otherwise identical frozen-parent batch-size-16 GA by at least 10 percentage points in optimum-reaching success, and the lower endpoint of a 95% paired Newcombe confidence interval for serial minus batch success will be above zero.",
+      "rationale": "This is the direct confirmatory test missing from the literature: tuning is isolated from confirmation, serial performance is placed in a nonsaturated regime, evaluation opportunity is equal, and the effect, interval, sample size, and decision rule are fixed before testing. It revisits the previously refuted fixed-regime batch claim without repeating it, because the operating regime is selected prospectively from independent data.",
+      "novelty": 9.1,
+      "feasibility": 9.0,
+      "info_gain": 9.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "On 80-bit OneMax with target fitness 80, parameters independently calibrated by the same prespecified grid-and-tie-breaking procedure to give serial success between 0.35 and 0.65, the absolute paired success-rate difference between serial elitist steady-state replacement and frozen-parent batch-size-16 replacement will be no greater than 5 percentage points across 192 held-out seed pairs, with the 95% paired confidence interval contained within the equivalence bounds [-0.10, 0.10].",
+      "rationale": "A preregistered equivalence result on a smooth benchmark would test whether any batch penalty found on deceptive trap functions is problem-structural rather than an unavoidable consequence of batching. The survey reports no calibrated finite-budget equivalence comparison and emphasizes that asymptotic convergence does not answer this question.",
+      "novelty": 8.5,
+      "feasibility": 9.5,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "In the independently calibrated 80-bit trap-4 regime, optimum-reaching success across 128 held-out paired seeds will show a batch-size dose response: frozen-parent batch size 16 will be at least 8 percentage points less successful than batch size 4, while batch size 4 will be no more than 5 percentage points less successful than serial batch size 1; all variants will use the same initial populations, operators, and total evaluation budget.",
+      "rationale": "A graded response would distinguish a genuine stale-population batching mechanism from a chance difference specific to the value 16. Prior work and the earlier lab test compare endpoints but do not establish whether degradation increases with the number of offspring generated from one population snapshot.",
+      "novelty": 8.8,
+      "feasibility": 9.2,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "Across 40 deterministic calibration-validation splits constructed from a precomputed 400-seed outcome table for the trap-4 parameter grid, using 64 calibration seeds rather than 16 will increase by at least 20 percentage points the fraction of selected regimes whose serial success on a disjoint 64-seed validation block lies in the prespecified informative interval [0.30, 0.70].",
+      "rationale": "The survey calls for separate calibration but does not establish how much calibration data are needed to select a reliably nonsaturated regime. This hypothesis quantifies whether a small pilot like the 30-run precedent is too unstable for prospective parameter and budget selection.",
+      "novelty": 8.7,
+      "feasibility": 9.4,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Across the same 40 deterministic calibration-validation splits, the median absolute deviation of serial success from the calibration target 0.50 will be at least 0.08 larger on held-out validation seeds than on the seeds used to select population size, mutation rate, and budget; reusing the selection seeds as confirmatory observations will therefore overstate calibration accuracy.",
+      "rationale": "This directly tests the survey's concern that parameter selection must be insulated from confirmatory data. It measures selection-induced optimism even when the investigator tunes for an informative success rate rather than simply choosing the highest-performing setting.",
+      "novelty": 9.0,
+      "feasibility": 9.5,
+      "info_gain": 9.5,
+      "chosen": true,
+      "outcome": "refuted"
+    },
+    {
+      "id": 6,
+      "statement": "Using a reservoir of 512 held-out paired serial and batch-size-16 outcomes from the calibrated trap-4 regime, deterministic resampling will show that increasing the preregistered sample size from 30 pairs, as used in the earlier comparison, to 128 pairs reduces the median width of the 95% paired success-difference confidence interval by at least 40% and reduces the fraction of intervals spanning both -0.10 and 0.10 by at least 30 percentage points.",
+      "rationale": "The literature motivates repeated runs but does not justify whether 30 runs can support an informative interval-based decision. This hypothesis links sample-size preregistration to practical decisiveness rather than relying only on a significance threshold.",
+      "novelty": 8.3,
+      "feasibility": 9.7,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "For the calibrated trap-4 population size and mutation rate, the selected budget B will produce at least 1.5 times as many serial-versus-batch discordant success pairs as either the floor regime B/4 or the saturated regime 4B across 128 matched seeds, and the paired confidence interval for the success difference at B will be at least 25% narrower than at each alternative budget.",
+      "rationale": "This tests the central premise that calibration to nonsaturated serial success makes the comparison more informative. The survey notes that near-zero and near-one success leave little room for detecting differences, but none of the cited studies empirically compares the information obtained at calibrated and deliberately uninformative budgets.",
+      "novelty": 9.1,
+      "feasibility": 8.9,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "In the calibrated trap-4 comparison, changing only the batch-budget boundary rule among (i) evaluating a partial final batch, (ii) stopping before any incomplete final batch, and (iii) allowing one complete final batch to overshoot the nominal budget by at most 15 evaluations will change batch-size-16 success by no more than 2 percentage points across 256 held-out seeds, with each 95% paired confidence interval contained within [-0.05, 0.05].",
+      "rationale": "The survey identifies within-batch stopping and evaluation accounting as potential sources of unintended advantage. This preregistered equivalence test determines whether reasonable boundary rules are negligible at the calibrated budget or large enough to account for the primary serial-batch effect.",
+      "novelty": 8.9,
+      "feasibility": 9.5,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Run a preregistered, deterministic steady-state genetic-algorithm experiment on 120 independent calibration-validation splits to quantify selection-induced optimism and then compare serial replacement with batch-size-16 replacement only on held-out seeds.",
+    "protocol": "1. Use Python 3.11 or later with only numpy, pandas, and matplotlib; do not access the network or alter any specification after examining outcomes. Record package versions in the output.\n2. Optimize the deterministic 20-bit OneMax objective f(x) = bit_count(x), whose unique success state is the all-ones bit string. Represent genomes as unsigned integers. A run is successful if the optimum is evaluated at least once within the evaluation budget.\n3. Implement a generationally reproducible steady-state genetic algorithm. Initialize P genomes independently and uniformly from all 2^20 bit strings and count these P evaluations toward the budget. For every offspring evaluation, sample two population indices independently and uniformly with replacement; use the fitter genome as parent, breaking a fitness tie in favor of the first sampled index. Mutate each of the 20 bits independently with probability p. Evaluate the child. If its fitness is at least the current minimum population fitness, replace one minimum-fitness individual selected uniformly at random; otherwise discard it. Stop after exactly B total evaluations or immediately after evaluating the optimum. Use numpy.random.Generator(numpy.random.PCG64(seed)) separately for every run.\n4. Preregister the candidate grid before running any calibration: population P in {4, 12}, mutation probability p in {0.5/20, 1/20, 2/20}, and total evaluation budget B in {80, 160, 320}, giving 18 settings. The target serial success rate is exactly 0.50.\n5. Create 120 fixed, mutually disjoint calibration-validation splits indexed i = 0,...,119. For split i, set base_i = 10000000 + 10000*i. Its 16 calibration seeds are base_i + j for j = 0,...,15, and its 128 validation seeds are base_i + 1000 + j for j = 0,...,127. The same seed may be reused across candidate settings within its split as common random numbers, but no seed may occur in two splits or in both calibration and validation.\n6. For every split and every candidate setting, run the serial algorithm on all 16 calibration seeds and compute its calibration success rate. Select the setting minimizing |calibration_success_rate - 0.50|. Resolve ties, in order, by smaller B, smaller P, and mutation-multiplier order 1, 0.5, 2. Save all candidate results and the selected setting; do not retune using validation results.\n7. Apply each split's selected setting to the serial algorithm on that split's 128 held-out validation seeds. For split i compute c_i, the selected setting's success proportion on the 16 reused calibration seeds; v_i, its success proportion on the 128 held-out validation seeds; a_i = |c_i - 0.50|; b_i = |v_i - 0.50|; and delta_i = b_i - a_i.\n8. Before inspecting validation outcomes, preregister the primary effect D = median(delta_i) over the 120 splits and the threshold 0.08. Construct a paired split-level 95% percentile bootstrap confidence interval by initializing PCG64 with seed 20250308, drawing 20000 bootstrap samples of 120 split indices with replacement, computing the median delta in each sample, and taking numpy.quantile values 0.025 and 0.975 with method='linear'. Support the hypothesis only if the lower confidence bound is at least 0.08; refute it only if the upper confidence bound is below 0.08; otherwise report inconclusive. Equality at 0.08 counts as support for a lower bound and does not count as refutation for an upper bound.\n9. Treat informative calibration as a preregistered regime check: at least 96 of 120 selected calibration rates c_i must lie in [0.25, 0.75]. If this check fails, label the experiment 'regime-check failure/inconclusive' regardless of D; do not change the grid or rerun with new seeds.\n10. Only after the settings and all rules above are locked, implement batch-size-16 replacement. Initialization, objective, tournament selection, mutation, replacement rule, seed, P, p, and B are identical to serial. At the start of each batch, freeze a snapshot of the population; generate up to 16 offspring, or the number remaining before budget B, with every tournament parent selected from that frozen snapshot. After all offspring in the batch have been evaluated, process them in generation order against the live population using the same serial replacement rule. Success means that the optimum was evaluated by any offspring, whether or not retained.\n11. Run batch-size-16 on exactly the same 128 validation seeds and selected setting in each split; calibration seeds must not be used for this comparison. For each validation seed record paired binary outcomes for batch and serial. Define q_i as the mean within split i of batch_success - serial_success, and define the preregistered paired batch effect Q = mean(q_i) across the 120 splits. Obtain its 95% percentile cluster-bootstrap interval using the same 20000 split resamples used for D. Declare batch-size-16 superior if the lower bound is greater than 0, serial superior if the upper bound is less than 0, and otherwise declare no decisive difference. This batch decision is secondary and cannot change the hypothesis decision for D.\n12. Also report median(a_i), median(b_i), D, the bootstrap interval for D, the count of splits with delta_i > 0, delta_i = 0, and delta_i < 0, the regime-check count, serial and batch validation success rates, Q, its interval, and paired discordant counts where only serial or only batch succeeds.\n13. Save results.csv with one row per split and columns split, selected_P, selected_mutation_multiplier, selected_p, selected_B, calibration_success_rate, validation_serial_success_rate, validation_batch_success_rate, calibration_target_deviation, validation_target_deviation, delta, and batch_minus_serial. Save run_summary.json containing all aggregate metrics, confidence intervals, package versions, fixed seeds, decision labels, and runtime.\n14. Save calibration_optimism.png at 1600 by 700 pixels with two panels. The left panel is a scatterplot of a_i versus b_i with a dashed y=x line and solid lines at the respective medians. The right panel plots the sorted delta_i values, a horizontal zero line, a horizontal 0.08 threshold line, and an annotation containing D and its 95% confidence interval. Use fixed plotting order and no random jitter.\n15. Implement bit-packed genomes and avoid retaining per-evaluation histories. The fixed workload is 120 splits, 16 calibration seeds per split across 18 settings, and 128 validation seeds per split for each of serial and batch-size-16; do not add exploratory runs or increase budgets.",
+    "metrics": [
+      "Primary calibration-optimism effect D: median over 120 splits of |held-out serial success rate - 0.50| minus |reused calibration success rate - 0.50|.",
+      "95% paired bootstrap CI for D: 2.5th and 97.5th percentiles from 20000 fixed-seed split-level bootstrap resamples.",
+      "Directional split count: numbers of splits with positive, zero, and negative delta_i, showing how consistently held-out deviation exceeds reused-calibration deviation.",
+      "Informative-regime check: number of selected calibration success rates in [0.25, 0.75], required to be at least 96 of 120.",
+      "Batch-size-16 paired success effect Q: mean over splits of the within-split mean of batch_success minus serial_success on the same 128 validation seeds.",
+      "95% cluster-bootstrap CI for Q and paired discordant outcome counts: seeds where only batch succeeds versus seeds where only serial succeeds."
+    ],
+    "time_budget_minutes": 30,
+    "expected_if_true": "The informative-regime check passes and the lower endpoint of the 95% paired bootstrap confidence interval for D is at least 0.08, with most splits having positive delta_i; this is classified as supported.",
+    "expected_if_false": "The informative-regime check passes and the upper endpoint of the 95% paired bootstrap confidence interval for D is below 0.08; this is classified as refuted. If the interval overlaps 0.08, the result is explicitly inconclusive."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T09:25:56+00:00",
+      "finished_at": "2026-07-19T09:33:05+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "inconclusive",
+      "notes": "The estimated increase in median target deviation was D = 0.0625, below the preregistered 0.08 threshold, but its bootstrap confidence interval was [0.0625, 0.125], which includes effects meeting the hypothesis. Validation deviations were higher in 27 of 40 splits, so the data suggest some calibration optimism but do not decisively establish or rule out an increase of at least 0.08.\n\nRevision instructions: Increase the number of independent calibration-validation splits and/or validation seeds to narrow the confidence interval. Preregister a CI-based decision rule: support only if the lower bound is at least 0.08, refute only if the upper bound is below 0.08, and otherwise classify the result as inconclusive."
+    },
+    {
+      "index": 2,
+      "started_at": "2026-07-19T09:35:30+00:00",
+      "finished_at": "2026-07-19T09:42:20+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "refuted",
+      "notes": "The informative-regime check passed in all 120 splits, exceeding the required 96. The primary paired effect was D = 0.0234 with a 95% bootstrap CI of [0.0078, 0.0391]; because the upper endpoint is well below the preregistered 0.08 threshold, the hypothesis is decisively refuted despite 78 positive versus 40 negative split-level deltas."
+    }
+  ],
+  "verdict": "refuted",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 5.0,
+  "error": ""
+}

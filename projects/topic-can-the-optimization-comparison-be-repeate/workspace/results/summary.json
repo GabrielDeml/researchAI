@@ -1,0 +1,44 @@
+{
+  "D": 0.0625,
+  "D_ci_95": [
+    0.0625,
+    0.125
+  ],
+  "Delta": -0.25625,
+  "Delta_ci_95": [
+    -0.309375,
+    -0.20152343750000057
+  ],
+  "batch_decision": "serial superior",
+  "diagnostics": {
+    "median_a_s": 0.0,
+    "median_c_s": 0.5,
+    "median_h_s": 0.0625,
+    "median_v_s": 0.53125,
+    "splits_h_greater_a": 27
+  },
+  "optimism_threshold": 0.08,
+  "package_versions": {
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.1",
+    "pandas": "3.0.3",
+    "python": "3.14.6"
+  },
+  "sample_sizes": {
+    "bootstrap_resamples": 10000,
+    "calibration_observations": 640,
+    "splits": 40,
+    "validation_pairs": 640
+  },
+  "selected_configuration_frequencies": {
+    "P16_m0.025_B128": 7,
+    "P16_m0.05_B128": 5,
+    "P16_m0.2_B512": 1,
+    "P32_m0.1_B256": 2,
+    "P32_m0.2_B512": 1,
+    "P8_m0.025_B128": 9,
+    "P8_m0.05_B128": 5,
+    "P8_m0.1_B128": 10
+  },
+  "threshold_decision": "refuted"
+}

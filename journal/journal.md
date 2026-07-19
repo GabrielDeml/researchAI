@@ -38,3 +38,11 @@
 - **Verdict:** supported
 - **Key numbers:** all_semantic_validations_passed=True; canonical_archive_size_max_bytes=2513; canonical_archive_size_min_bytes=2504; canonical_pair_sizes_all_equal=True; canonical_preservation_count=50; canonical_preservation_rate=1.0; canonical_preservation_required_count=50; canonical_preservation_required_rate=1.0
 - **What I'd do differently:** Next time, I would predefine and publish the canonicalization rules and validation protocol, then replicate across independent environments to confirm stable identifiers beyond this single iteration.
+
+## 2026-07-19 — topic-can-the-optimization-comparison-be-repeate
+
+- **Topic:** Topic **Can the optimization comparison be repeated in a preregistered, informative regime?** Select the population size, mutation rate, and evaluation budget in advance using a separate calibration procedure so that serial success is measurable but nonsaturated. Then preregister the primary paired success effect, confidence interval, sample size, and decision rule before comparing batch-size-16. _(auto-enqueued follow-up from genetic-algorithms)_
+- **Hypothesis:** Across the same 40 deterministic calibration-validation splits, the median absolute deviation of serial success from the calibration target 0.50 will be at least 0.08 larger on held-out validation seeds than on the seeds used to select population size, mutation rate, and budget; reusing the selection seeds as confirmatory observations will therefore overstate calibration accuracy.
+- **Verdict:** refuted
+- **Key numbers:** batch_Q=-0.3421223958333333; batch_ci_high=-0.3279947916666667; batch_ci_low=-0.35592447916666664; batch_decision=serial superior; batch_validation_success_rate=0.16197916666666667; bootstrap_seed=20250308; delta_negative_splits=40; delta_positive_splits=78
+- **What I'd do differently:** Next time, preregister the calibration, paired split analysis, bootstrap confidence interval, and decision threshold before running the full comparison to prevent post hoc interpretation of modest effects.

@@ -1,0 +1,43 @@
+{
+  "fixed_grid": {
+    "evaluation_budgets": [
+      64,
+      128,
+      256,
+      512
+    ],
+    "mutation_rates": [
+      0.025,
+      0.05,
+      0.1,
+      0.2
+    ],
+    "population_sizes": [
+      8,
+      16,
+      32
+    ]
+  },
+  "master_seed": 20250308,
+  "observations_per_partition_per_split": 16,
+  "package_versions": {
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.1",
+    "pandas": "3.0.3",
+    "python": "3.14.6"
+  },
+  "primary_confidence_interval": "paired split bootstrap percentile 95%, 10000 resamples, seed 20250309",
+  "primary_decision_rule": "support iff D >= 0.08; otherwise refute",
+  "primary_estimand": "median(h_s)-median(a_s)",
+  "primary_sample_size_splits": 40,
+  "secondary_confidence_interval": "cluster bootstrap percentile 95%, 10000 resamples, seed 20250310",
+  "secondary_decision_rule": "batch superior iff CI low > 0; serial superior iff CI high < 0; otherwise no detectable difference",
+  "secondary_estimand": "mean(batch_success-serial_success)",
+  "secondary_paired_sample_size": 640,
+  "selection_target": 0.5,
+  "selection_tiebreak": [
+    "lower_budget",
+    "lower_population",
+    "lower_mutation_rate"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "base_seed_start": 10000000,
+  "base_seed_stride": 10000,
+  "batch_Q_ci_95": [
+    -0.35592447916666664,
+    -0.3279947916666667
+  ],
+  "batch_decision": "serial superior",
+  "batch_effect_Q": -0.3421223958333333,
+  "batch_validation_success_rate": 0.16197916666666667,
+  "batch_validation_successes": 2488,
+  "batch_validation_trials": 15360,
+  "bootstrap_resamples": 20000,
+  "bootstrap_seed": 20250308,
+  "calibration_run_count": 34560,
+  "calibration_seeds_per_split": 16,
+  "candidate_settings": 18,
+  "delta_negative_splits": 40,
+  "delta_positive_splits": 78,
+  "delta_zero_splits": 2,
+  "experiment": "preregistered OneMax calibration optimism and batch-size-16 comparison",
+  "median_calibration_target_deviation": 0.0625,
+  "median_validation_target_deviation": 0.046875,
+  "only_batch_succeeds": 1047,
+  "only_serial_succeeds": 6302,
+  "package_versions": {
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.1",
+    "pandas": "3.0.3",
+    "python": "3.14.6"
+  },
+  "paired_concordant_count": 8011,
+  "primary_D_ci_95": [
+    0.0078125,
+    0.0390625
+  ],
+  "primary_decision": "refuted",
+  "primary_effect_D": 0.0234375,
+  "primary_threshold": 0.08,
+  "regime_check_count": 120,
+  "regime_check_passed": true,
+  "regime_check_required": 96,
+  "runtime_seconds": 51.51292262499919,
+  "serial_validation_success_rate": 0.5041015625,
+  "serial_validation_successes": 7743,
+  "serial_validation_trials": 15360,
+  "split_count": 120,
+  "validation_batch_run_count": 15360,
+  "validation_seed_offset": 1000,
+  "validation_seeds_per_split": 128,
+  "validation_serial_run_count": 15360
+}

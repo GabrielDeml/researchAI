@@ -1,0 +1,63 @@
+{
+  "base_seed_formula": "10000000 + 10000 * split",
+  "batch_size": 16,
+  "bootstrap_resamples": 20000,
+  "bootstrap_seed": 20250308,
+  "calibration_seed_formula": "base + j, j=0,...,15",
+  "calibration_seeds_per_split": 16,
+  "calibration_target": 0.5,
+  "candidate_grid": {
+    "mutation_multiplier": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "mutation_probability": [
+      0.025,
+      0.05,
+      0.1
+    ],
+    "population_size": [
+      4,
+      12
+    ],
+    "total_evaluation_budget": [
+      80,
+      160,
+      320
+    ]
+  },
+  "objective": "20-bit OneMax; success iff the all-ones genome is evaluated",
+  "package_versions_at_lock": {
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.1",
+    "pandas": "3.0.3",
+    "python": "3.14.6"
+  },
+  "primary_confidence_interval": "95% paired split-level percentile bootstrap; 20000 resamples of 120 splits; numpy.quantile method=linear",
+  "primary_decision": {
+    "otherwise": "inconclusive",
+    "refuted": "bootstrap upper bound < 0.08",
+    "supported": "bootstrap lower bound >= 0.08"
+  },
+  "primary_effect": "D = median_i(|v_i-0.50| - |c_i-0.50|)",
+  "primary_threshold": 0.08,
+  "regime_check": "at least 96 of 120 selected calibration rates must be in [0.25, 0.75]; failure overrides the primary decision",
+  "rng": "numpy.random.Generator(numpy.random.PCG64(seed)), separately per run",
+  "secondary_confidence_interval": "95% cluster-bootstrap interval using the exact same split resamples as D",
+  "secondary_decision": {
+    "batch_size_16_superior": "bootstrap lower bound > 0",
+    "otherwise": "no decisive difference",
+    "serial_superior": "bootstrap upper bound < 0"
+  },
+  "secondary_effect": "Q = mean over splits of mean over held-out paired seeds of batch_success - serial_success",
+  "selection_tie_break": [
+    "smaller total evaluation budget",
+    "smaller population size",
+    "mutation multiplier order 1, 0.5, 2"
+  ],
+  "split_count": 120,
+  "status": "locked before calibration and validation",
+  "validation_seed_formula": "base + 1000 + j, j=0,...,127",
+  "validation_seeds_per_split": 128
+}
