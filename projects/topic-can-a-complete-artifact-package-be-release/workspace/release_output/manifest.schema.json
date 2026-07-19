@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/synthetic-cross-file-manifest.schema.json",
+  "title": "Synthetic cross-file artifact manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "generator",
+    "files",
+    "relational_rules"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "generator": {
+      "const": "synthetic-cross-file-validation-v1"
+    },
+    "files": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/csvFile"
+          },
+          {
+            "$ref": "#/$defs/npyFile"
+          }
+        ]
+      }
+    },
+    "relational_rules": {
+      "type": "array",
+      "prefixItems": [
+        { "const": "R1" },
+        { "const": "R2" },
+        { "const": "R3" },
+        { "const": "R4" },
+        { "const": "R5" },
+        { "const": "R6" },
+        { "const": "R7" },
+        { "const": "R8" }
+      ],
+      "items": false,
+      "minItems": 8,
+      "maxItems": 8
+    }
+  },
+  "$defs": {
+    "commonFileFields": {
+      "type": "object",
+      "required": ["path", "sha256", "size_bytes", "format"],
+      "properties": {
+        "path": {
+          "enum": [
+            "observations.csv",
+            "per_seed.csv",
+            "summary.csv",
+            "heatmap_cells.csv",
+            "heatmap_matrix.npy"
+          ]
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "format": {
+          "enum": ["csv", "npy"]
+        }
+      }
+    },
+    "csvFile": {
+      "allOf": [
+        { "$ref": "#/$defs/commonFileFields" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "sha256",
+            "size_bytes",
+            "format",
+            "columns",
+            "data_rows"
+          ],
+          "properties": {
+            "path": { "type": "string", "pattern": "\\.csv$" },
+            "sha256": { "type": "string" },
+            "size_bytes": { "type": "integer" },
+            "format": { "const": "csv" },
+            "columns": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "data_rows": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ]
+    },
+    "npyFile": {
+      "allOf": [
+        { "$ref": "#/$defs/commonFileFields" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "sha256",
+            "size_bytes",
+            "format",
+            "dtype",
+            "shape"
+          ],
+          "properties": {
+            "path": { "const": "heatmap_matrix.npy" },
+            "sha256": { "type": "string" },
+            "size_bytes": { "type": "integer" },
+            "format": { "const": "npy" },
+            "dtype": { "type": "string", "minLength": 1 },
+            "shape": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+

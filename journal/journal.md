@@ -54,3 +54,11 @@
 - **Verdict:** refuted
 - **Key numbers:** at_100000_batch16_optimum_success_count=0; at_100000_batch16_optimum_success_proportion=0.0; at_100000_bootstrap_90pct_high=0.359375; at_100000_bootstrap_90pct_low=-0.5; at_100000_eligible_mean_best_fitness_difference=-0.078125; at_100000_eligible_mean_solved_block_difference=-0.078125; at_100000_mcnemar_n01_batch16_only=0; at_100000_mcnemar_n10_serial_only=0
 - **What I'd do differently:** Next time, increase the number of independent paired instances and use a prespecified graded performance metric, because zero optimum successes at every budget made success-rate comparisons uninformative despite 500,000 evaluations.
+
+## 2026-07-19 — topic-can-a-complete-artifact-package-be-release
+
+- **Topic:** Topic Can a complete artifact package be released containing executable source code, the four CSV files, the heatmap source matrix, a schema-versioned manifest, an environment lock file, and a documented one-command reproduction procedure? _(auto-enqueued follow-up from topic-can-a-raw-per-seed-file-be-released-contai)_
+- **Hypothesis:** Among 40 coordinated output mutations whose altered files have valid formats and freshly recomputed manifest checksums, relational validation rules linking seed identifiers, row counts, summary values, and heatmap cells across the four CSV files and matrix will detect at least 36 mutations, while all 20 unmodified regenerated output sets will pass.
+- **Verdict:** supported
+- **Key numbers:** artifact_completeness_audit_pass=True; audit_clean_00_release_files_byte_identical=True; audit_environment_lock_present=True; audit_exactly_four_canonical_release_csvs=True; audit_makefile_present=True; audit_readme_documents_make_reproduce=True; audit_readme_present=True; audit_release_executable_source_present=True
+- **What I'd do differently:** Next time, run completeness and relational-validation checks across multiple regenerations and independent environments, with CI enforcing manifest, schema, checksum, and one-command reproduction consistency before release.

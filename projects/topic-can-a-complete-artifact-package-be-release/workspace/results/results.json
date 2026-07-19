@@ -1,0 +1,2457 @@
+{
+  "clean_outcomes": [
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.019035416975384578,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.03248079199693166,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_00",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.013445375021547079,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.009351249987957999,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01808087498648092,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_01",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.008729624998522922,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.007016249990556389,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.013830874988343567,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_02",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0068146249977871776,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.00586533299065195,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012238208000781015,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_03",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006372875010129064,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006031582975992933,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01253874899703078,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_04",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006507166021037847,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0060754579899366945,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012539374001789838,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_05",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006463916011853144,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006053166987840086,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012510625994764268,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_06",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006457459006924182,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006156290997751057,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01271445699967444,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_07",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006558166001923382,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0061503329779952765,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01278133297455497,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_08",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006630999996559694,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006161833996884525,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012771459005307406,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_09",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006609625008422881,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006177750008646399,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012795125017873943,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_10",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006617375009227544,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006215542001882568,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012743583996780217,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_11",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006528041994897649,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006172958004754037,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01282437500776723,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_12",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006651417003013194,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006169208005303517,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012753249990055338,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_13",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0065840419847518206,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006209082988789305,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012805707985535264,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_14",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006596624996745959,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006260916998144239,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012866792007116601,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_15",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006605875008972362,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006125790998339653,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012732624018099159,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_16",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006606833019759506,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.00618758299970068,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012757749995216727,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_17",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006570166995516047,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0060975840024184436,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012647625000681728,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_18",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0065500409982632846,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006181583012221381,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012809125008061528,
+      "failed_rules": [],
+      "kind": "clean",
+      "mutation_class": null,
+      "mutation_name": null,
+      "name": "clean_19",
+      "parsing_pass": true,
+      "relational_pass": true,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006627541995840147,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": true,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": null
+    }
+  ],
+  "experiment": "deterministic-synthetic-cross-file-relational-validation",
+  "experiment_valid": true,
+  "hypothesis_decision": "supported",
+  "metrics": {
+    "checksum_only_mutant_detection_count": 0,
+    "clean_acceptance_count": 20,
+    "clean_acceptance_rate_percent": 100.0,
+    "mutant_parse_checksum_precondition_count": 40,
+    "per_class_detection_counts": {
+      "M1": 5,
+      "M2": 5,
+      "M3": 5,
+      "M4": 5,
+      "M5": 5,
+      "M6": 5,
+      "M7": 5,
+      "M8": 5
+    },
+    "relational_mutation_detection_count": 40,
+    "relational_mutation_detection_rate_percent": 100.0,
+    "rule_level_failure_counts": {
+      "R1": 0,
+      "R2": 5,
+      "R3": 10,
+      "R4": 20,
+      "R5": 15,
+      "R6": 0,
+      "R7": 15,
+      "R8": 10
+    },
+    "support_threshold_count": 36,
+    "wall_clock_seconds": 3.477259834005963,
+    "wall_clock_under_1800_seconds": true
+  },
+  "mutant_outcomes": [
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006155624985694885,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01255333298468031,
+      "failed_rules": [
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M1",
+      "mutation_name": "raw_value_only",
+      "name": "mutant_M1_00",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006397707998985425,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 0
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006092499999795109,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012432292016455904,
+      "failed_rules": [
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M1",
+      "mutation_name": "raw_value_only",
+      "name": "mutant_M1_01",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006339792016660795,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 1
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006050750002032146,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012431749986717477,
+      "failed_rules": [
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M1",
+      "mutation_name": "raw_value_only",
+      "name": "mutant_M1_02",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006380999984685332,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 2
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0061996250005904585,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01261166698532179,
+      "failed_rules": [
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M1",
+      "mutation_name": "raw_value_only",
+      "name": "mutant_M1_03",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0064120419847313315,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 3
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006104000000050291,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012678291997872293,
+      "failed_rules": [
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M1",
+      "mutation_name": "raw_value_only",
+      "name": "mutant_M1_04",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006574291997822002,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 4
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006266084004892036,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012722543004201725,
+      "failed_rules": [
+        "R2",
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M2",
+      "mutation_name": "raw_seed_only",
+      "name": "mutant_M2_00",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006456458999309689,
+        "errors": [],
+        "failed_rules": [
+          "R2",
+          "R3",
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 0
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006175999995321035,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01263862501946278,
+      "failed_rules": [
+        "R2",
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M2",
+      "mutation_name": "raw_seed_only",
+      "name": "mutant_M2_01",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006462625024141744,
+        "errors": [],
+        "failed_rules": [
+          "R2",
+          "R3",
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 1
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006141958001535386,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012607458018464968,
+      "failed_rules": [
+        "R2",
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M2",
+      "mutation_name": "raw_seed_only",
+      "name": "mutant_M2_02",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006465500016929582,
+        "errors": [],
+        "failed_rules": [
+          "R2",
+          "R3",
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 2
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006111791008152068,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012513791007222608,
+      "failed_rules": [
+        "R2",
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M2",
+      "mutation_name": "raw_seed_only",
+      "name": "mutant_M2_03",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.00640199999907054,
+        "errors": [],
+        "failed_rules": [
+          "R2",
+          "R3",
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 3
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006064125016564503,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012554416025523096,
+      "failed_rules": [
+        "R2",
+        "R3",
+        "R4",
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M2",
+      "mutation_name": "raw_seed_only",
+      "name": "mutant_M2_04",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006490291008958593,
+        "errors": [],
+        "failed_rules": [
+          "R2",
+          "R3",
+          "R4",
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 4
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006095082993851975,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01258137499098666,
+      "failed_rules": [
+        "R3",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M3",
+      "mutation_name": "per_seed_count_only",
+      "name": "mutant_M3_00",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0064862919971346855,
+        "errors": [],
+        "failed_rules": [
+          "R3",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 0
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006071999989217147,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012564333999762312,
+      "failed_rules": [
+        "R3",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M3",
+      "mutation_name": "per_seed_count_only",
+      "name": "mutant_M3_01",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006492334010545164,
+        "errors": [],
+        "failed_rules": [
+          "R3",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 1
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006050958996638656,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012490875000366941,
+      "failed_rules": [
+        "R3",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M3",
+      "mutation_name": "per_seed_count_only",
+      "name": "mutant_M3_02",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006439916003728285,
+        "errors": [],
+        "failed_rules": [
+          "R3",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 2
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006012166995787993,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012491875007981434,
+      "failed_rules": [
+        "R3",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M3",
+      "mutation_name": "per_seed_count_only",
+      "name": "mutant_M3_03",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006479708012193441,
+        "errors": [],
+        "failed_rules": [
+          "R3",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 3
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006040832988219336,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012520958000095561,
+      "failed_rules": [
+        "R3",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M3",
+      "mutation_name": "per_seed_count_only",
+      "name": "mutant_M3_04",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0064801250118762255,
+        "errors": [],
+        "failed_rules": [
+          "R3",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 4
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006087500019930303,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012481375015340745,
+      "failed_rules": [
+        "R4",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M4",
+      "mutation_name": "per_seed_mean_only",
+      "name": "mutant_M4_00",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006393874995410442,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 0
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006040250009391457,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012422166008036584,
+      "failed_rules": [
+        "R4",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M4",
+      "mutation_name": "per_seed_mean_only",
+      "name": "mutant_M4_01",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006381915998645127,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 1
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006000541994580999,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012371166987577453,
+      "failed_rules": [
+        "R4",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M4",
+      "mutation_name": "per_seed_mean_only",
+      "name": "mutant_M4_02",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006370624992996454,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 2
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006110375019488856,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.023663625033805147,
+      "failed_rules": [
+        "R4",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M4",
+      "mutation_name": "per_seed_mean_only",
+      "name": "mutant_M4_03",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.01755325001431629,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 3
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.014302957977633923,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.023799998976755887,
+      "failed_rules": [
+        "R4",
+        "R7"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M4",
+      "mutation_name": "per_seed_mean_only",
+      "name": "mutant_M4_04",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.009497040999121964,
+        "errors": [],
+        "failed_rules": [
+          "R4",
+          "R7"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 4
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006278957996983081,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012948582996614277,
+      "failed_rules": [
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M5",
+      "mutation_name": "summary_only",
+      "name": "mutant_M5_00",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006669624999631196,
+        "errors": [],
+        "failed_rules": [
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 0
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006203124998137355,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012827124999603257,
+      "failed_rules": [
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M5",
+      "mutation_name": "summary_only",
+      "name": "mutant_M5_01",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006624000001465902,
+        "errors": [],
+        "failed_rules": [
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 1
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006129292014520615,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01273320900509134,
+      "failed_rules": [
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M5",
+      "mutation_name": "summary_only",
+      "name": "mutant_M5_02",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006603916990570724,
+        "errors": [],
+        "failed_rules": [
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 2
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006102125014876947,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012646750023122877,
+      "failed_rules": [
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M5",
+      "mutation_name": "summary_only",
+      "name": "mutant_M5_03",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.00654462500824593,
+        "errors": [],
+        "failed_rules": [
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 3
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006127666012616828,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012895374005893245,
+      "failed_rules": [
+        "R5"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M5",
+      "mutation_name": "summary_only",
+      "name": "mutant_M5_04",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006767707993276417,
+        "errors": [],
+        "failed_rules": [
+          "R5"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 4
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006146499974420294,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012621916976058856,
+      "failed_rules": [
+        "R7",
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M6",
+      "mutation_name": "heatmap_csv_only",
+      "name": "mutant_M6_00",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0064754170016385615,
+        "errors": [],
+        "failed_rules": [
+          "R7",
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 0
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006095166987506673,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012939999985974282,
+      "failed_rules": [
+        "R7",
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M6",
+      "mutation_name": "heatmap_csv_only",
+      "name": "mutant_M6_01",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006844832998467609,
+        "errors": [],
+        "failed_rules": [
+          "R7",
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 1
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006413082999642938,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01295387398567982,
+      "failed_rules": [
+        "R7",
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M6",
+      "mutation_name": "heatmap_csv_only",
+      "name": "mutant_M6_02",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006540790986036882,
+        "errors": [],
+        "failed_rules": [
+          "R7",
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 2
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006220457988092676,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012837415997637436,
+      "failed_rules": [
+        "R7",
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M6",
+      "mutation_name": "heatmap_csv_only",
+      "name": "mutant_M6_03",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.00661695800954476,
+        "errors": [],
+        "failed_rules": [
+          "R7",
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 3
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006176666996907443,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012653791985940188,
+      "failed_rules": [
+        "R7",
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M6",
+      "mutation_name": "heatmap_csv_only",
+      "name": "mutant_M6_04",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006477124989032745,
+        "errors": [],
+        "failed_rules": [
+          "R7",
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 4
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006110665999585763,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012647041003219783,
+      "failed_rules": [
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M7",
+      "mutation_name": "matrix_only",
+      "name": "mutant_M7_00",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006536375003634021,
+        "errors": [],
+        "failed_rules": [
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 0
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0061250000144355,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012591375038027763,
+      "failed_rules": [
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M7",
+      "mutation_name": "matrix_only",
+      "name": "mutant_M7_01",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0064663750235922635,
+        "errors": [],
+        "failed_rules": [
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 1
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006094832991948351,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012585290969582275,
+      "failed_rules": [
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M7",
+      "mutation_name": "matrix_only",
+      "name": "mutant_M7_02",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006490457977633923,
+        "errors": [],
+        "failed_rules": [
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 2
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0061138330202084035,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012556458037579432,
+      "failed_rules": [
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M7",
+      "mutation_name": "matrix_only",
+      "name": "mutant_M7_03",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006442625017371029,
+        "errors": [],
+        "failed_rules": [
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 3
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006089583010179922,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012585999997099862,
+      "failed_rules": [
+        "R8"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M7",
+      "mutation_name": "matrix_only",
+      "name": "mutant_M7_04",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0064964169869199395,
+        "errors": [],
+        "failed_rules": [
+          "R8"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 4
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006159124983241782,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01259741696412675,
+      "failed_rules": [
+        "R4"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M8",
+      "mutation_name": "coordinated_derived_files",
+      "name": "mutant_M8_00",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006438291980884969,
+        "errors": [],
+        "failed_rules": [
+          "R4"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 0
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006119500001659617,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012566666002385318,
+      "failed_rules": [
+        "R4"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M8",
+      "mutation_name": "coordinated_derived_files",
+      "name": "mutant_M8_01",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0064471660007257015,
+        "errors": [],
+        "failed_rules": [
+          "R4"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 1
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.0061200000054668635,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.01250883299508132,
+      "failed_rules": [
+        "R4"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M8",
+      "mutation_name": "coordinated_derived_files",
+      "name": "mutant_M8_02",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006388832989614457,
+        "errors": [],
+        "failed_rules": [
+          "R4"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 2
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006110832997364923,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012514165980974212,
+      "failed_rules": [
+        "R4"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M8",
+      "mutation_name": "coordinated_derived_files",
+      "name": "mutant_M8_03",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006403332983609289,
+        "errors": [],
+        "failed_rules": [
+          "R4"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 3
+    },
+    {
+      "checksum_only_pass": true,
+      "checksum_only_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006156833027489483,
+        "errors": [],
+        "failed_rules": [],
+        "mode": "checksum_only",
+        "parsing_pass": true,
+        "relational_pass": null,
+        "schema_pass": true
+      },
+      "checksum_verification_pass": true,
+      "elapsed_validation_seconds": 0.012608083023224026,
+      "failed_rules": [
+        "R4"
+      ],
+      "kind": "mutant",
+      "mutation_class": "M8",
+      "mutation_name": "coordinated_derived_files",
+      "name": "mutant_M8_04",
+      "parsing_pass": true,
+      "relational_pass": false,
+      "relational_validation": {
+        "checksum_only_pass": true,
+        "checksum_verification_pass": true,
+        "elapsed_seconds": 0.006451249995734543,
+        "errors": [],
+        "failed_rules": [
+          "R4"
+        ],
+        "mode": "relational",
+        "parsing_pass": true,
+        "relational_pass": false,
+        "schema_pass": true
+      },
+      "schema_pass": true,
+      "target_index": 4
+    }
+  ],
+  "package_file_audit": {
+    "all_audits_pass": true,
+    "clean_00_release_files_byte_identical": true,
+    "detection_figure_is_1600_by_900": true,
+    "environment_lock_present": true,
+    "exactly_four_canonical_release_csvs": true,
+    "makefile_present": true,
+    "readme_documents_make_reproduce": true,
+    "readme_present": true,
+    "release_executable_source_present": true,
+    "release_heatmap_matrix_present": true,
+    "release_manifest_present": true,
+    "release_manifest_schema_valid": true,
+    "release_manifest_versioned": true,
+    "release_output_relationally_valid": true,
+    "repository_executable_source_present": true,
+    "required_matplotlib_pin_present": true,
+    "required_numpy_pin_present": true,
+    "schema_present": true
+  },
+  "software_versions": {
+    "jsonschema": "4.23.0",
+    "matplotlib": "3.9.2",
+    "numpy": "2.1.3",
+    "platform": "macOS-26.5.2-arm64-arm-64bit",
+    "python": "3.12.9"
+  }
+}

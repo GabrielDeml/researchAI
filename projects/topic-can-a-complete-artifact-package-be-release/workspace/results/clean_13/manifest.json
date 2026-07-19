@@ -1,0 +1,77 @@
+{
+  "files": [
+    {
+      "columns": [
+        "seed_id",
+        "observation_id",
+        "value"
+      ],
+      "data_rows": 1000,
+      "format": "csv",
+      "path": "observations.csv",
+      "sha256": "b5b6509edb03d39059b4c579e61ba61be62ec48c35baeacd013447f1b1834cc4",
+      "size_bytes": 25263
+    },
+    {
+      "columns": [
+        "seed_id",
+        "n",
+        "mean",
+        "sample_std"
+      ],
+      "data_rows": 20,
+      "format": "csv",
+      "path": "per_seed.csv",
+      "sha256": "3a6ca73c7cdd7ef6fdd0246c65b359923efc106f2f935fbc59557dedcaab13e6",
+      "size_bytes": 788
+    },
+    {
+      "columns": [
+        "seed_count",
+        "total_observations",
+        "grand_mean"
+      ],
+      "data_rows": 1,
+      "format": "csv",
+      "path": "summary.csv",
+      "sha256": "728aead742be1cabcb45c49629250df73750ee58081915987ea8965480d73d05",
+      "size_bytes": 64
+    },
+    {
+      "columns": [
+        "row_index",
+        "seed_id",
+        "metric",
+        "value"
+      ],
+      "data_rows": 60,
+      "format": "csv",
+      "path": "heatmap_cells.csv",
+      "sha256": "c0169cefcf0aa0eaf2ce340a71ba308d1df37ebf9879068ab7caad8b82572358",
+      "size_bytes": 1503
+    },
+    {
+      "dtype": "<f8",
+      "format": "npy",
+      "path": "heatmap_matrix.npy",
+      "sha256": "428be539f37ccff2b71ea00c056bb4d018801b290997c50011600627e4e721d0",
+      "shape": [
+        20,
+        3
+      ],
+      "size_bytes": 608
+    }
+  ],
+  "generator": "synthetic-cross-file-validation-v1",
+  "relational_rules": [
+    "R1",
+    "R2",
+    "R3",
+    "R4",
+    "R5",
+    "R6",
+    "R7",
+    "R8"
+  ],
+  "schema_version": "1.0.0"
+}
