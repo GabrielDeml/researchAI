@@ -1,0 +1,234 @@
+{
+  "slug": "topic-can-make-reproduce-be-run-from-a-fresh-iso",
+  "topic": "Topic Can `make reproduce` be run from a fresh isolated checkout in a clean container or virtual machine, with the exact command, container or image identifier, interpreter path, exit status, stdout and stderr logs, generated hashes, and comparison against the released reference outputs reported? _(auto-enqueued follow-up from topic-can-a-complete-artifact-package-be-release)_",
+  "created_at": "2026-07-19T10:44:38+00:00",
+  "updated_at": "2026-07-19T12:09:02+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Preparing Reproducible Scientific Artifacts using Docker",
+      "authors": [
+        "Michael Canesche",
+        "Roland Leissa",
+        "Fernando Magno Quintão Pereira"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2308.14122v1",
+      "source": "arXiv:2308.14122v1"
+    },
+    {
+      "title": "Case Studies and Challenges in Reproducibility in the Computational Sciences",
+      "authors": [
+        "Sylwester Arabas",
+        "Michael R. Bareford",
+        "Lakshitha R. de Silva",
+        "Ian P. Gent",
+        "Benjamin M. Gorman",
+        "Masih Hajiarabderkani",
+        "Tristan Henderson",
+        "Luke Hutton"
+      ],
+      "year": 2014,
+      "url": "http://arxiv.org/abs/1408.2123v2",
+      "source": "arXiv:1408.2123v2"
+    },
+    {
+      "title": "Similarity-Based Assessment of Computational Reproducibility in Jupyter Notebooks",
+      "authors": [
+        "A S M Shahadat Hossain",
+        "Colin Brown",
+        "David Koop",
+        "Tanu Malik"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2509.23645v1",
+      "source": "arXiv:2509.23645v1"
+    },
+    {
+      "title": "How to Read a Research Compendium",
+      "authors": [
+        "Daniel Nüst",
+        "Carl Boettiger",
+        "Ben Marwick"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1806.09525v1",
+      "source": "arXiv:1806.09525v1"
+    },
+    {
+      "title": "MolSSI and BioExcel Workflow Workshop 2018 Report",
+      "authors": [
+        "Levi N. Naden",
+        "Sam Ellis",
+        "Shantenu Jha"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1905.11863v1",
+      "source": "arXiv:1905.11863v1"
+    },
+    {
+      "title": "Performance Evaluation of Container-based Virtualization for High Performance Computing Environments",
+      "authors": [
+        "Carlos Arango",
+        "Rémy Dernat",
+        "John Sanabria"
+      ],
+      "year": 2017,
+      "url": "http://arxiv.org/abs/1709.10140v1",
+      "source": "arXiv:1709.10140v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "In five fresh checkouts executed in the same immutable container image with all network interfaces disabled before invocation, the literal command `make reproduce` will exit 0 every time and generate all four CSV files and the heatmap source matrix with SHA-256 hashes identical to the released references.",
+      "rationale": "The survey motivates container isolation but identifies no end-to-end test for hidden network dependencies. This directly tests whether reproduction depends only on material already present in the checkout and image rather than package repositories, remote data, or other services.",
+      "novelty": 8.8,
+      "feasibility": 9.5,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "When the checkout is mounted read-only except for the manifest-declared output directory and a fresh temporary directory, `make reproduce` will exit 0 in all five trials, reproduce the five reference hashes, and produce no attempted writes to source files, user-home paths, or other filesystem locations.",
+      "rationale": "A clean checkout can still conceal writes to source trees, caches, or user configuration directories. Filesystem write confinement tests the survey's concern about unrecorded host state more strongly than ordinary container execution.",
+      "novelty": 9.0,
+      "feasibility": 8.8,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "Across four paired clean-container trials with `MAKEFLAGS=-j1` and `MAKEFLAGS=-j8`, while invoking the same literal command `make reproduce`, every run will exit 0 and the complete generated-file inventory and SHA-256 hashes will be identical between serial and parallel make execution.",
+      "rationale": "Undeclared target dependencies and race-prone recipes can remain hidden in a successful default run. The literature supports full-workflow evaluation but does not test whether the advertised Make entry point is invariant to inherited parallelism.",
+      "novelty": 8.7,
+      "feasibility": 9.3,
+      "info_gain": 8.9,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "If executable decoys named `python`, `python3`, and `pip` that log their use and exit 97 are prepended to `PATH`, three fresh executions of `make reproduce` will still exit 0, invoke none of the decoys, and report an interpreter path inside the recorded container environment while reproducing all five reference hashes.",
+      "rationale": "The survey specifically calls for the interpreter path, but merely recording it does not show that recipes consistently use it. PATH poisoning provides a deterministic test for accidental reliance on an undocumented ambient interpreter.",
+      "novelty": 9.3,
+      "feasibility": 9.4,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "For each of five trials in which all declared output files are prepopulated with syntactically valid stale content and timestamps set 24 hours in the future, `make reproduce` will regenerate every declared output rather than treating it as up to date, exit 0, and restore all five released reference hashes.",
+      "rationale": "Fresh-checkout success does not establish that the reproduction target is phony or otherwise protected against Make timestamp semantics. This test detects a one-command interface that silently accepts stale products instead of rerunning the scientific workflow.",
+      "novelty": 9.1,
+      "feasibility": 9.7,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "When exactly one released reference output is replaced by a format-valid but content-altered counterpart in each of five isolated trials, `make reproduce` will regenerate the normal outputs but return a nonzero exit status in all five trials, identify the mismatching logical output on stderr, and never report overall reproduction success.",
+      "rationale": "The survey distinguishes execution success from output agreement, while the prior fault tests concern missing or malformed package components before analysis. This tests whether scientifically meaningful reference mismatches are propagated through the advertised entry point's exit status and diagnostics.",
+      "novelty": 8.9,
+      "feasibility": 9.5,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Across six independent clean-container runs of `make reproduce`, a provenance capture harness will produce records containing the checkout revision, immutable image identifier, resolved interpreter path, literal command, integer exit status, separately hashed stdout and stderr logs, generated-file inventory, generated hashes, reference hashes, and per-output comparison results; an independent verifier will recompute and confirm every recorded field in all six records.",
+      "rationale": "The literature survey explicitly notes that this metadata bundle is not standardized. This hypothesis tests whether the complete evidence package can be captured mechanically without relying on author interpretation or information inferred retrospectively from merged logs.",
+      "novelty": 9.2,
+      "feasibility": 9.6,
+      "info_gain": 9.7,
+      "chosen": true,
+      "outcome": "broken"
+    },
+    {
+      "id": 8,
+      "statement": "In three paired trials under a 512 MiB memory limit with one CPU and under a 2 GiB limit with two CPUs, the literal command `make reproduce` will exit 0 in every trial and produce identical hashes for all five deliverables, with no out-of-memory termination, timeout, or resource-dependent output mismatch.",
+      "rationale": "An image identifier alone does not specify resource availability, and workflow behavior can change through parallelism, failures, or resource-sensitive code paths. Establishing a modest reproducible resource envelope would make the isolated rerun claim more portable and independently actionable.",
+      "novelty": 8.3,
+      "feasibility": 9.2,
+      "info_gain": 8.6,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Run six primary and six replay executions of the literal command `make reproduce` in fresh Docker containers and isolated checkouts, then independently verify 66 provenance checks and 18 generated-output byte comparisons.",
+    "protocol": "1. Implement the experiment using host Python 3.11 or newer and only its standard library; optionally install `matplotlib==3.9.2` with `python -m pip install matplotlib==3.9.2` for the required PNG. Set the artifact random seed to 20250308. Do not access the network during preflight or timed execution. Supply the experiment package with an architecture-appropriate OCI image archive containing Linux, CPython 3.12, POSIX shell utilities, Git, and GNU Make, plus `image.lock.json` containing the archive SHA-256 and expected Docker image ID in the form `sha256:<64 lowercase hex digits>`. Treat this archive as the offline equivalent of a previously pulled immutable image.\n2. Before starting either the experiment timer or any checkout, run an untimed fail-fast Docker preflight. Use the configured `DOCKER_HOST` if present; otherwise use the active Docker context. On macOS, run `open -a Docker` if `docker info` initially fails; on Linux with systemd, run `sudo -n systemctl start docker` if it initially fails. Poll `docker info` every 2 seconds for at most 120 seconds. If it still fails, report status `BROKEN_DOCKER_DAEMON` and execute no primary or replay runs.\n3. Repair stale CLI plugins before the final `docker info`: inspect `${DOCKER_CONFIG:-$HOME/.docker}/cli-plugins/docker-dev` and `docker-feedback`; if either is a dangling symlink or is not executable, rename it by appending `.disabled`. Run `docker info` again. Confirm the runner can access the configured socket without an interactive privilege prompt by successfully running both `docker version` and `docker ps`. Any failure is `BROKEN_DOCKER_PERMISSION`, not a refutation.\n4. Compute SHA-256 of the supplied OCI archive and compare it with `image.lock.json`. Inspect the expected image ID locally with `docker image inspect`. If absent, load only the supplied archive with `docker load`, then inspect again; never run an unpinned `docker pull`. Require the resulting `.Id` to equal the locked `sha256:` identifier exactly and require the image architecture to equal `linux/arm64` on Apple Silicon or the runner's declared Linux architecture. Run a smoke container with `--network none` that executes `python3 --version`, `git --version`, and `make --version`. Any archive, ID, architecture, or smoke-test failure is `BROKEN_IMAGE_PREFLIGHT`. Save the successful `docker info`, image inspection, and smoke-test stdout and stderr separately under `preflight/`.\n5. Generate a synthetic Git artifact repository locally. Commit `Makefile`, `reproduce.py`, `reference/`, and documentation, then clone it as a local bare repository used by all runs. `make reproduce` must delete and recreate `generated/` and invoke `python3 reproduce.py`. `reproduce.py` must use `random.Random(20250308)` to create exactly 10,000 records. For record index `i` from 0 through 9999, draw `x = rng.randrange(0, 1000000)` and compute `y = (1103515245*x + 12345 + i) % 2147483648`. Produce exactly three files: `generated/samples.csv`, containing the UTF-8 header `i,x,y\\n` and the 10,000 decimal rows with LF endings; `generated/summary.json`, containing `n`, `sum_x`, `sum_y`, and the SHA-256 of `samples.csv`, serialized as UTF-8 with sorted keys, separators `(',', ':')`, and one trailing LF; and `generated/histogram.bin`, containing 256 little-endian unsigned 32-bit counts of `x % 256`. It must print exactly `generated 3 files from 10000 records\\n` to stdout, exactly `seed=20250308\\n` to stderr, and exit 0.\n6. Create the three files under `reference/` before the repository commit using a separate `build_references.py` implementation that does not import `reproduce.py`. Confirm once that the reference inventory is exactly `samples.csv`, `summary.json`, and `histogram.bin`. Commit the references and record the resulting artifact revision from `git rev-parse HEAD`. No run may modify the bare repository or reference files.\n7. After all preflight steps succeed, start a 20-minute timed section. Create six primary directories named `primary-01` through `primary-06`. For each run, make a new local clone from the bare repository, detach at the recorded revision, and confirm `git status --porcelain` is empty before execution. Never reuse a checkout or container.\n8. For each primary run, resolve the interpreter path in a separate probe container made from the same locked image by running `python3 -c 'import os,sys; print(os.path.realpath(sys.executable))'` with `--network none`; require one absolute path line. Then create a new artifact container with `docker create`, a unique name, `--network none`, `--cap-drop ALL`, `--security-opt no-new-privileges`, `--read-only`, a writable tmpfs at `/tmp`, the checkout bind-mounted read-write at `/work`, working directory `/work`, the locked image, and command arguments exactly `make` and `reproduce`. Record the human-readable literal command as exactly `make reproduce`, the Docker container ID, locked image reference, and inspected immutable image ID.\n9. Execute each created primary container using `docker start --attach`, capturing stdout bytes directly to `evidence/primary-NN/stdout.log` and stderr bytes directly to `evidence/primary-NN/stderr.log` using distinct subprocess pipes; never merge the streams and never decode and re-encode them. Obtain the integer exit status from `docker inspect --format '{{.State.ExitCode}}' CONTAINER_ID`. Preserve the checkout and logs, then remove the stopped container.\n10. For each primary run, write one canonical UTF-8 JSON record with sorted keys and a trailing LF. It must contain: schema version; run number; checkout revision; immutable image reference and image ID; container ID; resolved interpreter path; literal command `make reproduce`; integer exit status; separate SHA-256 and byte length for stdout and stderr; generated-file inventory as sorted relative paths and byte sizes; SHA-256 for every generated file; sorted reference-file inventory and SHA-256 values; and, for each expected output, generated hash, reference hash, byte equality, and hash equality. Inventory only regular files and reject symlinks, unexpected files, missing files, or paths outside `generated/` and `reference/`.\n11. After all six primary runs, create six replay directories named `replay-01` through `replay-06`. Repeat Steps 7 through 9 from new clones and new containers, pairing replay NN with primary NN. Capture replay logs, exit status, interpreter path, inventories, and hashes in replay JSON files, but do not overwrite primary evidence. Thus the timed section must complete exactly six primary and six replay executions.\n12. Implement `verify.py` independently: it may use only the standard library, must not import the harness, artifact generator, reference builder, or their helper modules, and must parse evidence from disk. For each of the six primary records, perform exactly 11 category checks: (1) checkout revision equals `git rev-parse HEAD`; (2) immutable image reference and image ID equal the lock and current `docker image inspect`; (3) the absolute interpreter path equals a newly resolved path from the locked image and the paired replay value; (4) literal command equals `make reproduce` and container command arguments recorded by the harness were `['make','reproduce']`; (5) primary and replay exit statuses are integers equal to 0; (6) recomputed primary stdout length and SHA-256 equal the record and replay stdout hash; (7) recomputed primary stderr length and SHA-256 equal the record and replay stderr hash; (8) recomputed sorted generated inventory equals the record and replay inventory; (9) recomputed generated SHA-256 mapping equals the record and replay mapping; (10) recomputed reference inventory and hashes equal the record and are unchanged in the replay; and (11) recomputed per-output byte/hash comparison booleans are all true and equal the recorded results. A category passes only if every assertion within it passes. This yields exactly 6*11 = 66 evidence checks.\n13. Independently of the 66 category checks, compare the raw bytes of the three primary generated files with the corresponding paired replay files for each run. Count one comparison per file, yielding exactly 6*3 = 18 byte comparisons. Also require every primary generated file to equal its released reference counterpart byte-for-byte.\n14. Have `verify.py` emit `verification.json` containing attempted, passed, and failed counts; individual failures; elapsed seconds; and final classification. It must emit `verification_summary.png`, at least 1000 by 600 pixels, with two bars labeled `Evidence fields` and `Replay bytes`, showing passed/required values with fixed axes of 0-66 and 0-18 or normalized percentages, and annotate the bars with `66/66` and `18/18` when successful. Use deterministic plotting settings and no timestamps in the figure.\n15. Classify the hypothesis as `SUPPORTED` only if preflight succeeded, all 12 executions completed within the 20-minute timed section, all six primary and six replay exit statuses are 0, the verifier reports exactly 66 attempted and 66 passed evidence checks, exactly 18 attempted and 18 passed byte comparisons, all 18 primary-to-reference byte comparisons pass, and the PNG exists and is nonempty. If preflight succeeded but any execution, evidence check, replay comparison, or reference comparison fails, classify it as `REFUTED`. If Docker/image preflight fails, fewer than six primary and six replay runs are attempted because of infrastructure failure, the verifier cannot run, or the timed section exceeds 20 minutes, classify it as `BROKEN`, report completed and attempted counts, and do not interpret it as evidence against the hypothesis.",
+    "metrics": [
+      "Evidence verification rate: number of passed verifier categories divided by 66; support requires exactly 66/66 = 1.000.",
+      "Replay byte agreement: number of byte-identical primary/replay file pairs across six runs and three outputs divided by 18; support requires exactly 18/18 = 1.000.",
+      "Released-reference agreement: number of byte-identical primary/reference file pairs across six runs and three outputs divided by 18; support requires exactly 18/18 = 1.000.",
+      "Execution completion rate: successful zero-exit executions divided by 12 total primary-plus-replay runs; support requires 12/12 = 1.000.",
+      "Stream-separation integrity: all 12 executions must have independently stored stdout and stderr, with recomputed byte lengths and SHA-256 hashes matching their records; any merged, missing, or mismatched stream fails the associated evidence checks.",
+      "Timed elapsed duration: wall-clock seconds beginning only after successful preflight and ending after verification and PNG creation; support requires no more than 1200 seconds."
+    ],
+    "time_budget_minutes": 25,
+    "expected_if_true": "Preflight succeeds; six primary and six replay containers finish with exit status 0; the independent verifier reports exactly 66/66 evidence checks, 18/18 primary-to-replay byte comparisons, and 18/18 primary-to-reference byte comparisons; all records contain the locked revision and image ID, one absolute interpreter path, literal command `make reproduce`, separate reproducible log hashes, and identical three-file inventories; `verification_summary.png` shows two full-height 100% bars.",
+    "expected_if_false": "After a successful preflight, at least one of the 12 executions has a nonzero status, at least one provenance field cannot be recomputed, the evidence result is below 66/66, the replay result is below 18/18, or the reference result is below 18/18; Docker daemon, permission, image, or timeout failures instead produce an explicit `BROKEN` classification and are not counted as refutation."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T10:50:23+00:00",
+      "finished_at": "2026-07-19T11:04:58+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment never reached the six clean-container runs: experiment_completed is false, and prepare_release.py exited 1 while inspecting python:3.12.8-bookworm because it could not connect to the Docker daemon. Consequently, there are 0 reported primary runs, 0 of 66 evidence-category checks, and 0 of 18 output/reference comparisons, so the hypothesis was not actually tested.\n\nRevision instructions: Run the experiment on a host with a functioning Docker daemon and verify access before starting (for example, require `docker info` and `docker image inspect python:3.12.8-bookworm` to succeed, pulling the pinned image if necessary). Treat infrastructure/preparation failures as BROKEN rather than REFUTED, then execute all six isolated runs and emit the complete records, verifier results, comparisons, and required PNG."
+    },
+    {
+      "index": 2,
+      "started_at": "2026-07-19T11:12:45+00:00",
+      "finished_at": "2026-07-19T11:26:02+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The Docker preflight failed with exit status 1 because the client could not connect to the daemon at unix:///var/run/docker.sock. Consequently, fixture preparation failed, 0 of 6 primary runs were attempted, and neither the 66 evidence-category checks nor the 18 output/reference comparisons were executed; this matches the stated BROKEN condition rather than refuting the hypothesis.\n\nRevision instructions: Start and verify the Docker daemon before rerunning, and ensure the selected Docker context/socket is accessible to the experiment user. Retain the preflight, but only begin the experiment after `docker info` succeeds; then prepare the fixture and image, execute all six isolated runs, and run the independent verifier over all 66 evidence checks and 18 byte-exact comparisons."
+    },
+    {
+      "index": 3,
+      "started_at": "2026-07-19T11:29:16+00:00",
+      "finished_at": "2026-07-19T11:49:16+00:00",
+      "codex_exit": 0,
+      "timed_out": true,
+      "verdict": "broken",
+      "notes": "Docker preflight failed because the harness could not connect to the daemon at unix:///var/run/docker.sock, and the experiment hit its wall-clock timeout. Consequently, 0/6 primary runs and 0/6 replay runs completed, 0/66 evidence checks and 0/18 byte comparisons were attempted, and the verifier never ran; this is explicitly a BROKEN preflight condition rather than evidence against the hypothesis.\n\nRevision instructions: Start and validate the Docker daemon before launching the timed experiment, ensure the runner has permission to access the configured Docker socket, and remove or repair the stale docker-dev and docker-feedback CLI plugin entries. Add an untimed fail-fast environment preflight that runs `docker info`, verifies/pulls the required immutable image, and only starts the experiment timeout after preflight succeeds; then rerun all six primary and six replay runs and require the verifier to report 66/66 evidence checks and 18/18 byte comparisons."
+    },
+    {
+      "index": 4,
+      "started_at": "2026-07-19T11:51:24+00:00",
+      "finished_at": "2026-07-19T12:04:35+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "Preflight failed with BROKEN_DOCKER_DAEMON because `docker info` remained unsuccessful after bounded recovery. Consequently, 0/12 required executions were attempted, 0/66 evidence checks and 0/18 replay and reference comparisons were attempted, and no verification PNG was produced; the hypothesis was never tested.\n\nRevision instructions: Run on a host with a working, accessible Docker daemon and verify `docker info` before starting the timed experiment. Add diagnostics for daemon status, socket path and permissions, Docker context, storage capacity, and recovery attempts; fail preflight explicitly without recording zero-attempt metrics as experimental evidence, then rerun all six primary and six replay containers."
+    }
+  ],
+  "verdict": "broken",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.0,
+  "error": ""
+}

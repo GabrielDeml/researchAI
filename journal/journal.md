@@ -62,3 +62,11 @@
 - **Verdict:** supported
 - **Key numbers:** artifact_completeness_audit_pass=True; audit_clean_00_release_files_byte_identical=True; audit_environment_lock_present=True; audit_exactly_four_canonical_release_csvs=True; audit_makefile_present=True; audit_readme_documents_make_reproduce=True; audit_readme_present=True; audit_release_executable_source_present=True
 - **What I'd do differently:** Next time, run completeness and relational-validation checks across multiple regenerations and independent environments, with CI enforcing manifest, schema, checksum, and one-command reproduction consistency before release.
+
+## 2026-07-19 — topic-can-make-reproduce-be-run-from-a-fresh-iso
+
+- **Topic:** Topic Can `make reproduce` be run from a fresh isolated checkout in a clean container or virtual machine, with the exact command, container or image identifier, interpreter path, exit status, stdout and stderr logs, generated hashes, and comparison against the released reference outputs reported? _(auto-enqueued follow-up from topic-can-a-complete-artifact-package-be-release)_
+- **Hypothesis:** Across six independent clean-container runs of `make reproduce`, a provenance capture harness will produce records containing the checkout revision, immutable image identifier, resolved interpreter path, literal command, integer exit status, separately hashed stdout and stderr logs, generated-file inventory, generated hashes, reference hashes, and per-output comparison results; an independent verifier will recompute and confirm every recorded field in all six records.
+- **Verdict:** broken
+- **Key numbers:** artifact_seed=20250308; classification=BROKEN; error=docker info remained unsuccessful after the bounded recovery poll; evidence_checks_attempted=0; evidence_checks_passed=0; evidence_verification_rate=0.0; execution_completion_rate=0.0; png_exists_nonempty=False
+- **What I'd do differently:** Next time, verify Docker daemon health, socket permissions, context, and storage before timing, record recovery diagnostics, and treat failed preflight separately from experimental metrics before rerunning all 12 primary and replay containers.
