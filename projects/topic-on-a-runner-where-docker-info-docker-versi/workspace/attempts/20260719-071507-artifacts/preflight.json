@@ -1,0 +1,80 @@
+{
+  "created_monotonic_ns": 371790091380000,
+  "error": "stale Docker CLI plugin could not be quarantined: /Users/gdeml/.docker/cli-plugins/docker-dev: [Errno 1] Operation not permitted: '/Users/gdeml/.docker/cli-plugins/docker-dev' -> '/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/plugin_quarantine/docker-dev'; stale Docker CLI plugin could not be quarantined: /Users/gdeml/.docker/cli-plugins/docker-feedback: [Errno 1] Operation not permitted: '/Users/gdeml/.docker/cli-plugins/docker-feedback' -> '/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/plugin_quarantine/docker-feedback'",
+  "host_requirements": {
+    "cpu_count": 12,
+    "free_disk_bytes": 339424550912,
+    "host_machine": "arm64",
+    "matplotlib_backend": "Agg",
+    "matplotlib_version": "3.9.2",
+    "physical_memory_bytes": 38654705664,
+    "python_version": "3.12.9",
+    "pythonhashseed": "0",
+    "venv_prefix": "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/.venv"
+  },
+  "plugin_audit": {
+    "directories": [
+      {
+        "exists": true,
+        "path": "/Users/gdeml/.docker/cli-plugins",
+        "readable": true,
+        "writable": false
+      },
+      {
+        "exists": false,
+        "path": "/usr/local/lib/docker/cli-plugins",
+        "readable": null,
+        "writable": null
+      },
+      {
+        "exists": false,
+        "path": "/usr/local/libexec/docker/cli-plugins",
+        "readable": null,
+        "writable": null
+      },
+      {
+        "exists": false,
+        "path": "/opt/homebrew/lib/docker/cli-plugins",
+        "readable": null,
+        "writable": null
+      },
+      {
+        "exists": false,
+        "path": "/opt/homebrew/libexec/docker/cli-plugins",
+        "readable": null,
+        "writable": null
+      }
+    ],
+    "ended_monotonic_ns": 371790107706000,
+    "entries": [
+      {
+        "action": "retained_stale_unwritable",
+        "is_symlink": true,
+        "mode": "0o120755",
+        "move_error": "PermissionError: [Errno 1] Operation not permitted: '/Users/gdeml/.docker/cli-plugins/docker-dev' -> '/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/plugin_quarantine/docker-dev'",
+        "name": "docker-dev",
+        "path": "/Users/gdeml/.docker/cli-plugins/docker-dev",
+        "quarantine_destination": "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/plugin_quarantine/docker-dev",
+        "stale_reason": "broken_symlink",
+        "symlink_target": "/Applications/Docker.app/Contents/Resources/cli-plugins/docker-dev"
+      },
+      {
+        "action": "retained_stale_unwritable",
+        "is_symlink": true,
+        "mode": "0o120755",
+        "move_error": "PermissionError: [Errno 1] Operation not permitted: '/Users/gdeml/.docker/cli-plugins/docker-feedback' -> '/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/plugin_quarantine/docker-feedback'",
+        "name": "docker-feedback",
+        "path": "/Users/gdeml/.docker/cli-plugins/docker-feedback",
+        "quarantine_destination": "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/plugin_quarantine/docker-feedback",
+        "stale_reason": "broken_symlink",
+        "symlink_target": "/Applications/Docker.app/Contents/Resources/cli-plugins/docker-feedback"
+      }
+    ],
+    "moved_count": 0,
+    "retained_count": 2,
+    "started_monotonic_ns": 371790107504000,
+    "valid": false
+  },
+  "timed_section_started": false,
+  "valid": false
+}

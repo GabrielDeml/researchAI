@@ -1,0 +1,9 @@
+{
+  "error": "stale Docker CLI plugin could not be quarantined: /Users/gdeml/.docker/cli-plugins/docker-dev: [Errno 1] Operation not permitted: '/Users/gdeml/.docker/cli-plugins/docker-dev' -> '/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/plugin_quarantine/docker-dev'; stale Docker CLI plugin could not be quarantined: /Users/gdeml/.docker/cli-plugins/docker-feedback: [Errno 1] Operation not permitted: '/Users/gdeml/.docker/cli-plugins/docker-feedback' -> '/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/plugin_quarantine/docker-feedback'",
+  "execution_final_record_count": 0,
+  "execution_target_count": 24,
+  "hypothesis_evaluated": false,
+  "hypothesis_supported": false,
+  "status": "invalid_not_evaluated",
+  "timed_section_started": false
+}

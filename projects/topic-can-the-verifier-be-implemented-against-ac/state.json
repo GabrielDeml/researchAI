@@ -1,0 +1,255 @@
+{
+  "slug": "topic-can-the-verifier-be-implemented-against-ac",
+  "topic": "Topic Can the verifier be implemented against actual Git repositories, deriving tracked paths, blob identities, tree modes, symlinks, executable bits, submodules, and Git LFS semantics from an authenticated commit or tag? _(auto-enqueued follow-up from topic-can-the-complete-repository-and-release-pa)_",
+  "created_at": "2026-07-19T15:09:19+00:00",
+  "updated_at": "2026-07-19T15:29:42+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "SoK: Analysis of Software Supply Chain Security by Establishing Secure Design Properties",
+      "authors": [
+        "Chinenye Okafor",
+        "Taylor R. Schorlemmer",
+        "Santiago Torres-Arias",
+        "James C. Davis"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2406.10109v1",
+      "source": "arXiv:2406.10109v1"
+    },
+    {
+      "title": "Time Travel: LLM-Assisted Semantic Behavior Localization with Git Bisect",
+      "authors": [
+        "Yujing Wang",
+        "Weize Hong"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2511.18854v1",
+      "source": "arXiv:2511.18854v1"
+    },
+    {
+      "title": "Key establishment à la Merkle in a quantum world",
+      "authors": [
+        "Gilles Brassard",
+        "Peter Hoyer",
+        "Kassem Kalach",
+        "Marc Kaplan",
+        "Sophie Laplante",
+        "Louis Salvail"
+      ],
+      "year": 2011,
+      "url": "http://arxiv.org/abs/1108.2316v2",
+      "source": "arXiv:1108.2316v2"
+    },
+    {
+      "title": "GoSurf: Identifying Software Supply Chain Attack Vectors in Go",
+      "authors": [
+        "Carmine Cesarano",
+        "Vivi Andersson",
+        "Roberto Natella",
+        "Martin Monperrus"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2407.04442v2",
+      "source": "arXiv:2407.04442v2"
+    },
+    {
+      "title": "Dirty-Waters: Detecting Software Supply Chain Smells",
+      "authors": [
+        "Raphina Liu",
+        "Sofia Bobadilla",
+        "Benoit Baudry",
+        "Martin Monperrus"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2410.16049v1",
+      "source": "arXiv:2410.16049v1"
+    },
+    {
+      "title": "Maven-Hijack: Software Supply Chain Attack Exploiting Packaging Order",
+      "authors": [
+        "Frank Reyes",
+        "Federico Bono",
+        "Aman Sharma",
+        "Benoit Baudry",
+        "Martin Monperrus"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2407.18760v4",
+      "source": "arXiv:2407.18760v4"
+    },
+    {
+      "title": "Evaluating a bot detection model on git commit messages",
+      "authors": [
+        "Mehdi Golzadeh",
+        "Alexandre Decan",
+        "Tom Mens"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2103.11779v1",
+      "source": "arXiv:2103.11779v1"
+    },
+    {
+      "title": "To BLOB or Not To BLOB: Large Object Storage in a Database or a Filesystem?",
+      "authors": [
+        "Russell Sears",
+        "Catharine Van Ingen",
+        "Jim Gray"
+      ],
+      "year": 2007,
+      "url": "http://arxiv.org/abs/cs/0701168v1",
+      "source": "arXiv:cs/0701168v1"
+    },
+    {
+      "title": "ZIRCON: Zero-watermarking-based approach for data integrity and secure provenance in IoT networks",
+      "authors": [
+        "Omair Faraj",
+        "David Megías",
+        "Joaquin Garcia-Alfaro"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2305.00266v1",
+      "source": "arXiv:2305.00266v1"
+    },
+    {
+      "title": "Authenticated Contradictions from Desynchronized Provenance and Watermarking",
+      "authors": [
+        "Alexander Nemecek",
+        "Hengzhi He",
+        "Guang Cheng",
+        "Erman Ayday"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2603.02378v2",
+      "source": "arXiv:2603.02378v2"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across eight deterministic repositories crossed by SHA-1 versus SHA-256 object format and loose versus delta-packed storage, a repository verifier that reads the object database directly will produce exactly the same byte-preserving path, object-ID, object-type, and mode inventory as `git ls-tree -rz --full-tree` for every entry, including regular files, executable files, symbolic links, nested trees, and gitlinks.",
+      "rationale": "The survey identifies no experiment showing that complete tree semantics can be reconstructed from real loose and packed Git objects. Crossing storage representation and hash format tests whether verification is based on Git semantics rather than SHA-1 assumptions or loose-object implementation details.",
+      "novelty": 9.3,
+      "feasibility": 8.8,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For twelve repositories in which an authenticated commit object is assigned a replacement commit through `refs/replace` and the index, working tree, and sparse-checkout configuration describe different states, a raw-object verifier pinned to the authenticated object ID will return the original commit's tree inventory in all twelve cases, while ordinary replacement-aware Git traversal will return the adversarial replacement inventory in all twelve.",
+      "rationale": "This directly tests the survey's cross-layer consistency concern: local Git configuration can alter apparent commit interpretation even though the authenticated object ID is unchanged. A positive result would establish that replacement refs and checkout state must be excluded from the verifier's trust boundary.",
+      "novelty": 9.6,
+      "feasibility": 9.2,
+      "info_gain": 9.7,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 3,
+      "statement": "Across twenty deterministic references comprising lightweight tags, one-level and two-level annotated tags ending at commits, annotated tags ending at trees or blobs, and references retargeted after initial resolution, the verifier will agree with Git's commit-peeling result for every reference, reject every non-commit terminal object, and retain the initially pinned commit inventory after every subsequent reference retargeting.",
+      "rationale": "The literature gap explicitly includes tag peeling but does not test nested tags, invalid terminal types, or time-of-check/time-of-use ref movement. The experiment distinguishes authentication of a resolved immutable object ID from continued reliance on a mutable ref name.",
+      "novelty": 9.2,
+      "feasibility": 9.5,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "For a synthetic repository containing at least forty legal Git pathnames with tabs, newlines, leading dashes, trailing spaces, decomposed Unicode, and non-UTF-8 bytes, a byte-oriented verifier will enumerate every pathname exactly once and round-trip every original name through its encoded inventory, whereas a line-delimited UTF-8 replacement-decoding implementation will merge, split, or alter at least eight entries.",
+      "rationale": "The survey calls for tracked-path enumeration but does not address Git's byte-string pathname model. This tests whether apparently cosmetic decoding and delimiter choices can break path identity or create duplicate-looking entries in authenticated trees.",
+      "novelty": 9.5,
+      "feasibility": 9.3,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "A strict object-graph verifier will accept all twelve canonical control repositories and reject all thirty raw-object fixtures containing exactly one of the following defects: truncated tree entries, zero or unavailable referenced object IDs, duplicate names, noncanonical ordering, illegal pathname bytes, unsupported modes, or mode-to-object-type mismatches; each rejection will occur before any working-tree materialization.",
+      "rationale": "The surveyed work does not define malformed-object or unavailable-object behavior, despite identifying explicit failure on missing objects as an experimental requirement. Raw objects written with Git plumbing provide a deterministic test of fail-closed parsing and recursive type validation.",
+      "novelty": 9.4,
+      "feasibility": 9.1,
+      "info_gain": 9.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "For eighteen commits containing dangling, absolute, parent-traversing, self-referential, and mutually cyclic symbolic-link targets, changing whether those targets exist on the host and changing their host-side contents will not alter any verifier output: every entry will remain mode 120000 with the exact committed blob bytes recorded as its target, while a comparator that follows links will fail or produce different content hashes in at least twelve cases.",
+      "rationale": "The gap names symlink representation but prior experiments do not distinguish authenticated link-target bytes from dereferenced filesystem content. This provides a direct test that repository verification cannot escape the object graph through symlink resolution.",
+      "novelty": 9.1,
+      "feasibility": 9.6,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Across twenty-four superproject commits containing eight consistent submodule configurations and sixteen cases with a missing `.gitmodules` entry, duplicate declared path, declaration for a non-gitlink path, or gitlink path absent from the declarations, the low-level verifier will identify every mode-160000 entry and its exact referenced commit ID without network access, while a separate materialization-readiness check will accept all eight consistent cases and flag all sixteen metadata inconsistencies.",
+      "rationale": "This separates what the authenticated top-level tree proves—the gitlink path and object ID—from unauthenticated submodule contents and potentially inconsistent `.gitmodules` materialization metadata. That separation is not demonstrated by the surveyed literature and is distinct from merely checking whether a release bundles submodule content.",
+      "novelty": 9.3,
+      "feasibility": 9.4,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "In forty-eight tracked paths governed by deterministic root and nested `.gitattributes` rules, a commit-scoped attribute resolver will agree with Git on the effective `filter` attribute for all paths; the LFS verifier will accept all sixteen LFS-managed canonical pointer blobs whose local payload matches both declared SHA-256 OID and size, reject all sixteen LFS-managed malformed or payload-mismatched pointers, and classify all sixteen pointer-looking but non-LFS-managed blobs as ordinary authenticated Git blobs.",
+      "rationale": "The survey gap emphasizes the distinction between authenticated LFS pointer blobs and externally retrieved payloads, but does not test path-specific attribute resolution or pointer-looking ordinary files. This experiment establishes whether LFS semantics are derived from the authenticated commit rather than filename heuristics or ambient checkout configuration.",
+      "novelty": 9.5,
+      "feasibility": 9.0,
+      "info_gain": 9.8,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Create twelve deterministic synthetic Git repositories with pinned original commits, adversarial commit replacements, and divergent sparse-checkout/index/working-tree states, then compare a replacement-disabled raw-object verifier with ordinary replacement-aware Git traversal.",
+    "protocol": "1. Preflight: use Python 3.10 or newer, Git 2.25 or newer, and matplotlib 3.8.4; fail the experiment if `git --version` is unavailable or SHA-1 repositories are unsupported. Set `LC_ALL=C`, `TZ=UTC`, `PYTHONHASHSEED=0`, and Python's random seed to 20250308. Create a fresh output directory containing `repos/`, `results/`, and `results/key_result.png`. Disable all inherited Git configuration for every subprocess by setting `GIT_CONFIG_NOSYSTEM=1`, `HOME` to a fresh empty directory, and `GIT_TERMINAL_PROMPT=0`.\n2. Implement helpers that invoke Git with argument arrays, never a shell. Initialize twelve repositories named `case-00` through `case-11` using `git init --object-format=sha1`, then set `gc.auto=0`, `user.name=Verifier Experiment`, and `user.email=verifier@example.invalid`. Set commit environment variables to `GIT_AUTHOR_NAME=Verifier Experiment`, `GIT_AUTHOR_EMAIL=verifier@example.invalid`, `GIT_COMMITTER_NAME=Verifier Experiment`, `GIT_COMMITTER_EMAIL=verifier@example.invalid`, and, for case k, author and committer date `1700000000 + k +0000`.\n3. Build all blobs, trees, and commits with `git hash-object -w --stdin`, `git mktree --missing`, and `git commit-tree`; do not use the working tree to construct commits. Each original tree must contain these leaf entries: `README.md` mode 100644; `visible/case.txt` mode 100644; `bin/run.sh` mode 100755; `links/readme-link` mode 120000 with blob bytes `../README.md`; `vendor/dependency` mode 160000 whose gitlink object ID is the fixed 40-hex value `1111111111111111111111111111111111111111`; `.gitattributes` mode 100644 with bytes `assets/model.bin filter=lfs diff=lfs merge=lfs -text\\n`; `assets/model.bin` mode 100644 containing the valid LFS pointer `version https://git-lfs.github.com/spec/v1\\noid sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\nsize 12345\\n`; and `nested/data.txt` mode 100644. Include the case number in the contents of `README.md`, `visible/case.txt`, and `nested/data.txt` so the twelve original commits are distinct. Create a root commit with message `original case-K\\n`, no parent, and update `refs/heads/main` to it. Record its SHA-1 as O_k.\n4. Create one replacement commit R_k per repository by copying the original inventory and applying exactly one mutation: case 00 replaces the `README.md` blob contents; case 01 renames `nested/data.txt` to `nested/renamed.txt`; case 02 changes `bin/run.sh` from mode 100755 to 100644; case 03 changes the `links/readme-link` symlink target blob to `../nested/data.txt`; case 04 changes `links/readme-link` from mode 120000 to a mode-100644 regular blob; case 05 replaces the executable `bin/run.sh` blob while retaining mode 100755; case 06 changes the `vendor/dependency` gitlink ID to `2222222222222222222222222222222222222222`; case 07 changes the LFS pointer OID to 64 lowercase `b` characters and size to 54321; case 08 changes `.gitattributes` to `assets/model.bin -filter -diff -merge text\\n`; case 09 deletes the entire `nested` subtree; case 10 adds `adversarial/new.txt` mode 100644; and case 11 simultaneously deletes `README.md`, changes `visible/case.txt`, changes the executable bit of `bin/run.sh`, and changes the gitlink ID to `3333333333333333333333333333333333333333`. Commit each replacement tree with message `replacement case-K\\n`, no parent, and timestamp `1700001000 + k +0000`. Record the resulting commit SHA-1 as R_k. Assert O_k differs from R_k.\n5. Before installing any replacement ref, authenticate and snapshot O_k. Implement a raw loose-object reader in Python that opens `.git/objects/<first-two-hex>/<remaining-hex>`, zlib-decompresses it, parses `<type> <decimal-size>\\0<payload>`, checks the declared size, and recomputes `SHA1(header || payload)` to require equality with the requested object ID. It must not invoke revision parsing, read refs, inspect the index or working tree, or honor alternates. Parse the raw commit payload to obtain its `tree` header. Parse binary tree payloads as repeated `<ASCII mode><space><path bytes><NUL><20-byte object ID>` entries; recurse only into mode 040000 trees and treat modes 100644, 100755, 120000, and 160000 as leaves. For every blob leaf, validate its blob object hash. Do not attempt to open the object named by a 160000 gitlink.\n6. Canonicalize every inventory as a sorted list ordered by raw path bytes. Each record must contain path encoded as lowercase hexadecimal bytes, six-digit mode, inferred kind (`blob`, `symlink`, or `gitlink`), and lowercase object ID. For mode-100644 blobs only, additionally parse Git LFS semantics if and only if the complete blob is a valid three-line pointer with the exact version line, an `oid sha256:` line containing 64 lowercase hexadecimal characters, and a decimal `size` line; store the parsed LFS SHA-256 and size, otherwise store null values. Serialize canonical inventories as UTF-8 JSON with sorted keys and compact separators, and fingerprint them with SHA-256.\n7. Run the raw reader on O_k before adversarial setup, save the canonical inventory and fingerprint in an external file `authenticated-case-K.json`, and save O_k as the pinned authenticated commit ID. Independently run the same raw reader on R_k and save its canonical replacement inventory. These files are expected-result fixtures only; the tested verifier must later receive only the repository path and pinned O_k, not R_k or branch names.\n8. Populate the checkout before replacement installation: run `git checkout -f main`; run `git sparse-checkout init --no-cone`; then pass the sole pattern `/visible/` followed by a newline to `git sparse-checkout set --no-cone --stdin`. Immediately snapshot the sparse projection as the set of stage-0 paths lacking the skip-worktree bit, obtained from `git ls-files -v -z`; require that `visible/case.txt` is projected and at least one original path is skip-worktree.\n9. Make the index and working tree disagree without changing HEAD. Write a deterministic blob `index-only case-K\\n` using `git hash-object -w --stdin`, then add it only to the index as `visible/index-only.txt` with mode 100644 using `git update-index --add --cacheinfo`. Do not create that file in the working tree. Replace the working-tree contents of `visible/case.txt` with `working-tree mutation case-K\\n` without staging it, and create untracked `visible/worktree-only.txt` containing `untracked case-K\\n`. Confirm with `git status --porcelain=v1` that `visible/case.txt` is modified, `visible/index-only.txt` is deleted or absent from the working tree relative to the index, and `visible/worktree-only.txt` is untracked.\n10. Snapshot the index inventory using `git ls-files --stage -z`, retaining only stage 0 and canonicalizing path, mode, and blob/gitlink ID. Snapshot the physical working-tree inventory by recursively scanning all files below the repository except `.git`: encode symlinks as mode 120000 and hash their link-target bytes as Git blobs; encode regular files as 100755 when any user executable bit is set and otherwise 100644, and hash their bytes as Git blobs; include untracked files; do not infer gitlinks from directories. Save both fingerprints. Require the original, replacement, index, and working-tree fingerprints to be pairwise distinct, and require the sparse projected path set to differ from each of their complete path sets; otherwise mark the case as an invalid fixture.\n11. Install the attack only after all checkout-state construction by running `git replace O_k R_k`. Verify that `.git/refs/replace/O_k` resolves to R_k. Do not set `GIT_NO_REPLACE_OBJECTS` for the ordinary traversal.\n12. Test the raw verifier by rerunning the Python loose-object verifier with the repository path and literal pinned O_k. Compare its canonical inventory byte-for-byte with the authenticated original snapshot and separately with the replacement snapshot. Also require every raw object hash validation to pass and require the parsed commit's tree ID to equal the original snapshot's tree ID.\n13. Test ordinary replacement-aware traversal by running `git ls-tree -r -z --full-tree O_k` with default replacement behavior. Parse each NUL-delimited record as `<mode> <type> <object-id>\\t<path>`, canonicalize it using the same representation, and inspect referenced blobs with ordinary `git cat-file blob <object-id>` to attach the same LFS fields. Compare this inventory byte-for-byte with the raw snapshot of R_k and separately with the raw snapshot of O_k. As a replacement-activation control, run the same `git ls-tree` command with `GIT_NO_REPLACE_OBJECTS=1` and require that it equals the original inventory.\n14. Write `results/cases.json` with one record per case containing O_k, R_k, all inventory fingerprints, fixture-validity flags, raw-versus-original equality, raw-versus-replacement equality, ordinary-versus-original equality, ordinary-versus-replacement equality, no-replace-control-versus-original equality, and elapsed seconds. Write an aggregate `results/summary.json` containing all metrics and the final decision.\n15. Produce `results/key_result.png` with matplotlib at 160 DPI. Draw four fixed-order bars on a 0-to-12 y-axis: `Raw = original`, `Raw = replacement`, `Ordinary = original`, and `Ordinary = replacement`; bar heights are the corresponding case counts. Print each integer count above its bar, label the y-axis `Repositories (n=12)`, and title the figure `Effect of refs/replace on traversal pinned to the same commit ID`.\n16. Declare the hypothesis supported only if all 12 fixtures are valid, raw traversal equals the original and not the replacement in 12/12 cases, ordinary traversal equals the replacement and not the original in 12/12 cases, the `GIT_NO_REPLACE_OBJECTS=1` control equals the original in 12/12 cases, and there are zero object-hash, parsing, or command failures. Declare it refuted if any valid case has raw traversal differing from the authenticated original or ordinary replacement-aware traversal differing from the adversarial replacement. Treat setup failures, unsupported Git versions, or invalid fixtures as experiment errors rather than evidence. Ensure total execution is terminated as an error if it exceeds 30 minutes.",
+    "metrics": [
+      "raw_original_match_count: number of the 12 repositories whose raw loose-object inventory for pinned O_k is byte-for-byte equal to the authenticated original inventory; support requires 12",
+      "raw_replacement_match_count: number whose raw inventory for O_k equals the R_k inventory; support requires 0",
+      "ordinary_replacement_match_count: number whose default `git ls-tree` inventory for literal O_k equals the raw R_k inventory; support requires 12",
+      "ordinary_original_match_count: number whose default replacement-aware inventory equals the original inventory; support requires 0",
+      "no_replace_control_match_count: number whose `GIT_NO_REPLACE_OBJECTS=1 git ls-tree` inventory for O_k equals the original inventory; support requires 12",
+      "fixture_divergence_count: number with pairwise-distinct original, replacement, index, and physical working-tree fingerprints plus a distinct nonempty sparse projection; support requires 12",
+      "object_integrity_failure_count: count of commit, tree, or blob objects with a size mismatch or recomputed Git SHA-1 different from the requested ID; support requires 0",
+      "case_runtime_seconds and total_runtime_seconds: monotonic elapsed time per case and overall; total must be at most 1800 seconds"
+    ],
+    "time_budget_minutes": 30,
+    "expected_if_true": "All 12 fixtures are valid; the four figure bars are exactly 12, 0, 0, and 12 for `Raw = original`, `Raw = replacement`, `Ordinary = original`, and `Ordinary = replacement`, respectively; the replacement-disabled control is 12/12 original matches and object-integrity failures are zero.",
+    "expected_if_false": "At least one valid repository yields a raw inventory for pinned O_k that is not the authenticated original, or at least one default replacement-aware traversal fails to equal R_k; equivalently, raw_original_match_count or ordinary_replacement_match_count is below 12, or either forbidden cross-match count is above 0."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T15:13:13+00:00",
+      "finished_at": "2026-07-19T15:24:06+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "All 12 fixtures showed the exact predicted non-trivial separation: raw traversal matched the authenticated original in 12/12 cases and the replacement in 0/12, while ordinary replacement-aware traversal matched the original in 0/12 and the adversarial replacement in 12/12. All fixtures diverged, the replacement-disabled control matched the original in 12/12, and there were zero command, parsing, or object-integrity failures across 635 object validations."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
+  "error": ""
+}

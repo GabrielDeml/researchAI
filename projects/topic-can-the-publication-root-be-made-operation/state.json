@@ -1,0 +1,257 @@
+{
+  "slug": "topic-can-the-publication-root-be-made-operation",
+  "topic": "Topic **Can the publication root be made operationally trustworthy?** Publish the literal inventory root through a signed release, transparency log, or equivalent authenticated channel, and specify exactly how a verifier obtains and validates it. _(auto-enqueued follow-up from topic-can-all-raw-records-be-made-auditable-publ)_",
+  "created_at": "2026-07-19T18:50:04+00:00",
+  "updated_at": "2026-07-19T19:09:52+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "State Machine Model for The Update Framework (TUF)",
+      "authors": [
+        "Brian Romansky",
+        "Thomas Mazzuchi",
+        "Shahram Sarkani"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2502.18092v1",
+      "source": "arXiv:2502.18092v1"
+    },
+    {
+      "title": "AMP: Authentication of Media via Provenance",
+      "authors": [
+        "Paul England",
+        "Henrique S. Malvar",
+        "Eric Horvitz",
+        "Jack W. Stokes",
+        "Cédric Fournet",
+        "Rebecca Burke-Aguero",
+        "Amaury Chamayou",
+        "Sylvan Clebsch"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2001.07886v3",
+      "source": "arXiv:2001.07886v3"
+    },
+    {
+      "title": "Verification of a Merkle Patricia Tree Library Using F*",
+      "authors": [
+        "Sota Sato",
+        "Ryotaro Banno",
+        "Jun Furuse",
+        "Kohei Suenaga",
+        "Atsushi Igarashi"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2106.04826v1",
+      "source": "arXiv:2106.04826v1"
+    },
+    {
+      "title": "Asynchronous Merkle Trees",
+      "authors": [
+        "Anoushk Kharangate"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2311.17441v1",
+      "source": "arXiv:2311.17441v1"
+    },
+    {
+      "title": "Dynamic Merkle B-tree with Efficient Proofs",
+      "authors": [
+        "Chase Smith",
+        "Alex Rusnak"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2006.01994v3",
+      "source": "arXiv:2006.01994v3"
+    },
+    {
+      "title": "Cartesian Merkle Tree",
+      "authors": [
+        "Artem Chystiakov",
+        "Oleh Komendant",
+        "Kyrylo Riabov"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2504.10944v1",
+      "source": "arXiv:2504.10944v1"
+    },
+    {
+      "title": "Towards a unified query language for provenance and versioning",
+      "authors": [
+        "Amit Chavan",
+        "Silu Huang",
+        "Amol Deshpande",
+        "Aaron Elmore",
+        "Samuel Madden",
+        "Aditya Parameswaran"
+      ],
+      "year": 2015,
+      "url": "http://arxiv.org/abs/1506.04815v1",
+      "source": "arXiv:1506.04815v1"
+    },
+    {
+      "title": "Evaluation of Provenance Serialisations for Astronomical Provenance",
+      "authors": [
+        "Michael A. C. Johnson",
+        "Marcus Paradies",
+        "Hans-Rainer Klöckner",
+        "Albina Muzafarova",
+        "Kristen Lackeos",
+        "David J. Champion",
+        "Marta Dembska",
+        "Sirko Schindler"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2407.14290v1",
+      "source": "arXiv:2407.14290v1"
+    },
+    {
+      "title": "IVOA Recommendation: Resource Metadata for the Virtual Observatory Version 1.12",
+      "authors": [
+        "Robert Hanisch",
+        "the IVOA Resource Registry Working Group",
+        "the NVO Metadata Working Group"
+      ],
+      "year": 2011,
+      "url": "http://arxiv.org/abs/1110.0514v1",
+      "source": "arXiv:1110.0514v1"
+    },
+    {
+      "title": "EngMeta -- Metadata for Computational Engineering",
+      "authors": [
+        "Björn Schembera",
+        "Dorothea Iglezakis"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2005.01637v2",
+      "source": "arXiv:2005.01637v2"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "For 96 pairs of validly signed release manifests that contain the same literal Merkle root but differ in exactly one of inventory identifier, scope, canonicalization-specification digest, tree type, record count, or proof-service identifier, a transparency entry containing only the root will authenticate both manifests, whereas an entry containing the digest of the complete signed manifest will accept the intended manifest and reject the alternate in all 96 pairs.",
+      "rationale": "This tests whether registration identifies the meaning of a root rather than merely its bytes. The survey notes that roots require signed semantic context, but the gap contains no experiment distinguishing root-only registration from registration of the complete release assertion.",
+      "novelty": 9.3,
+      "feasibility": 9.8,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "Across 120 deterministic metadata mix-and-match attacks combining individually valid timestamp, snapshot, and root-bearing release objects from different publication generations, a TUF-style metadata graph that binds every child version and digest will reject all 120 attacks and accept all 40 coherent controls, while a verifier that checks each object's signature independently without parent-to-child bindings will accept at least 90 attacks.",
+      "rationale": "This isolates authenticated discovery of the correct release from signature validity alone. TUF motivates linked roles [1], but the identified gap lacks an end-to-end test showing whether such bindings prevent a verifier from obtaining the wrong, yet validly signed, inventory root.",
+      "novelty": 8.8,
+      "feasibility": 9.7,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "After observing release version v, a verifier that persistently records the highest accepted version and its manifest digest will reject all 100 replay attempts presenting a still-unexpired release with version less than v or a different digest at version v, whereas a stateless verifier checking only signatures and expiration will accept all 100; both verifiers will accept every one of 50 strictly advancing control sequences.",
+      "rationale": "Expiration alone does not prevent rollback while an older release remains temporally valid. This directly tests the survey's unresolved freshness and stale-release requirement using deterministic clocks and persisted verifier state.",
+      "novelty": 8.7,
+      "feasibility": 9.9,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "In 100 forged-root releases produced using one compromised key from a three-key release role, a 2-of-3 threshold verifier will reject every forgery while accepting all 100 legitimate releases signed by any authorized pair; a single-signature configuration using the compromised key will accept every forgery, and the threshold format will add no more than 256 serialized signature bytes per release.",
+      "rationale": "TUF supports multiple keys and threshold-style roles [1], but the survey gap leaves their concrete security and metadata cost for inventory-root publication untested. The experiment quantifies both compromise resistance and a reproducible byte-level overhead.",
+      "novelty": 8.1,
+      "feasibility": 9.9,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Across 80 deterministic key-transition sequences comprising 40 legitimate rotations and 40 attacker substitutions, a rollover protocol requiring each new trust-root object to satisfy both the previous threshold and the newly declared threshold will accept all legitimate rotations and reject all substitutions; static key pinning will reject all 40 legitimate rotations, while trust-on-first-use of the latest advertised key will accept all 40 substitutions.",
+      "rationale": "This tests recovery and continuity rather than ordinary release signing. Although TUF describes root-mediated key replacement [1], the literature gap does not experimentally compare chained rollover with static pinning and unauthenticated adoption in a complete inventory-root verifier.",
+      "novelty": 8.9,
+      "feasibility": 9.7,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "For 64 simulated split-view attacks in which a transparency service signs two checkpoints of the same tree size with different roots and supplies a valid inclusion proof within each fork, isolated inclusion-only verifiers will accept both views, whereas verifiers that exchange their latest checkpoints once and require equal-size checkpoints to have identical roots will detect all 64 forks; neither method will flag any of 64 consistent-log controls.",
+      "rationale": "AMP-like registration makes operations auditable [2], but log inclusion alone does not establish a globally consistent view. This addresses the gap's equivocation scenario and measures the precise additional guarantee supplied by checkpoint gossip.",
+      "novelty": 9.2,
+      "feasibility": 9.8,
+      "info_gain": 9.7,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 7,
+      "statement": "In an exhaustive crash-state model with durable publication of records, proofs, a signed root manifest, and a signed latest-release pointer, enforcing the dependency order records-before-proofs-before-manifest-before-latest will yield zero reachable states in which an authenticated latest pointer names an unavailable dependency; allowing the four publication events in arbitrary order will expose such a broken authenticated latest state in at least 18 of the 24 event orderings.",
+      "rationale": "Operational trust includes whether a verifier can actually obtain the records and proofs named by an authenticated root. The survey calls for complete-path evaluation but does not address publication atomicity or crashes between artifact upload and release announcement.",
+      "novelty": 9.5,
+      "feasibility": 9.8,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "During a simulated transparency-service outage, a verifier using a previously witnessed signed checkpoint plus content-addressed copies of the included manifest and proofs will accept all 80 requests whose checkpoint age is within a configured 24-hour bound and reject all 40 requests whose checkpoint is older than that bound; a verifier requiring live log access will reject all 120 requests, while a permissive offline verifier without the age bound will incorrectly accept all 40 stale cases.",
+      "rationale": "This evaluates the availability-freshness trade-off in the verifier procedure requested by the survey gap. It distinguishes secure cached verification from both fail-closed online dependence and unsafe indefinite offline trust, complementing the ledger-registration pattern in AMP [2].",
+      "novelty": 9.1,
+      "feasibility": 9.8,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Simulate 64 signed same-size split-view transparency-log forks and 64 consistent controls, then compare isolated inclusion verification with one-round signed-checkpoint gossip.",
+    "protocol": "1. Use Python 3.11 or later with only the standard library plus `cryptography` and `matplotlib`; install with `pip install cryptography matplotlib`. Set Matplotlib's backend to `Agg`. Do not use network access, external datasets, clocks, or nondeterministic randomness.\n2. Define `MASTER_SEED = SHA256(b\"publication-root-gossip-experiment-v1\").digest()`. Derive the transparency service's deterministic Ed25519 private-key seed as `HMAC-SHA256(MASTER_SEED, b\"ed25519-private-key\")`; construct an Ed25519 private key from those 32 bytes and derive its public key. Treat the resulting public key as verifier configuration pinned out-of-band: artifacts may contain signatures but must not supply or replace the verifier's trusted public key.\n3. Implement the binary Merkle tree with exactly 64 leaves. Hash a record byte string as `SHA256(b\"\\x00\" + record)`. Hash an internal node as `SHA256(b\"\\x01\" + left_hash + right_hash)`. At every level, combine adjacent nodes `(0,1), (2,3), ...`; because 64 is a power of two, no odd-node rule is needed. The final 32-byte value is the literal inventory root.\n4. Implement inclusion proofs as the six sibling hashes from leaf level to root, each paired with a side marker. For a left sibling compute `SHA256(b\"\\x01\" + sibling + current)`; for a right sibling compute `SHA256(b\"\\x01\" + current + sibling)`. A proof is valid only if its leaf index is in `[0,63]`, it has exactly six siblings with the sides implied by the index at each level, and its reconstructed root equals the checkpoint root.\n5. Serialize a checkpoint for signing as the exact byte sequence `b\"INVCHKPT-v1\\n\" + tree_size.to_bytes(8, \"big\") + root`, where `tree_size` is 64 and `root` is exactly 32 raw bytes. Sign these bytes with Ed25519. A release artifact contains the integer tree size, lowercase hexadecimal root, lowercase hexadecimal signature, target leaf index, the target record encoded as UTF-8 text, and the six proof siblings and side markers. The verifier obtains the literal root by reading the artifact's root field, decoding exactly 32 bytes, rebuilding the checkpoint serialization, and verifying the signature with the pinned public key before using the root.\n6. Generate records using canonical compact JSON encoded as UTF-8 with sorted keys and separators `(',', ':')`. For experiment class `kind`, scenario `s`, and index `i`, create fields `{\"index\": i, \"kind\": kind, \"nonce\": HMAC-SHA256(MASTER_SEED, f\"record|{kind}|{s}|{i}\".encode()).hexdigest(), \"scenario\": s}`. Use `kind=\"attack\"` for attack scenarios and `kind=\"control\"` for controls. Assert that every scenario has exactly 64 distinct record byte strings.\n7. Generate 64 attack scenarios numbered 0 through 63. For scenario `s`, build fork A from its 64 ordinary attack records. Set target index `t = (13*s + 5) % 64`. Set mutation index `m = (17*s + 3) % 64`; if `m == t`, replace `m` with `(m + 1) % 64`. Build fork B by replacing only record `m` with canonical JSON containing `{\"index\": m, \"kind\": \"attack\", \"mutation\": \"fork-B\", \"nonce\": HMAC-SHA256(MASTER_SEED, f\"mutation|attack|{s}|{m}\".encode()).hexdigest(), \"scenario\": s}`. Thus the target record at `t` is identical in both forks. Compute both roots and assert they differ. Sign both size-64 checkpoints. Give verifier A the signed fork-A checkpoint and a valid proof for target `t` in fork A; give verifier B the signed fork-B checkpoint and a valid proof for the same target record in fork B.\n8. Generate 64 consistent-log control scenarios numbered 0 through 63. For each scenario, build one size-64 tree from its control records, set `t = (13*s + 5) % 64`, compute and sign its checkpoint, and give both verifiers identical copies of that checkpoint plus a valid inclusion proof for record `t`. Assert that the two checkpoint roots and sizes are equal.\n9. Implement the isolated inclusion-only baseline. Independently for each verifier and artifact: decode and length-check the root and signature, verify the Ed25519 signature over the exact checkpoint serialization, hash the supplied record, validate the inclusion proof against the signed root, and accept only if all checks pass. It has no access to the other verifier's checkpoint. Record a local alert whenever an artifact is rejected. For each scenario, record dual acceptance when both isolated verifiers accept.\n10. Implement the checkpoint-gossip comparison. First perform the same local signature and inclusion checks as the baseline. Then exchange the two verifiers' latest checkpoint tuples `(tree_size, root, signature)` exactly once. Independently validate both signatures using the pinned public key. If both signed checkpoints have equal tree size but different roots, emit a fork alert; if their sizes and roots are equal, emit no fork alert. All generated pairs have equal size, so no consistency-proof behavior for unequal sizes is part of this experiment.\n11. Add implementation sanity checks outside the 128 scored scenarios: altering one bit of a signed root while retaining its signature must fail signature verification, and altering one proof sibling while retaining the signed checkpoint must fail inclusion verification. Abort rather than report results if either tampered artifact is accepted or if any generator assertion fails.\n12. Write one CSV row per scored scenario containing class, scenario number, both roots, both local acceptance results, dual-acceptance indicator, and gossip-alert indicator. Also write a JSON summary containing all metric counts and rates.\n13. Save `checkpoint_gossip_results.png` at at least 1200 by 700 pixels. Plot grouped bars for attack and control scenarios, with one bar per method showing the fraction of scenarios that emitted an alert: inclusion-only local rejection/alert and checkpoint-gossip fork alert. Fix the y-axis to `[0,1.05]`, label each bar with its numerator and denominator, and title the figure `Split-view detection from signed-checkpoint gossip`.\n14. Treat inclusion-only as the baseline and one-round gossip as the comparison. Mark the hypothesis supported only if all of these exact thresholds hold: attack dual acceptance is 64/64 for inclusion-only verification; gossip detects 64/64 attacks; inclusion-only local alerts are 0/128 attack views and 0/128 control views; control dual acceptance is 64/64; and gossip alerts are 0/64 controls. Any failure of an exact threshold refutes the stated hypothesis.",
+    "metrics": [
+      "Attack dual-acceptance count and rate: number of the 64 attack scenarios in which both isolated inclusion-only verifiers accept their locally valid fork, divided by 64.",
+      "Attack-view local alert count and rate: number of rejected attack artifacts among 128 individual fork views, divided by 128.",
+      "Gossip fork-detection count and true-positive rate: number of the 64 attack checkpoint pairs that produce an equal-size/different-root alert, divided by 64.",
+      "Control dual-acceptance count and rate: number of the 64 consistent controls in which both isolated verifiers accept, divided by 64.",
+      "Control local false-alert count and rate: number of rejected control artifacts among 128 individual control views, divided by 128.",
+      "Gossip control false-positive count and rate: number of the 64 consistent checkpoint pairs that produce a fork alert, divided by 64.",
+      "Detection-rate improvement: gossip attack true-positive rate minus the inclusion-only attack fork-alert rate; the expected improvement is 1.0."
+    ],
+    "time_budget_minutes": 10,
+    "expected_if_true": "All 128 attack views pass signature and inclusion verification, yielding attack dual acceptance of 64/64; isolated inclusion-only verification detects 0/64 forks; one-round checkpoint gossip detects 64/64 forks because every attack pair has size 64 and unequal signed roots; all 128 control views are accepted; and both methods produce 0/64 control alerts. The figure therefore shows attack alert rates of 0.0 for inclusion-only and 1.0 for gossip, with both control alert rates at 0.0.",
+    "expected_if_false": "The hypothesis is refuted if even one attack scenario is not accepted by both isolated verifiers, if gossip misses even one of the 64 equal-size/different-root forks, or if either method flags any consistent control. Concretely, any attack dual-acceptance count below 64, gossip attack-detection count below 64, attack or control local-alert count above 0, control dual-acceptance count below 64, or gossip control false-positive count above 0 is a refuting result."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T18:53:16+00:00",
+      "finished_at": "2026-07-19T19:04:15+00:00",
+      "codex_exit": 0,
+      "timed_out": true,
+      "verdict": "supported",
+      "notes": "All 64/64 attack scenarios achieved dual acceptance under isolated inclusion verification, with 0/64 inclusion-only alerts, while one-round checkpoint gossip detected all 64/64 equal-size, unequal-root forks. All 64/64 controls were dual-accepted, and both inclusion-only verification and gossip produced 0/64 control alerts. The reported timeout does not invalidate the complete scored results, which exactly match the prespecified supported pattern and show a non-trivial detection-rate improvement of 1.0."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
+  "error": ""
+}

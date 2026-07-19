@@ -1,0 +1,37 @@
+# Experiment design: Topic Under a genuinely prespecified stochastic data-generating process, how often do exact or practically indistinguishable tuning ties arise without forcing their number, optimizer composition, or post-selection performance ordering? _(auto-enqueued follow-up from topic-can-the-120-split-analysis-be-repeated-on)_
+
+**Hypothesis:** For 500 independent n=300 samples from a prespecified asymmetric one-dimensional logistic DGP, tuning 11 fixed probability-threshold classifiers whose population accuracies are all distinct by deterministic quadrature will nevertheless produce an exact validation-accuracy tie for the empirical optimum in at least 15% of samples; at least 80% of those tie events will contain candidates whose population accuracies differ by more than 0.001.
+
+## Summary
+Simulate 500 fixed validation samples from an asymmetric one-dimensional logistic DGP, tune 11 prespecified probability-threshold classifiers by integer validation accuracy, and compare empirical optimum ties with their deterministically quadrature-computed distinct population accuracies.
+
+## Protocol
+1. Use Python 3 with numpy, scipy, pandas, and matplotlib; record Python and package versions in the output. Set the sole simulation RNG to numpy.random.Generator(numpy.random.PCG64(20250308)). Do not rerun, discard, condition on, or replace any sample based on its results.
+2. Prespecify the asymmetric DGP as follows. Let a=5, delta=a/sqrt(1+a^2), and independently draw U,V~N(0,1). Set X=-1+1.5*(delta*abs(U)+sqrt(1-delta^2)*V), which is a skew-normal variable with shape 5, location -1, and scale 1.5. Given X=x, draw Y~Bernoulli(expit(x)). Generate Bernoulli outcomes as Y=1[R<expit(X)] with independent R~Uniform(0,1). This has logistic intercept 0, slope 1, and Bayes probability cutoff 0.5.
+3. Prespecify exactly 11 candidates indexed j=0,...,10 with probability cutoffs q_j=0.30+0.04*j, namely [0.30,0.34,0.38,0.42,0.46,0.50,0.54,0.58,0.62,0.66,0.70]. Candidate j predicts h_j(x)=1[expit(x)>=q_j], equivalently 1[x>=log(q_j/(1-q_j))]. Do not add, remove, reorder, or adapt candidates.
+4. Before simulation, compute each candidate's population accuracy A_j by deterministic quadrature. Use the skew-normal density f(x)=2*phi(z)*Phi(5z)/1.5 with z=(x+1)/1.5 and calculate A_j=integral from -infinity to t_j of (1-expit(x))*f(x) dx plus integral from t_j to infinity of expit(x)*f(x) dx, where t_j=logit(q_j). Use scipy.integrate.quad separately on the two intervals with epsabs=1e-12, epsrel=1e-12, and limit=500. Save all A_j values with at least 12 decimal places.
+5. Verify the prespecified population-risk conditions numerically: all 11 A_j values must be finite; the minimum absolute difference over all 55 pairs must exceed 1e-8; and q=0.50 must be the sole population-accuracy maximizer. If any check fails, terminate and report the experiment as invalid rather than changing the DGP, candidates, tolerances, or seed.
+6. Generate exactly 500 independent validation samples, each of size n=300, sequentially from the RNG in step 1. These samples are used only for evaluation because the classifiers are fixed and require no training.
+7. For every sample s and candidate j, compute the integer correct-classification count C_sj=sum_i 1[h_j(X_si)=Y_si]. Use these integer counts, not rounded floating-point accuracies, for optimization and equality testing. Let M_s=max_j C_sj and O_s={j:C_sj=M_s}.
+8. Define an exact empirical-optimum tie as T_s=1[|O_s|>=2]. For each tied sample define its optimizer population-accuracy range D_s=max_{j in O_s} A_j-min_{j in O_s} A_j. Define a wide-population-gap tie as W_s=1[T_s=1 and D_s>0.001]. Set D_s to missing for non-tied samples. Also record the optimizer count |O_s|, optimizer cutoff list, M_s/300, whether q=0.50 belongs to O_s, and the population-best candidate's empirical rank using competition ranking.
+9. Compute N_tie=sum_s T_s, the tie rate N_tie/500, N_wide=sum_s W_s, and the conditional wide-gap proportion N_wide/N_tie. If N_tie=0, define the conditional proportion as 0 for the decision rule. Compute descriptive 95% Wilson binomial intervals for the tie rate using denominator 500 and for the conditional wide-gap proportion using denominator N_tie; these intervals are reported but do not replace the prespecified count-based decision rule.
+10. Use the unique population optimizer as the baseline/comparison: report its cutoff and accuracy, all other candidates' population-accuracy deficits, how often it is the sole empirical optimizer, how often it is among tied empirical optimizers, and how often it is absent from the empirical optimizer set. This comparison distinguishes empirical score equality from multiple population maximizers.
+11. Save a sample-level CSV named tie_samples.csv containing sample index, all 11 integer scores, M_s, optimizer count, optimizer cutoff list, T_s, D_s, W_s, and membership of q=0.50 in O_s. Save population_accuracies.csv with cutoff, x-threshold, population accuracy, and deficit from the population optimum. Save summary_metrics.json with all aggregate metrics, seed, n, number of samples, quadrature settings, and the final decision.
+12. Create tuning_tie_results.png at 1600x700 pixels with two panels. The left panel must show bars for the exact tie rate and conditional wide-gap proportion, with horizontal dashed reference lines at 0.15 and 0.80 and Wilson interval error bars. The right panel must show a histogram of D_s over tied samples, with a vertical dashed line at 0.001 and an annotation giving N_tie and N_wide; if there are no ties, display an explicit 'No tie events' annotation instead.
+13. Declare the hypothesis SUPPORTED if and only if the population checks in step 5 pass, N_tie>=75, and N_wide/N_tie>=0.80, equivalently N_wide>=ceil(0.80*N_tie). Declare it REFUTED if the population checks pass but either N_tie<75 or N_wide<ceil(0.80*N_tie). An invalid population check is reported as INVALID, not supported or refuted.
+
+## Metrics
+- Population distinctness: min_{j<k}|A_j-A_k| from deterministic quadrature; it must exceed 1e-8, with exactly one population maximizer.
+- Exact empirical-optimum tie count and rate: N_tie=sum_s 1[at least two candidates share the maximum integer correct count], reported as N_tie/500 with a 95% Wilson interval.
+- Wide-population-gap tie count: N_wide=sum_s 1[tied empirical optimizers have max(A_j)-min(A_j)>0.001].
+- Conditional wide-gap proportion: N_wide/N_tie, defined as 0 if N_tie=0 and reported with a 95% Wilson interval when N_tie>0.
+- Tie multiplicity distribution: counts and proportions of samples with 1, 2, 3, and at least 4 empirical optimizers.
+- Population-optimum comparison: proportions where q=0.50 is the sole empirical optimizer, belongs to a tied optimizer set, or is absent from the optimizer set.
+- Decision statistic: SUPPORTED exactly when N_tie>=75 and N_wide>=ceil(0.80*N_tie), conditional on valid distinct population accuracies.
+
+## Time budget
+10 minutes (ceiling 30).
+
+## Expected outcomes
+- **If supported:** All 11 quadrature accuracies are distinct with q=0.50 uniquely best; at least 75 of the 500 samples have an exact maximum-accuracy tie, and at least 80% of those tied samples have an optimizer population-accuracy range greater than 0.001.
+- **If refuted:** With valid distinct population accuracies, fewer than 75 of 500 samples have an exact empirical-optimum tie, or fewer than 80% of tied samples have optimizer population accuracies spanning more than 0.001; either failure refutes the conjunction.

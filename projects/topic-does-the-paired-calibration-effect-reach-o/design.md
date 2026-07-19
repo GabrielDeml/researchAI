@@ -1,0 +1,36 @@
+# Experiment design: Topic Does the paired calibration effect reach or exceed 0.08 when selection is performed over a substantially larger locked parameter grid while retaining 16 calibration seeds per split? _(auto-enqueued follow-up from topic-can-the-optimization-comparison-be-repeate)_
+
+**Hypothesis:** Across 80 deterministic splits from a perfectly calibrated null DGP with q=P(Y=1|X), selecting from a locked 21-by-21 affine-logit grid using mean 15-bin ECE over exactly 16 seeds of n=50 will show an apparent reused-sample paired ECE reduction of at least 0.08 on average, while independent n=10000 evaluation will show a mean paired reduction no greater than 0 and will favor the identity calibrator.
+
+## Summary
+Run 80 deterministic null-DGP replicates, select an affine-logit calibrator from a fixed 21-by-21 grid using the mean 15-bin ECE of exactly sixteen n=50 calibration samples, and compare its reused-sample and independent n=10000 paired ECE effects against identity.
+
+## Protocol
+1. Use Python 3.11 with numpy==1.26.4 and matplotlib==3.8.4; do not use external data or network resources after installation.
+2. Define the perfectly calibrated null DGP as follows: draw q independently from Uniform(0,1), set X=q, and draw Y as 1{U<q} with an independent U from Uniform(0,1). The unmodified prediction is q=P(Y=1|X), so the identity calibrator has exactly zero population calibration error.
+3. Lock the candidate grid before generating data. Let A=np.linspace(0.0,2.0,21) and B=np.linspace(-2.0,2.0,21), producing 441 ordered candidates by looping over a in ascending order and then b in ascending order. Candidate (a,b) maps q to c_ab(q)=sigmoid(a*logit(clip(q,1e-12,1-1e-12))+b). The identity calibrator is exactly (a,b)=(1,0), which is in the grid. Do not change or refine this grid after observing results.
+4. Implement 15-bin ECE with fixed equal-width bins on [0,1]. For prediction p_i, assign bin index min(floor(15*p_i),14). For each nonempty bin k compute (n_k/n)*abs(mean(Y in k)-mean(p in k)); ECE is the sum over nonempty bins. Do not use adaptive, quantile, debiased, pooled, or cross-fitted bins.
+5. Run split indices s=0,...,79. Within every split generate exactly 16 independent calibration samples, indexed j=0,...,15, each with n=50. For calibration sample (s,j), initialize rng=np.random.Generator(np.random.PCG64(np.random.SeedSequence([20250308,s,0,j]))), draw q=rng.random(50), then draw Y=(rng.random(50)<q).astype(int).
+6. For every split s and every one of the 441 candidates, compute its 15-bin ECE separately on each of the 16 calibration samples and average those 16 ECE values. Select the candidate with the smallest mean ECE. Do not pool the 800 observations before computing ECE. If objective values are exactly tied in float64, choose the first candidate in the fixed ordering from step 3, equivalent to numpy.argmin on the flattened objective array.
+7. On those same reused calibration samples, compute split-level reused paired reduction R_reuse_s=(1/16)*sum_j[ECE(identity on sample s,j)-ECE(selected candidate for split s on sample s,j)]. The identity ECE must be recomputed using predictions q and the same binning function; do not substitute the selected-grid objective unless the selected candidate is identity.
+8. Generate one independent evaluation sample of n=10000 for each split s using rng=np.random.Generator(np.random.PCG64(np.random.SeedSequence([20250308,s,1,0]))), followed by q=rng.random(10000) and Y=(rng.random(10000)<q).astype(int). This sample must not be used for candidate selection.
+9. On each independent evaluation sample, compute E_id_s=ECE(q,Y), E_sel_s=ECE(c_selected_s(q),Y), and the paired reduction R_eval_s=E_id_s-E_sel_s. Positive reduction favors the selected calibrator; negative reduction favors identity.
+10. Compute A=mean_s(R_reuse_s), B=mean_s(R_eval_s), mean identity evaluation ECE=mean_s(E_id_s), mean selected evaluation ECE=mean_s(E_sel_s), and identity win rate=(1/80)*sum_s 1{E_id_s<E_sel_s}. Also report the sample standard deviation and the normal-approximation 95% interval mean +/- 1.96*SD/sqrt(80) for both sets of split-level paired reductions; these intervals are descriptive and do not alter the decision rule.
+11. Declare the hypothesis SUPPORTED if and only if A>=0.08, B<=0, and mean_s(E_id_s)<mean_s(E_sel_s). Otherwise declare it REFUTED. The first condition tests the claimed apparent reused-sample effect; the latter two require that independent evaluation not show a positive improvement and that it favor identity in mean ECE.
+12. Save a CSV named split_results.csv with one row per split and columns split, selected_a, selected_b, selected_calibration_objective, identity_reused_mean_ece, selected_reused_mean_ece, reused_paired_reduction, identity_evaluation_ece, selected_evaluation_ece, and evaluation_paired_reduction. Save summary metrics and the final SUPPORTED/REFUTED decision in summary.json.
+13. Create paired_calibration_effects.png at at least 1600x700 pixels. Use two panels: the left panel plots all 80 R_reuse_s values by split with a horizontal solid line at their mean, a dashed line at 0, and a red dashed threshold line at 0.08; the right panel plots all 80 R_eval_s values by split with a horizontal solid line at their mean and a dashed reference line at 0. Label the y-axis as identity ECE minus selected ECE and state in the caption or title that positive values favor the selected calibrator and negative values favor identity.
+
+## Metrics
+- Mean reused-sample paired ECE reduction A: the average over 80 splits of the mean across the same sixteen n=50 calibration samples of ECE(identity)-ECE(selected); the primary apparent-effect threshold is A>=0.08.
+- Mean independent paired ECE reduction B: the average over 80 independent n=10000 evaluation samples of ECE(identity)-ECE(selected); B<=0 means independent evaluation shows no positive improvement.
+- Mean independent identity and selected ECE: separately average E_id_s and E_sel_s over the 80 splits; identity is favored when mean(E_id_s)<mean(E_sel_s).
+- Identity evaluation win rate: the fraction of the 80 splits for which E_id_s<E_sel_s, reported descriptively.
+- Selected-parameter distribution: counts and frequencies of the selected (a,b) pairs across the 80 splits, reported to show whether noisy ECE selection systematically chooses non-identity or strongly shrunk calibrators.
+- Uncertainty summary: sample SD and normal-approximation 95% interval mean +/- 1.96*SD/sqrt(80) for both reused and independent split-level paired reductions.
+
+## Time budget
+20 minutes (ceiling 30).
+
+## Expected outcomes
+- **If supported:** The result is SUPPORTED when the reused-sample mean paired reduction is at least 0.08, the independent-evaluation mean paired reduction is no greater than 0, and the identity calibrator has lower mean independent ECE than the selected calibrators; the figure should show reused reductions centered at or above 0.08 but evaluation reductions centered below zero.
+- **If refuted:** The result is REFUTED if the reused-sample mean paired reduction is below 0.08, or if the independent mean paired reduction is positive, or if identity does not have lower mean independent ECE than the selected calibrators.

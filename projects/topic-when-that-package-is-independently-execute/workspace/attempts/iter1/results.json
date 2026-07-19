@@ -1,0 +1,23 @@
+{
+  "decision": "invalid",
+  "experiment_valid": false,
+  "hypothesis_supported": false,
+  "error": "experiment_manifest.json is missing from the workspace root | no usable Linux container engine: docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?; podman: Cannot connect to Podman. Please verify your connection to the Linux system using `podman system connection list`, or try `podman machine init` and `podman machine start` to manage a new Linux VM Error: unable to connect to Podman socket: Get \"http://d/v5.6.0/libpod/_ping\": dial unix /var/folders/wx/2t76kt5d3bx8q341hj7q8kyh0000gn/T/storage-run-501/podman/podman.sock: connect: no such file or directory",
+  "parser_unit_tests_passed": true,
+  "parser_controls_passed": false,
+  "target_run_combinations_expected": 12,
+  "target_run_combinations_observed": 0,
+  "target_run_pass_count": 0,
+  "target_run_pass_rate": 0.0,
+  "creation_provenance_count": 0,
+  "creation_provenance_rate": 0.0,
+  "positive_write_count": 0,
+  "positive_write_rate": 0.0,
+  "write_before_read_count": 0,
+  "write_before_read_rate": 0.0,
+  "digest_match_count": 0,
+  "digest_reproduction_rate": 0.0,
+  "package_executions_observed": 0,
+  "zero_exit_execution_count": 0,
+  "execution_success_rate": 0.0
+}

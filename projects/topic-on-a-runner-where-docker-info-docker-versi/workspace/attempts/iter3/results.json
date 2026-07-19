@@ -1,0 +1,18 @@
+{
+  "cleanup_count": 0,
+  "completed_executions": 0,
+  "docker_client_version": "",
+  "docker_daemon_version": "",
+  "docker_host": "unix:///var/run/docker.sock",
+  "error": "start the Docker daemon at unix:///var/run/docker.sock and require docker info, docker version, and docker ps to exit 0.",
+  "fixture_image": "python:3.12-alpine",
+  "hypothesis_evaluated": false,
+  "hypothesis_supported": false,
+  "image_architecture": "",
+  "image_id": "",
+  "image_os": "",
+  "scheduled_executions": 0,
+  "seed": 20250308,
+  "timed_section_seconds": 0.0,
+  "timeout_count": 0
+}

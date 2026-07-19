@@ -1,0 +1,8 @@
+test_preexisting_read_then_rewrite_is_negative (test_trace_parser.TraceParserTests.test_preexisting_read_then_rewrite_is_negative) ... ok
+test_temp_write_then_rename_does_not_retroactively_count_write (test_trace_parser.TraceParserTests.test_temp_write_then_rename_does_not_retroactively_count_write) ... ok
+test_unfinished_dup_chdir_and_write (test_trace_parser.TraceParserTests.test_unfinished_dup_chdir_and_write) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.003s
+
+OK

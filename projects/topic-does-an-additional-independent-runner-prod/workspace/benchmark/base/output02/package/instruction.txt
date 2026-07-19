@@ -1,0 +1,1 @@
+Run package/task.py with the supplied INPUT_FILE and place the result in results.

@@ -1,0 +1,7 @@
+{
+  "replication_generation_calls_before_freeze": 0,
+  "selection_rows": 1500,
+  "selections_frozen_utc_timestamp": "2026-07-19T16:18:59.611850Z",
+  "selections_sha256": "43a9fc5b316b046f5e14aaf86da77948dcac2c7f8599821e5f355768bee4a87f",
+  "verified_no_replication_generation_before_freeze": true
+}

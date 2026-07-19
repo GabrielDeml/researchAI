@@ -1,0 +1,282 @@
+{
+  "client": {},
+  "daemon": {},
+  "daemon_endpoint": {
+    "Host": "unix:///var/run/docker.sock",
+    "SkipTLSVerify": false
+  },
+  "daemon_info": {
+    "Architecture": null,
+    "Name": null,
+    "OSType": null,
+    "OperatingSystem": null,
+    "ServerVersion": null
+  },
+  "docker_help": {
+    "argv": [
+      "docker",
+      "--config",
+      "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config",
+      "--help"
+    ],
+    "elapsed_s": 0.009548208,
+    "exit_code": 0,
+    "stderr": "",
+    "stdout": "Usage:  docker [OPTIONS] COMMAND\n\nA self-sufficient runtime for containers\n\nCommon Commands:\n  run         Create and run a new container from an image\n  exec        Execute a command in a running container\n  ps          List containers\n  build       Build an image from a Dockerfile\n  pull        Download an image from a registry\n  push        Upload an image to a registry\n  images      List images\n  login       Authenticate to a registry\n  logout      Log out from a registry\n  search      Search Docker Hub for images\n  version     Show the Docker version information\n  info        Display system-wide information\n\nManagement Commands:\n  builder     Manage builds\n  checkpoint  Manage checkpoints\n  container   Manage containers\n  context     Manage contexts\n  image       Manage images\n  manifest    Manage Docker image manifests and manifest lists\n  network     Manage networks\n  plugin      Manage plugins\n  system      Manage Docker\n  trust       Manage trust on Docker images\n  volume      Manage volumes\n\nSwarm Commands:\n  config      Manage Swarm configs\n  node        Manage Swarm nodes\n  secret      Manage Swarm secrets\n  service     Manage Swarm services\n  stack       Manage Swarm stacks\n  swarm       Manage Swarm\n\nCommands:\n  attach      Attach local standard input, output, and error streams to a running container\n  commit      Create a new image from a container's changes\n  cp          Copy files/folders between a container and the local filesystem\n  create      Create a new container\n  diff        Inspect changes to files or directories on a container's filesystem\n  events      Get real time events from the server\n  export      Export a container's filesystem as a tar archive\n  history     Show the history of an image\n  import      Import the contents from a tarball to create a filesystem image\n  inspect     Return low-level information on Docker objects\n  kill        Kill one or more running containers\n  load        Load an image from a tar archive or STDIN\n  logs        Fetch the logs of a container\n  pause       Pause all processes within one or more containers\n  port        List port mappings or a specific mapping for the container\n  rename      Rename a container\n  restart     Restart one or more containers\n  rm          Remove one or more containers\n  rmi         Remove one or more images\n  save        Save one or more images to a tar archive (streamed to STDOUT by default)\n  start       Start one or more stopped containers\n  stats       Display a live stream of container(s) resource usage statistics\n  stop        Stop one or more running containers\n  tag         Create a tag TARGET_IMAGE that refers to SOURCE_IMAGE\n  top         Display the running processes of a container\n  unpause     Unpause all processes within one or more containers\n  update      Update configuration of one or more containers\n  wait        Block until one or more containers stop, then print their exit codes\n\nGlobal Options:\n      --config string      Location of client config files (default\n                           \"/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config\")\n  -c, --context string     Name of the context to use to connect to the\n                           daemon (overrides DOCKER_HOST env var and\n                           default context set with \"docker context use\")\n  -D, --debug              Enable debug mode\n  -H, --host list          Daemon socket to connect to\n  -l, --log-level string   Set the logging level (\"debug\", \"info\",\n                           \"warn\", \"error\", \"fatal\") (default \"info\")\n      --tls                Use TLS; implied by --tlsverify\n      --tlscacert string   Trust certs signed only by this CA (default\n                           \"/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config/ca.pem\")\n      --tlscert string     Path to TLS certificate file (default\n                           \"/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config/cert.pem\")\n      --tlskey string      Path to TLS key file (default\n                           \"/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config/key.pem\")\n      --tlsverify          Use TLS and verify the remote\n  -v, --version            Print version information and quit\n\nRun 'docker COMMAND --help' for more information on a command.\n\nFor more help on how to use Docker, head to https://docs.docker.com/go/guides/\n",
+    "timeout": false
+  },
+  "docker_help_system_plugin_error": false,
+  "docker_info_command": {
+    "argv": [
+      "docker",
+      "--config",
+      "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config",
+      "info",
+      "--format",
+      "{{json .}}"
+    ],
+    "elapsed_s": 0.009117834,
+    "exit_code": 1,
+    "stderr": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n",
+    "stdout": "{\"ID\":\"\",\"Containers\":0,\"ContainersRunning\":0,\"ContainersPaused\":0,\"ContainersStopped\":0,\"Images\":0,\"Driver\":\"\",\"DriverStatus\":null,\"Plugins\":{\"Volume\":null,\"Network\":null,\"Authorization\":null,\"Log\":null},\"MemoryLimit\":false,\"SwapLimit\":false,\"CpuCfsPeriod\":false,\"CpuCfsQuota\":false,\"CPUShares\":false,\"CPUSet\":false,\"PidsLimit\":false,\"IPv4Forwarding\":false,\"Debug\":false,\"NFd\":0,\"OomKillDisable\":false,\"NGoroutines\":0,\"SystemTime\":\"\",\"LoggingDriver\":\"\",\"CgroupDriver\":\"\",\"NEventsListener\":0,\"KernelVersion\":\"\",\"OperatingSystem\":\"\",\"OSVersion\":\"\",\"OSType\":\"\",\"Architecture\":\"\",\"IndexServerAddress\":\"\",\"RegistryConfig\":null,\"NCPU\":0,\"MemTotal\":0,\"GenericResources\":null,\"DockerRootDir\":\"\",\"HttpProxy\":\"\",\"HttpsProxy\":\"\",\"NoProxy\":\"\",\"Name\":\"\",\"Labels\":null,\"ExperimentalBuild\":false,\"ServerVersion\":\"\",\"Runtimes\":null,\"DefaultRuntime\":\"\",\"Swarm\":{\"NodeID\":\"\",\"NodeAddr\":\"\",\"LocalNodeState\":\"\",\"ControlAvailable\":false,\"Error\":\"\",\"RemoteManagers\":null},\"LiveRestoreEnabled\":false,\"Isolation\":\"\",\"InitBinary\":\"\",\"ContainerdCommit\":{\"ID\":\"\"},\"RuncCommit\":{\"ID\":\"\"},\"InitCommit\":{\"ID\":\"\"},\"SecurityOptions\":null,\"CDISpecDirs\":null,\"Warnings\":null,\"ClientInfo\":{\"Debug\":false,\"Version\":\"28.3.3\",\"DefaultAPIVersion\":\"1.51\",\"GitCommit\":\"980b856\",\"GoVersion\":\"go1.24.5\",\"Os\":\"darwin\",\"Arch\":\"arm64\",\"BuildTime\":\"Fri Jul 25 11:33:03 2025\",\"Context\":\"default\",\"Plugins\":[],\"Warnings\":null}}\n",
+    "timeout": false
+  },
+  "docker_version_command": {
+    "argv": [
+      "docker",
+      "--config",
+      "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config",
+      "version",
+      "--format",
+      "{{json .}}"
+    ],
+    "elapsed_s": 0.008701167,
+    "exit_code": 1,
+    "stderr": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n",
+    "stdout": "{\"Client\":{\"Version\":\"28.3.3\",\"ApiVersion\":\"1.51\",\"DefaultAPIVersion\":\"1.51\",\"GitCommit\":\"980b856\",\"GoVersion\":\"go1.24.5\",\"Os\":\"darwin\",\"Arch\":\"arm64\",\"BuildTime\":\"Fri Jul 25 11:33:03 2025\",\"Context\":\"default\"},\"Server\":null}\n",
+    "timeout": false
+  },
+  "fresh_docker_config": "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config",
+  "gates": {
+    "info": {
+      "argv": [
+        "docker",
+        "--config",
+        "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config",
+        "info"
+      ],
+      "elapsed_s": 0.00988675,
+      "exit_code": 1,
+      "stderr": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n",
+      "stdout": "Client:\n Version:    28.3.3\n Context:    default\n Debug Mode: false\n\nServer:\n",
+      "timeout": false
+    },
+    "ps": {
+      "argv": [
+        "docker",
+        "--config",
+        "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config",
+        "ps"
+      ],
+      "elapsed_s": 0.008854334,
+      "exit_code": 1,
+      "stderr": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n",
+      "stdout": "",
+      "timeout": false
+    },
+    "version": {
+      "argv": [
+        "docker",
+        "--config",
+        "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config",
+        "version"
+      ],
+      "elapsed_s": 0.009059417,
+      "exit_code": 1,
+      "stderr": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n",
+      "stdout": "Client:\n Version:           28.3.3\n API version:       1.51\n Go version:        go1.24.5\n Git commit:        980b856\n Built:             Fri Jul 25 11:33:03 2025\n OS/Arch:           darwin/arm64\n Context:           default\n",
+      "timeout": false
+    }
+  },
+  "image": {
+    "architecture": "",
+    "id": "",
+    "os": "",
+    "python_version": "",
+    "reference": "python:3.12-alpine",
+    "repo_digests": []
+  },
+  "image_inspect_command": {
+    "argv": [
+      "docker",
+      "--config",
+      "/Users/gdeml/git/researchAI/projects/topic-on-a-runner-where-docker-info-docker-versi/workspace/results/20260719T074159-5863/docker-config",
+      "image",
+      "inspect",
+      "python:3.12-alpine"
+    ],
+    "elapsed_s": 0.008730792,
+    "exit_code": 1,
+    "stderr": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n",
+    "stdout": "[]\n",
+    "timeout": false
+  },
+  "image_verify_command": {
+    "exit_code": -1,
+    "stderr": "image unavailable",
+    "stdout": "",
+    "timeout": false
+  },
+  "passed": false,
+  "plugin_audit": [
+    {
+      "entries": [
+        {
+          "executable": false,
+          "is_file": false,
+          "is_symlink": true,
+          "issue": "cannot read entry /Users/gdeml/.docker/cli-plugins/docker-dev",
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-dev",
+          "readable": false
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-init",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-sbom",
+          "readable": true
+        },
+        {
+          "executable": false,
+          "is_file": false,
+          "is_symlink": true,
+          "issue": "cannot read entry /Users/gdeml/.docker/cli-plugins/docker-feedback",
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-feedback",
+          "readable": false
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-scout",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-ai",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-model",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-cloud",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-buildx",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-mcp",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-compose",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-desktop",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-extension",
+          "readable": true
+        },
+        {
+          "executable": true,
+          "is_file": true,
+          "is_symlink": true,
+          "path": "/Users/gdeml/.docker/cli-plugins/docker-debug",
+          "readable": true
+        }
+      ],
+      "exists": true,
+      "issues": [
+        "cannot read entry /Users/gdeml/.docker/cli-plugins/docker-dev",
+        "cannot read entry /Users/gdeml/.docker/cli-plugins/docker-feedback"
+      ],
+      "path": "/Users/gdeml/.docker/cli-plugins",
+      "safely_excluded": true,
+      "scope": "user"
+    },
+    {
+      "entries": [],
+      "exists": false,
+      "issues": [],
+      "path": "/usr/local/lib/docker/cli-plugins",
+      "safely_excluded": false,
+      "scope": "system"
+    },
+    {
+      "entries": [],
+      "exists": false,
+      "issues": [],
+      "path": "/usr/local/libexec/docker/cli-plugins",
+      "safely_excluded": false,
+      "scope": "system"
+    },
+    {
+      "entries": [],
+      "exists": false,
+      "issues": [],
+      "path": "/usr/lib/docker/cli-plugins",
+      "safely_excluded": false,
+      "scope": "system"
+    },
+    {
+      "entries": [],
+      "exists": false,
+      "issues": [],
+      "path": "/usr/libexec/docker/cli-plugins",
+      "safely_excluded": false,
+      "scope": "system"
+    }
+  ],
+  "unsafe_issues": [
+    "required Docker commands failed: info, version, ps",
+    "local image unavailable: python:3.12-alpine",
+    "image does not provide usable Python 3.11+: python:3.12-alpine"
+  ]
+}

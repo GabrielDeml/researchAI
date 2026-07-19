@@ -1,0 +1,249 @@
+{
+  "slug": "topic-empirical-ai-ml-research-pick-one-open-con",
+  "topic": "Topic Empirical AI/ML research. Pick one open, concrete question about the behavior of machine-learning models — for example: training dynamics and generalization (grokking, double descent), in-context learning in small transformers, calibration of model confidence, prompt/format sensitivity of language models, tokenization effects, or optimizer behavior — that can be investigated rigorously with small-scale experiments runnable on a single machine (CPU or Apple-Silicon MPS), and study it end-to-end.",
+  "created_at": "2026-07-19T21:33:33+00:00",
+  "updated_at": "2026-07-19T22:05:08+00:00",
+  "stage": "design",
+  "status": "running",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Grokking modular arithmetic",
+      "authors": [
+        "Andrey Gromov"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2301.02679v1",
+      "source": "arXiv:2301.02679v1"
+    },
+    {
+      "title": "Towards Empirical Interpretation of Internal Circuits and Properties in Grokked Transformers on Modular Polynomials",
+      "authors": [
+        "Hiroki Furuta",
+        "Gouki Minegishi",
+        "Yusuke Iwasawa",
+        "Yutaka Matsuo"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2402.16726v4",
+      "source": "arXiv:2402.16726v4"
+    },
+    {
+      "title": "Weight Decay Regimes in Grokking Transformers: Cheap Online Diagnostics",
+      "authors": [
+        "Lucky Verma"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2605.20441v1",
+      "source": "arXiv:2605.20441v1"
+    },
+    {
+      "title": "What Does the Weight Norm Control in Grokking? Logit-Scale Mediation under Cross-Entropy",
+      "authors": [
+        "Truong Xuan Khanh"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2606.18465v1",
+      "source": "arXiv:2606.18465v1"
+    },
+    {
+      "title": "First-Passage Prediction of Grokking Delay: ACalibrated Law under AdamW with Causal Validation",
+      "authors": [
+        "Truong Xuan Khanh",
+        "Truong Quynh Hoa",
+        "Luu Duc Trung",
+        "Phan Thanh Duc"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2605.18845v1",
+      "source": "arXiv:2605.18845v1"
+    },
+    {
+      "title": "The Geometric Inductive Bias of Grokking: Bypassing Phase Transitions via Architectural Topology",
+      "authors": [
+        "Alper Yıldırım"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2603.05228v3",
+      "source": "arXiv:2603.05228v3"
+    },
+    {
+      "title": "On the Overlooked Pitfalls of Weight Decay and How to Mitigate Them: A Gradient-Norm Perspective",
+      "authors": [
+        "Zeke Xie",
+        "Zhiqiang Xu",
+        "Jingzhao Zhang",
+        "Issei Sato",
+        "Masashi Sugiyama"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2011.11152v6",
+      "source": "arXiv:2011.11152v6"
+    },
+    {
+      "title": "Empirically explaining SGD from a line search perspective",
+      "authors": [
+        "Maximus Mutschler",
+        "Andreas Zell"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2103.17132v3",
+      "source": "arXiv:2103.17132v3"
+    },
+    {
+      "title": "Grokking From Abstraction to Intelligence",
+      "authors": [
+        "Junjie Zhang",
+        "Zhen Shen",
+        "Gang Xiong",
+        "Xisong Dong"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2603.29262v1",
+      "source": "arXiv:2603.29262v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "For modular addition mod 31 with a width-128 two-layer ReLU MLP, cross-entropy loss, a fixed 50% training split, and four matched seeds, a no-decay fork started at the first checkpoint with at least 99% training accuracy and given an adaptive output temperature that matches the centered-logit RMS of its paired AdamW fork every 50 steps will reach sustained 95% test accuracy within 20% of the AdamW fork's post-checkpoint step count in at least three of four seeds.",
+      "rationale": "This is a direct causal test of the survey's central gap: whether AdamW accelerates cross-entropy grokking mainly through effective logit scale. Matching logit scale without changing the parameter update rule isolates the proposed mediator more sharply than correlating norm, logits, and grokking time in independent runs.",
+      "novelty": 9.0,
+      "feasibility": 8.8,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "Under the same mod-31 MLP protocol but with one-hot MSE, an adaptive output-temperature fork that matches the output RMS of a paired AdamW run will differ from that AdamW run's median post-memorization grokking delay by at least 40%, whereas a no-decay fork projected every 50 steps onto the AdamW run's parameter norm will differ by no more than 25%.",
+      "rationale": "The survey reports that MSE pins output scale and may leave parameter norm acting through another route, but this loss-dependent contrast has not been established in the interpretable two-layer MLP setting. The result would distinguish true norm dependence from a cross-entropy-specific logit-scale mechanism.",
+      "novelty": 9.1,
+      "feasibility": 8.5,
+      "info_gain": 9.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "At a memorized cross-entropy checkpoint, adding a rank-one class-common component to the output matrix that doubles total squared parameter norm while leaving every softmax probability unchanged, then decaying only that component until total norm crosses the threshold fitted from ordinary AdamW runs, will change the sustained-95%-test-accuracy grokking step by less than 10% relative to an unmodified no-decay fork across four matched seeds.",
+      "rationale": "A class-common logit component is exactly invisible to softmax probabilities, so it can manipulate raw parameter norm without changing predictions or centered logit scale. If crossing a total-norm threshold were itself causal, this intervention should alter grokking; if logit scale is the operative variable, it should not. This directly probes the survey's tension between norm-threshold and logit-mediation accounts.",
+      "novelty": 9.7,
+      "feasibility": 9.1,
+      "info_gain": 9.7,
+      "chosen": true,
+      "outcome": "broken"
+    },
+    {
+      "id": 4,
+      "statement": "In cross-entropy mod-31 MLP runs forked immediately after memorization, weight decay applied only to the centered output-layer weights, with its coefficient calibrated by a 200-step deterministic pilot to match the initial total-norm shrinkage of full-model AdamW, will produce a median grokking delay within 25% of full-model AdamW; matched-shrinkage decay applied only to the first layer will have a median delay at least 1.5 times that of full-model AdamW.",
+      "rationale": "If weight decay works mainly by reducing effective logit scale, decay acting directly on the probability-relevant output map should reproduce most of the benefit even when hidden-layer norm is not regularized. This layer-localized intervention separates logit control from generic norm reduction and representation simplification.",
+      "novelty": 9.2,
+      "feasibility": 8.7,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "For memorized cross-entropy ReLU MLP checkpoints, the function-preserving transformations W1 and b1 multiplied by c and W2 divided by c, using c in {0.5, 2}, will change total squared parameter norm by at least a factor of two but leave the subsequent median grokking step under SGD without momentum within 15% of the c=1 fork; consequently, an absolute total-norm first-passage predictor fitted on c=1 runs will have at least 50% median relative timing error on the rescaled forks.",
+      "rationale": "Positive homogeneity permits large changes in parameter norm without changing logits at the intervention point. Using plain SGD avoids Adam's coordinatewise state as an immediate confound. This tests whether the norm threshold described in the survey is architecture-parameterization dependent rather than a function-level causal quantity.",
+      "novelty": 9.5,
+      "feasibility": 8.9,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "With cross-entropy on mod-31 addition, AdamW enabled only after the first checkpoint with at least 99% training accuracy will reach sustained 95% test accuracy within 20% of the total step count of continuously applied AdamW, while AdamW disabled at that checkpoint after being applied only during memorization will reduce the post-memorization grokking delay by no more than 20% relative to a never-decayed control in at least three of four matched seeds.",
+      "rationale": "The survey does not establish when weight decay exerts its decisive effect. A post-memorization-only benefit would localize the mechanism to the delayed-generalization phase and support checkpoint-fork interventions, whereas a strong pre-memorization carryover would implicate early representation or optimizer-state formation.",
+      "novelty": 8.9,
+      "feasibility": 9.0,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "In cross-entropy checkpoint forks where output temperature alone accelerates grokking by at least 30%, the centered-logit RMS will complete half of its total pre-grokking change at least 20% of the post-memorization interval before the hidden-activation Fourier Coefficient Ratio completes half of its change, while the Fourier midpoint will occur within 10% of the sustained-95%-test-accuracy step in at least three of four seeds.",
+      "rationale": "This tests a staged mechanism connecting the survey's logit-scale and representation-level accounts: logit-scale correction should precede, rather than merely accompany, the emergence of Fourier structure, while Fourier organization should remain tightly coupled to actual generalization. Either temporal ordering would clarify which measurement is mediator versus marker.",
+      "novelty": 9.1,
+      "feasibility": 8.4,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "A first-passage predictor fitted only on four AdamW coefficients and four seeds of mod-31 MLP training will, on held-out temperature-only, softmax-null-component-decay, and function-preserving-rescaling interventions, achieve median relative grokking-time error below 25% when its crossing variable is centered-logit RMS under cross-entropy but above 50% when its crossing variable is total squared parameter norm; under MSE, the logit-RMS predictor will not outperform the norm predictor by more than five percentage points.",
+      "rationale": "Prior norm-threshold and logit-mediation results are mostly assessed within intervention families where norm and logits covary. Testing both predictors on interventions designed to dissociate them evaluates out-of-distribution causal generalization and directly addresses whether the preferred predictor changes with the loss.",
+      "novelty": 9.4,
+      "feasibility": 8.3,
+      "info_gain": 9.8,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Run four seeded modular-addition grokking experiments, fit a total-parameter-norm threshold from ordinary AdamW trajectories, and compare matched no-decay forks with and without a softmax-invisible rank-one class-common output component whose decay forces an artificial threshold crossing.",
+    "protocol": "1. Use Python 3.11, PyTorch, NumPy, and Matplotlib only. Run on CPU for reproducibility; call torch.set_num_threads(4), torch.use_deterministic_algorithms(True), and set PYTHONHASHSEED before importing torch. Use float32 throughout. Record package versions, platform, and CPU thread count in results.json.\n2. Create one output directory containing only results.json, key_result.png, and at most one temporary checkpoint named current_checkpoint.pt. Do not write TensorBoard logs, per-step model checkpoints, profiler output, verbose traces, or duplicate datasets. Store compact evaluation records directly in results.json. Every write must serialize to results.json.tmp, flush and fsync it, and then call os.replace('results.json.tmp','results.json'). Write an initial results.json before training, update it after calibration, and update it after every completed or failed seed.\n3. Implement a workspace-size function that recursively sums file sizes inside the output directory. Call it every 100 optimizer steps and before every atomic results write. Record the maximum observed byte count. If usage exceeds 75 MB, delete all files except results.json, results.json.tmp, and the current seed's current_checkpoint.pt; if it still exceeds 100 MB, atomically record status='failed_resource_limit' and terminate. Delete current_checkpoint.pt after both forks for a seed, run gc.collect(), and verify output usage is below 20 MB before starting the next seed.\n4. Use seeds [11, 22, 33, 44]. For each seed independently, reset Python random, NumPy, and torch seeds to that value before dataset splitting and model initialization. Generate all ordered pairs (a,b) in {0,...,30}^2 and label each pair y=(a+b) mod 31, giving 961 examples. Shuffle example indices with NumPy Generator(PCG64(seed)); use the first 384 examples as training data and the remaining 577 as test data. Use deterministic full-batch training, with examples always in sorted original-index order after the split so no minibatch randomness exists.\n5. Define the model as a shared nn.Embedding(31,32), followed by concatenation of the embeddings of a and b, nn.Linear(64,128,bias=False), GELU, and nn.Linear(128,31,bias=False). The last linear weight W has shape 31 by 128 and is the output matrix. Initialize every embedding and linear weight independently from Normal(0,0.02) using the seeded torch RNG. There are no biases, dropout, normalization layers, or other stochastic operations.\n6. Define total squared parameter norm Q as the float64 accumulation of the squared float32 values of every trainable parameter; define N=sqrt(Q). For an intervention with common matrix C and coefficient alpha, replace the output contribution W h by (W+alpha C)h and define effective Q by substituting W+alpha C for W while leaving all other parameters unchanged.\n7. Perform one ordinary AdamW calibration run per seed from initialization. Use full-batch cross-entropy, AdamW(lr=0.003, betas=(0.9,0.98), eps=1e-8, weight_decay=0.3), and no learning-rate schedule or gradient clipping. Evaluate at step 0 and every 20 optimizer steps through a maximum of 15000 steps. At each evaluation retain only step, train cross-entropy, train accuracy, test cross-entropy, test accuracy, and N. Stop after a sustained grokking event has been observable or at 15000 steps.\n8. Define the ordinary memorization step M_s as the first evaluation step with train accuracy exactly 1.0 and train cross-entropy at most 0.02. Define the ordinary grokking step G_s as the first evaluation step beginning a run of six consecutive evaluations, spanning 100 optimizer steps, whose test accuracies are all at least 0.95. A calibration seed is eligible only if M_s exists, G_s exists, and G_s-M_s is at least 300 steps.\n9. For each eligible seed define L_s as 20 times floor(min(400,(G_s-M_s)/3)/20). Thus L_s is an evaluation-aligned lead between 100 and 400 steps. Define the seed's reference step R_s=G_s-2L_s and take its recorded norm N_s(R_s). Fit the single ordinary-run norm threshold T as max_s N_s(R_s) across all four seeds. Atomically save all compact calibration metrics, M_s, G_s, L_s, R_s, and T to results.json. If any seed is ineligible, record decision='inconclusive_calibration_failure', still create a diagnostic key_result.png from available calibration curves, and terminate.\n10. For each seed, deterministically rerun its ordinary AdamW trajectory from initialization, without saving intermediate states. Select checkpoint step C_s as the latest evaluated step no later than G_s-L_s that satisfies all of: train accuracy=1.0, train cross-entropy<=0.02, test accuracy<0.95, N<T, and sqrt(2)*N>T. At C_s save exactly one checkpoint containing model state, AdamW optimizer state, seed, split indices, and step. Verify rerun metrics at C_s agree with the original calibration record within 1e-7 for accuracies, 1e-6 for losses, and 1e-5 relative error for N. If no qualifying checkpoint exists or the rerun audit fails, atomically record that seed as invalid, delete its checkpoint, and continue to the next seed.\n11. Load two independent exact copies of the checkpoint and optimizer state. In both copies set weight_decay=0 in every optimizer parameter group while preserving Adam first moments, second moments, and step counters. The baseline fork uses the unchanged model. The intervention fork keeps the same trainable W but adds alpha C only in the forward pass; C and alpha must not be included in Adam, and no trainable parameter receives explicit weight decay in either fork.\n12. Construct C deterministically at the checkpoint. Draw v from Normal(0,1) with a separate torch.Generator seeded with seed+100000. Let r be the sum of W's 31 rows. Project v orthogonally to r by v<-v-r*(v dot r)/(r dot r) when r dot r>1e-20; otherwise retain v. Normalize v to unit length. Let Q0 be the checkpoint's total squared parameter norm and set C=ones(31,1) outer (v*sqrt(Q0/31)). This makes the Frobenius inner product of W and C zero and ||C||_F^2=Q0, so effective total squared norm at alpha=1 should equal 2Q0. Set alpha=1 initially.\n13. Before any fork training, evaluate both forks on all 961 examples. Audit that the intervention is functionally null: maximum absolute softmax-probability difference from baseline <=2e-6; maximum absolute difference between centered logits, where each example's mean across its 31 logits is subtracted, <=2e-5; absolute train- and test-accuracy differences=0; absolute cross-entropy differences<=2e-6; relative error |Q_intervention/(2Q0)-1|<=1e-4; and effective intervention norm>T while baseline norm<T. Record all audit values. If any audit fails, mark the seed invalid and do not use it in the hypothesis statistic.\n14. Train both forks for H_s=max(1200,3L_s+300) optimizer steps, evaluating at step 0 and every 20 steps. Use full-batch cross-entropy and the preserved Adam state with weight_decay=0. The baseline has no additional update. In the intervention, after each ordinary optimizer update, reduce only alpha according to alpha<-max(0,alpha-1/D_s), where D_s=max(50,20*ceil((L_s/2)/20)). Stop reducing alpha immediately after the first evaluated effective norm at or below T; retain that alpha unchanged thereafter. Do not alter C. Record compact fork metrics only at evaluation steps.\n15. Define the intervention threshold-crossing step X_s as the first evaluation step with effective norm<=T whose immediately preceding evaluation had effective norm>T. Audit that X_s exists, 0<X_s<=D_s+20, alpha was monotonically nonincreasing through X_s, alpha was constant afterward, and no optimizer parameter group had nonzero weight decay. Also recompute at X_s the probability and centered-logit differences between applying and omitting alpha C to the same intervention model; require maxima <=2e-6 and <=2e-5 respectively.\n16. For each fork define its post-checkpoint grokking step g as the first evaluation beginning six consecutive evaluations, spanning 100 optimizer steps, all with test accuracy>=0.95. Require those six values to be present rather than extrapolating beyond the run. Let g_base,s and g_int,s be the two values. If either is absent, extend only that seed's two forks to a hard total limit of 3000 post-checkpoint steps. If still absent, mark the seed invalid for the primary statistic but record which fork failed.\n17. After each seed, atomically append checkpoint information, all audits, X_s, g_base,s, g_int,s, and compact fork metrics to results.json; then delete current_checkpoint.pt and temporary objects before proceeding. Never retain model weights after the seed is summarized.\n18. For every valid seed compute R_s=abs(g_int,s-g_base,s)/max(g_base,s,20). Compute R_max=max_s R_s and also report the four signed differences g_int,s-g_base,s, their median, and their maximum absolute value. The hypothesis is supported only if all four seeds pass every probability, centered-logit, norm-doubling, threshold-crossing, reproducibility, and sustained-accuracy audit and R_max<0.10. It is refuted if all four seeds pass the intervention audits and have finite grokking steps but R_max>=0.10. Any missing seed, failed audit, absent grokking step, or resource termination yields decision='inconclusive' rather than support.\n19. Save key_result.png at 1600 by 900 pixels. Use one panel with paired baseline/intervention post-checkpoint grokking-step bars for the four seeds and a second panel showing R_s for each seed with a horizontal dashed line at 0.10. Annotate each intervention bar with X_s and each ratio point with its numeric value. Generate the figure after every completed seed so a partial figure survives termination, and regenerate the final figure after computing the decision.\n20. The final results.json must contain schema_version, run status, decision, threshold T, software and hardware metadata, maximum workspace bytes, calibration summaries, per-seed split hashes, checkpoint steps, all audit tolerances and observed values, threshold crossings, both grokking steps, all R_s values, R_max, and the path to key_result.png.",
+    "metrics": [
+      "Ordinary memorization step M_s: first 20-step evaluation with training accuracy 1.0 and training cross-entropy <=0.02.",
+      "Sustained-95% grokking step: first evaluation beginning six consecutive evaluations over 100 optimizer steps with test accuracy >=0.95; computed separately for ordinary, baseline-fork, and intervention-fork trajectories.",
+      "Fitted norm threshold T: maximum across seeds of the ordinary total parameter norm at R_s=G_s-2L_s, with L_s=min(400,(G_s-M_s)/3) rounded down to a multiple of 20.",
+      "Norm-doubling error: |Q_intervention/(2Q0)-1|, required to be <=1e-4 immediately after adding the class-common component.",
+      "Probability-invariance error: maximum absolute difference over all 961 examples and 31 classes between baseline and intervention softmax probabilities, required to be <=2e-6.",
+      "Centered-logit invariance error: maximum absolute difference after subtracting each example's class-mean logit, required to be <=2e-5.",
+      "Threshold-crossing step X_s: first intervention evaluation with effective norm <=T after a preceding evaluation above T; required to exist by D_s+20.",
+      "Per-seed relative grokking change R_s: |g_int,s-g_base,s|/max(g_base,s,20).",
+      "Primary statistic R_max: maximum R_s over the four matched valid seeds; support requires R_max<0.10.",
+      "Workspace usage: maximum recursively measured output-directory bytes, with a 100 MB hard experiment limit."
+    ],
+    "time_budget_minutes": 30,
+    "expected_if_true": "All four interventions pass the exact-null audits, begin above T, cross T solely through decay of alpha, and reach sustained 95% test accuracy at nearly the same post-checkpoint step as their matched no-decay baselines; specifically every R_s is below 0.10 and therefore R_max<0.10, with probability differences <=2e-6 and centered-logit differences <=2e-5.",
+    "expected_if_false": "With all intervention and sustained-accuracy audits valid, at least one matched seed has a grokking-step shift of 10% or more, so R_max>=0.10; a consistent delay tied to X_s would be especially contrary to the hypothesis and compatible with a causal raw-total-norm threshold."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T21:38:06+00:00",
+      "finished_at": "2026-07-19T21:50:16+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment never reached the intervention test: all four calibration runs completed 15,000 steps but had grokking_step = -1, so no valid norm thresholds or matched intervention forks were produced. Although every seed memorized the training set (train accuracy 1.0 and cross-entropy between 4.31e-06 and 0.00127), best test accuracy was only 0.126-0.208, far below the sustained 95% criterion. Therefore the reported protocol-level \"refuted\" decision does not constitute evidence that the invisible norm manipulation changes grokking time.\n\nRevision instructions: First validate a grokking-producing baseline by extending the training horizon and tuning the established grokking controls—dataset/train split, model size, learning rate, AdamW weight decay, and modular-task setup—until ordinary runs reliably reach sustained 95% test accuracy across the intended seeds. Then fit thresholds only from successful ordinary runs, create matched no-decay and intervention forks from audited memorized checkpoints, verify probability and centered-logit invariance numerically, require the manipulated total norm to cross the fitted threshold, and compare paired sustained-grokking steps."
+    },
+    {
+      "index": 2,
+      "started_at": "2026-07-19T21:53:16+00:00",
+      "finished_at": "2026-07-19T22:01:34+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment produced no results.json and was killed after exceeding the 2048 MB workspace quota. Consequently, there are no reported values for the four seeds, threshold crossings, audit checks, grokking steps, or R_max, so the hypothesis was not actually evaluated.\n\nRevision instructions: Reduce disk usage by disabling large checkpoints and verbose traces, retaining only the memorized checkpoint and compact per-step metrics, and deleting temporary artifacts between seeds. Write results.json incrementally and atomically after each seed so partial diagnostics survive termination, monitor workspace usage during execution, and rerun all four matched seeds with the required probability, centered-logit, threshold-crossing, and sustained-95%-accuracy audits."
+    },
+    {
+      "index": 3,
+      "started_at": "2026-07-19T22:04:53+00:00",
+      "finished_at": "2026-07-19T22:05:04+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment was killed after 10.6 seconds because the workspace exceeded the 2048 MB disk quota, and the process also received a wall-clock timeout signal. No results.json was produced, so there are no exact-null audit values, threshold crossings, per-seed R_s values, or R_max with which to test the hypothesis.\n\nRevision instructions: Re-run in a clean workspace and keep total workspace usage below the quota: create the venv with system site packages if available, install only minimal CPU dependencies without pip caches, and delete caches/build artifacts and unnecessary checkpoints. Add an early disk-usage guard, save only compact scalar/curve data and the required PNG, then ensure the run completes all four matched seeds and writes a flat results.json containing invariance errors, T, each X_s, baseline/intervention grokking steps, each R_s, R_max, audit-validity flags, and maximum workspace bytes."
+    }
+  ],
+  "verdict": "broken",
+  "report_path": "",
+  "review_path": "",
+  "reviewer_score": null,
+  "error": ""
+}

@@ -1,0 +1,11 @@
+{
+  "host_architecture": "arm64",
+  "host_platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O",
+  "host_python": "3.14.6 (main, Jun 10 2026, 10:03:53) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "container_engine": "unavailable",
+  "container_engine_version": "unavailable",
+  "manifest": null,
+  "started_epoch": 1784464889.2139058,
+  "ended_epoch": 1784464890.6811461,
+  "duration_seconds": 1.467240333557129
+}

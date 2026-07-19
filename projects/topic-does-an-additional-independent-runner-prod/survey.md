@@ -1,0 +1,29 @@
+# Literature survey: Does an additional independent runner produce the same preflight and artifact-level outcome?
+
+The closest prior work frames reproducibility as an outcome that must hold across people and environments, not merely across repeated executions by the original researcher. Arabas et al. explicitly examine whether reproducibility for one researcher is the same as reproducibility for another by asking additional researchers to reproduce an author’s own ostensibly reproducible paper [6]. This establishes independent execution as an important test, but the retrieved material does not report enough detail to determine how agreement was separated into setup or “preflight” success versus agreement in final artifacts. More generally, artifact evaluation is increasingly treated as central to assessing scientific substance because code, data, analyses, and experimental infrastructure embody much of the evidence behind software-engineering claims [7].
+
+Environment construction is a primary concern for an independent runner. Docker-based artifact preparation seeks to package code, data, documentation, and dependencies into a portable execution environment intended for replication and validation by others [4]. GNU Guix addresses the same problem through functional package management, motivated by the observation that software may be upgraded, removed, or recompiled even on the same HPC system, making an environment difficult to reconstruct elsewhere or later [5]. These approaches suggest that a successful run from a fresh ISO should test more than whether a provided container or package manifest works on its creator’s machine. An additional runner can expose undocumented host assumptions, unavailable dependencies, privilege requirements, networking expectations, architecture constraints, and manual steps. The sources support environment capture as a mitigation, but they do not establish that one successful fresh-system run predicts success for a second independent operator.
+
+Prior work also distinguishes the ability to execute from the equality of the resulting artifact. The F-Droid study provides the clearest empirical separation: among 18,904 app versions previously confirmed as bitwise reproducible, 83% could still be rebuilt, while missing dependencies accounted for 76% of non-rebuildable cases; among successfully rebuilt apps, 94% remained bitwise reproducible [2]. Thus, rebuildability and artifact equality are separate outcomes. For the proposed experiment, preflight should therefore be recorded independently from execution completion and artifact comparison. Where deterministic build products are expected, the standard metric is bitwise identity, preferably implemented through cryptographic hashes and supplemented by file inventories or structured diffs when hashes disagree. F-Droid’s results also show that an artifact may remain deterministic conditional on successful setup even while dependency decay undermines overall reproducibility [2].
+
+Exact identity is not always an appropriate criterion. For notebook outputs, Hossain et al. propose the Similarity-based Reproducibility Index, which assigns output-specific scores from 0 to 1 and qualitative diagnostics rather than reducing all reruns to “identical” or “different” [1]. This is relevant if artifacts include plots, floating-point values, tables, logs, or other outputs affected by randomness or library variation. Outcome criteria must consequently be declared before the second run: bitwise equality for deterministic files, semantic or numerical tolerances for variable outputs, and a separate categorical preflight result. This is especially important because replication assessments in software engineering use heterogeneous and sometimes ad hoc criteria, making apparently conflicting outcomes difficult to interpret [3].
+
+## Gap
+
+The retrieved literature is thin on the specific incremental value of a *second* independent runner after one fresh-ISO reproduction has succeeded. Existing work motivates independent reproduction [6], environment capture [4][5], and separate rebuildability and artifact-equality checks [2], but does not test whether another runner reaches the same preflight status, encounters the same setup failures or warnings, and produces equivalent artifacts under a controlled fresh-system protocol. A new experiment should therefore compare runners using the same ISO image, instructions, inputs, and predefined metrics while separately recording operator actions, preflight diagnostics, run completion, artifact hashes, and any approved similarity measures.
+
+## References
+
+[1] A S M Shahadat Hossain, Colin Brown, David Koop, Tanu Malik (2025). Similarity-Based Assessment of Computational Reproducibility in Jupyter Notebooks. http://arxiv.org/abs/2509.23645v1
+
+[2] Denise Nanni, Julien Malka, Stefano Zacchiroli, Théo Zimmermann et al. (2026). Understanding Build Reproducibility in the F-Droid Ecosystem. http://arxiv.org/abs/2607.01890v1
+
+[3] Giuseppe Destefanis, Martin Shepperd, Leila Yousefi (2026). The Replication Assessment Problem in Software Engineering. http://arxiv.org/abs/2607.13815v1
+
+[4] Michael Canesche, Roland Leissa, Fernando Magno Quintão Pereira (2023). Preparing Reproducible Scientific Artifacts using Docker. http://arxiv.org/abs/2308.14122v1
+
+[5] Ludovic Courtès, Ricardo Wurmus (2015). Reproducible and User-Controlled Software Environments in HPC with Guix. http://arxiv.org/abs/1506.02822v2
+
+[6] Sylwester Arabas, Michael R. Bareford, Lakshitha R. de Silva, Ian P. Gent et al. (2014). Case Studies and Challenges in Reproducibility in the Computational Sciences. http://arxiv.org/abs/1408.2123v2
+
+[7] Christoph Treude, Christopher M. Poskitt, Rashina Hoda (2026). Rethinking Artifact Evaluation for Software Engineering in the Age of Generative AI. http://arxiv.org/abs/2604.16306v1

@@ -1,0 +1,253 @@
+{
+  "slug": "topic-can-test-generation-policy-equivalence-che",
+  "topic": "Topic Can test generation, policy-equivalence checking, and canonicalization be separated so that an independently written parser and verifier validate every canonical archive? _(auto-enqueued follow-up from topic-can-the-original-executable-source-code-ex)_",
+  "created_at": "2026-07-19T17:45:30+00:00",
+  "updated_at": "2026-07-19T18:21:28+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Verification, Validation and Integrity of Distributed and Interchanged Rule Based Policies and Contracts in the Semantic Web",
+      "authors": [
+        "Adrian Paschke"
+      ],
+      "year": 2006,
+      "url": "http://arxiv.org/abs/cs/0609119v2",
+      "source": "arXiv:cs/0609119v2"
+    },
+    {
+      "title": "Grammars for Free: Toward Grammar Inference for Ad Hoc Parsers",
+      "authors": [
+        "Michael Schröder",
+        "Jürgen Cito"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2202.01021v1",
+      "source": "arXiv:2202.01021v1"
+    },
+    {
+      "title": "A Derivative-based Parser Generator for Visibly Pushdown Grammars",
+      "authors": [
+        "Xiaodong Jia",
+        "Ashish Kumar",
+        "Gang Tan"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2109.04258v2",
+      "source": "arXiv:2109.04258v2"
+    },
+    {
+      "title": "Deductive Verification of Unmodified Linux Kernel Library Functions",
+      "authors": [
+        "Denis Efremov",
+        "Mikhail Mandrykin",
+        "Alexey Khoroshilov"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1809.00626v1",
+      "source": "arXiv:1809.00626v1"
+    },
+    {
+      "title": "Evaluating LLM-driven User-Intent Formalization for Verification-Aware Languages",
+      "authors": [
+        "Shuvendu K. Lahiri"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2406.09757v2",
+      "source": "arXiv:2406.09757v2"
+    },
+    {
+      "title": "Testing Deep Learning Models: A First Comparative Study of Multiple Testing Techniques",
+      "authors": [
+        "Mohit Kumar Ahuja",
+        "Arnaud Gotlieb",
+        "Helge Spieker"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2202.12139v1",
+      "source": "arXiv:2202.12139v1"
+    },
+    {
+      "title": "Reproducible Pattern Recognition Research: The Case of Optimistic SSL",
+      "authors": [
+        "Jesse H. Krijthe",
+        "Marco Loog"
+      ],
+      "year": 2016,
+      "url": "http://arxiv.org/abs/1612.08650v1",
+      "source": "arXiv:1612.08650v1"
+    },
+    {
+      "title": "SoK: Attacks on Industrial Control Logic and Formal Verification-Based Defenses",
+      "authors": [
+        "Ruimin Sun",
+        "Alejandro Mera",
+        "Long Lu",
+        "David Choffnes"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2006.04806v3",
+      "source": "arXiv:2006.04806v3"
+    },
+    {
+      "title": "Impact of HTTP Cookie Violations in Web Archives",
+      "authors": [
+        "Sawood Alam",
+        "Plinio Vargas",
+        "Michele C. Weigle",
+        "Michael L. Nelson"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1906.07141v1",
+      "source": "arXiv:1906.07141v1"
+    },
+    {
+      "title": "Full-Text and URL Search Over Web Archives",
+      "authors": [
+        "Miguel Costa"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2108.01603v1",
+      "source": "arXiv:2108.01603v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "For a preregistered finite archive language containing at most three canonically ordered entries, six legal path names, and policies over three Boolean variables, exhaustive enumeration of every normalized archive model will produce canonical bytes that two independently written parsers both accept and map back to the original model in 100% of cases; exhaustive enumeration of all byte strings admitted by either parser within the resulting maximum length will reveal no additional accepted canonical archive.",
+      "rationale": "This supplies a bounded completeness result rather than mere sampled agreement. It directly addresses the survey gap that existing work provides no evidence that every canonical output can be validated independently, while respecting the explicit-language requirement motivated by [2] and the parser-separation argument of [3].",
+      "novelty": 9.4,
+      "feasibility": 8.8,
+      "info_gain": 9.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For 128 policy mutants that each differ from a reference policy on exactly one of the 256 assignments of eight Boolean variables, an independently implemented exhaustive truth-table equivalence oracle will detect all 128 mutants, whereas suites of 16 uniformly sampled assignments will miss at least 85% of them on average across 100 deterministic seeds.",
+      "rationale": "The experiment sharply separates exact policy equivalence from test-based evidence. It operationalizes Paschke's behavioral approach [1] while testing the survey's warning that generated cases cannot prove equivalence unless the semantic domain is finite or completely characterized.",
+      "novelty": 9.1,
+      "feasibility": 9.9,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "Among 30 seeded lossy canonicalizer mutants that delete, merge, truncate, or default a policy field while remaining deterministic, idempotent, and accepted by an independent parser, all 30 will pass structural acceptance and fixed-point checks, but exact finite-domain policy-equivalence checking will reject at least 27.",
+      "rationale": "This tests whether parser acceptance, determinism, and idempotence are insufficient without a separate semantic oracle. A positive result would empirically justify the survey's proposed decomposition and demonstrate why canonicalization contracts alone [4] do not establish preservation of policy intent [5].",
+      "novelty": 9.3,
+      "feasibility": 9.7,
+      "info_gain": 9.7,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 4,
+      "statement": "For 24 serializer mutants that preserve the normalized policy model but independently violate one canonical byte rule involving field order, integer encoding, redundant defaults, string escaping, duplicate representation, or archive-entry order, exhaustive policy-behavior comparison will classify all 24 outputs as equivalent to the reference, while an independent canonical-form verifier will reject all 24.",
+      "rationale": "This is the converse of semantic-loss testing: policy equivalence alone cannot establish canonicality. It directly examines the survey gap by showing that behavioral verification supported by [1] must remain separate from the byte-level language and canonicalization constraints emphasized by [2].",
+      "novelty": 9.0,
+      "feasibility": 9.8,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Against 40 single-edit parser mutants covering length bounds, shortest-form integers, duplicate fields, ordering, UTF-8 validity, trailing bytes, and nesting depth, a 400-case suite generated solely from the published grammar and boundary contracts will kill at least 90% of mutants, while an equal-sized uniformly random byte suite using the same acceptance-disagreement oracle will kill no more than 60%.",
+      "rationale": "The claim tests whether test generation can be useful without consulting canonicalizer internals. It combines the explicit-grammar motivation of [2] with comparative testing methods from [6], while measuring parser discrepancies separately as recommended by the survey.",
+      "novelty": 8.9,
+      "feasibility": 9.5,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "For 30 canonicalizer mutants involving omitted sorting, unstable duplicate handling, incomplete normalization, retained defaults, and nonminimal encodings, a suite built from 200 independently generated semantic models and their permutations, redundant-field variants, and equivalent encodings will kill at least 24 mutants, whereas testing the same mutants only on the 200 already-canonical reference outputs for acceptance and idempotence will kill no more than 10.",
+      "rationale": "This tests the incremental value of independently generated metamorphic inputs over canonical-output self-tests. It grounds the separation of generation and canonicalization in the testing families summarized by [6] and addresses the survey's lack of combined empirical evidence.",
+      "novelty": 9.2,
+      "feasibility": 9.6,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Across 45 seeded single-stage mutants divided equally among parsing, canonicalization, and policy evaluation, the ordered disagreement signature consisting of accepted language, normalized model, canonical bytes, and complete policy truth table will correctly identify the mutated stage for at least 42 mutants; a diagnosis using only final pass/fail and policy decisions will correctly identify no more than 30.",
+      "rationale": "The survey explicitly recommends reporting stage-specific disagreements rather than one aggregate outcome, but gives no test of whether those measurements actually localize faults. This hypothesis measures the diagnostic benefit of the proposed decomposition using controlled ground-truth mutations.",
+      "novelty": 9.4,
+      "feasibility": 9.4,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "For 24 normalization-rule mutants affecting Unicode normalization, case folding, path separators, default elision, and numeric minimality, a generator and verifier that reuse the mutant canonicalizer's normalization helper will report agreement on all of their self-generated archives, whereas a generator derived from declarative rule tables and a separately coded verifier will reject or byte-disagree with at least 22 mutants while accepting all 24 unmutated controls.",
+      "rationale": "This tests whether nominal component separation fails under shared implementation dependencies through common-mode errors. It directly targets the survey's unresolved requirement for independently written components and complements Lahiri's warning [5] that mechanical agreement can validate the wrong formalization.",
+      "novelty": 9.6,
+      "feasibility": 9.3,
+      "info_gain": 9.8,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Construct 128 finite-domain policies, canonicalize them with a correct baseline and 30 deterministic lossy mutants, then independently test parser acceptance, byte-level fixed points, exact policy equivalence, repeatability, and artifact completeness.",
+    "protocol": "1. Use Python 3.11 or newer with only the standard library plus matplotlib. Set PYTHONHASHSEED=0 and use random.Random(20250308) for every randomized operation. Run without network access after dependency installation. Create separate modules named policy_generator.py, canonicalizers.py, independent_parser.py, independent_verifier.py, run_once.py, and run_experiment.py. independent_parser.py and independent_verifier.py must not import canonicalizers.py or call any canonicalization function; canonicalizers.py must not import either independent module.\n2. Define an archive as UTF-8 JSON followed by exactly one newline. The top-level object is {\"version\":1,\"policy\":{...}}. Require policy_id as a string. Permit these optional policy fields: effect, subjects, actions, resources, time_slots, regions, min_clearance, require_mfa, and max_amount. Use universes subjects=[\"s0\",\"s1\",\"s2\",\"s3\"], actions=[\"a0\",\"a1\",\"a2\",\"a3\"], resources=[\"r0\",\"r1\",\"r2\",\"r3\"], time_slots=[0,1,2,3], regions=[\"g0\",\"g1\",\"g2\",\"g3\"], clearances=[0,1,2,3], MFA=[false,true], and amounts=[0,1,2,3]. Parser defaults for missing fields are effect=\"deny\", each selector list equal to its complete four-element universe, min_clearance=0, require_mfa=false, and max_amount=3.\n3. Implement independent_parser.py directly with json.loads and explicit validation. It must reject malformed JSON, extra top-level or policy keys, a version other than integer 1, missing/non-string policy_id, wrong types, duplicate list members, out-of-universe values, unsorted lists, and integers outside 0..3. It must accept empty selector lists and missing optional fields, applying the defaults in step 2. Do not reuse normalization, schema-validation, or serialization code from canonicalizers.py.\n4. Define canonical byte serialization as json.dumps(obj, sort_keys=True, separators=(\",\",\":\"), ensure_ascii=False).encode(\"utf-8\") + b\"\\n\". Before serialization, sort and deduplicate every present selector list. Preserve missing optional fields rather than inserting defaults. C0 is the unmutated canonicalizer: it emits every field present in the generated source policy and otherwise only performs this normalization and serialization.\n5. Generate exactly 128 source policies. Create the list 0..127, shuffle it once with random.Random(20250308), and let x be the shuffled value assigned to case T000 through T127. For bit(x,k) equal to bit k of x, set policy_id to the case ID, effect=\"allow\", subjects=sorted({\"s\"+str(x%4), \"s\"+str((x+1+bit(x,0))%4)}), actions=sorted({\"a\"+str((x//4)%4), \"a\"+str(((x//4)+1+bit(x,1))%4)}), resources=sorted({\"r\"+str((x//16)%4), \"r\"+str(((x//16)+1+bit(x,2))%4)}), time_slots=sorted({x%4, (x+1+bit(x,3))%4}), regions=sorted({\"g\"+str((x//8)%4), \"g\"+str(((x//8)+1+bit(x,4))%4)}), min_clearance=1+(x%3), require_mfa=bool(bit(x,5)), and max_amount=x%3. Store x and the complete source policy in the per-case results.\n6. Implement exactly 30 mutant canonicalizers. Each invocation first parses JSON internally with json.loads, normalizes present lists, applies its transformation, and canonically serializes without inserting missing fields. The catalog is: M01 delete subjects; M02 delete actions; M03 delete resources; M04 delete time_slots; M05 delete regions; M06 delete effect; M07 delete min_clearance; M08 delete require_mfa; M09 delete max_amount; M10 replace subjects by its lexicographically first member if nonempty; M11 similarly truncate actions; M12 similarly truncate resources; M13 replace time_slots by its minimum member if nonempty; M14 similarly truncate regions; M15 replace min_clearance v by 2*floor(v/2); M16 replace min_clearance by 0; M17 replace max_amount v by 1 when v is 0 or 1 and by 3 when v is 2 or 3; M18 replace max_amount by 3; M19 replace require_mfa by false; M20 replace effect by \"deny\"; M21 map subjects s1->s0 and s3->s2, leaving s0 and s2 fixed, then deduplicate; M22 apply the analogous a1->a0 and a3->a2 action map; M23 apply the analogous r1->r0 and r3->r2 resource map; M24 map time slots 1->0 and 3->2, leaving 0 and 2 fixed; M25 apply the analogous g1->g0 and g3->g2 region map; M26 intersect subjects with {\"s0\",\"s1\"}; M27 intersect actions with {\"a0\",\"a1\"}; M28 intersect resources with {\"r0\",\"r1\"}; M29 intersect time_slots with {0,2}; and M30 intersect regions with {\"g0\",\"g1\"}. Always sort transformed lists. Record this catalog verbatim in results.json.\n7. Implement the semantic oracle independently in independent_verifier.py. Enumerate all 4*4*4*4*4*4*2*4=32768 requests in lexicographic product order over subject, action, resource, time_slot, region, clearance, require_mfa_value, and amount. A parsed policy matches when all five categorical values belong to their selector lists, clearance>=min_clearance, require_mfa is false or the request MFA value is true, and amount<=max_amount. Its decision is effect when it matches and \"deny\" otherwise. Represent the complete decision vector as a Python integer bitset with bit j=1 exactly when request j is allowed. Equivalence is exact integer equality; behavioral distance is (baseline_bitset XOR comparison_bitset).bit_count(). If unequal, decode and record the lowest-index differing request as a counterexample.\n8. For every case, produce C0 bytes and perform exactly three baseline checks: independent parser acceptance, byte fixed point C0(C0(source_bytes))==C0(source_bytes), and exact equality between the source policy's semantic bitset and the independently parsed C0 archive's bitset. Record all three booleans, archive SHA-256, allowed-request count, and any error for each of the 128 cases. Aggregate each baseline count separately; all must equal 128.\n9. For each mutant M01..M30 and each of the 128 C0 archives, compute y=M(C0_bytes) and z=M(y). Perform and record independent parser acceptance of y, byte fixed point y==z, exact semantic equivalence between parsed C0 and parsed y, behavioral distance, y SHA-256, byte lengths of C0 and y, and the first counterexample or null. This yields exactly 3840 mutant parser-acceptance checks, 3840 mutant byte-fixed-point checks, and 3840 mutant equivalence checks. A mutant is semantically rejected if at least one of its 128 cases has behavioral distance greater than zero.\n10. For every mutant aggregate: accepted_case_count, fixed_point_case_count, equivalent_case_count, counterexample_case_count=128-equivalent_case_count, total_behavioral_distance=sum of the 128 distances, maximum_behavioral_distance, first failing case, and first counterexample. Also aggregate total mutant parser acceptances out of 3840, total fixed points out of 3840, total equivalent pairs out of 3840, and semantically_rejected_mutant_count out of 30.\n11. Make run_once.py return a deterministic payload containing the seed, schema, universes, request-domain size, mutation catalog, all 128 source definitions, all C0 per-case results and aggregates, all 3840 mutant per-case results, all per-mutant aggregates, and chart values. Do not put timestamps, elapsed times, temporary paths, process IDs, or platform-specific values in this deterministic payload. Serialize it canonically and calculate its SHA-256.\n12. In run_experiment.py, execute run_once.py twice in fresh subprocesses with PYTHONHASHSEED=0. Measure each subprocess using time.perf_counter. Require byte-for-byte equality of the two canonical deterministic payloads and equality of every archive SHA-256. Store repeat_run_equal, both payload SHA-256 values, each elapsed time, and total elapsed time in the final results. Use the first deterministic payload as the reported data.\n13. Generate key_result.png with fixed size 14 by 7 inches and DPI 150. Plot mutant IDs M01..M30 on the x-axis. In the upper panel, plot accepted_case_count and fixed_point_case_count as grouped bars with a y-axis of 0..128. In the lower panel, plot counterexample_case_count as bars with a horizontal threshold line at 1 and a y-axis of 0..128. Use the noninteractive Agg backend, fixed colors, fixed labels, no current date, and metadata={\"Software\":\"policy-equivalence-experiment\"}. Store under chart_values the ordered mutant IDs and the three exact integer arrays used in the figure, plus semantically_rejected_mutant_count and the rejection threshold 27.\n14. Build results.json with top-level keys schema_version, deterministic_payload, deterministic_payload_sha256, repeat_run, runtime, hypothesis_decision, chart_values, and artifact_manifest. hypothesis_decision must be \"supported\" exactly when all C0 acceptance, fixed-point, and equivalence counts are 128; mutant acceptance is 3840/3840; mutant fixed points are 3840/3840; semantically_rejected_mutant_count>=27; repeat_run_equal is true; and total elapsed time is at most 1800 seconds. Otherwise set it to \"refuted\" and list every failed condition.\n15. Prevent another truncated export by writing results.json.tmp in UTF-8, flushing and calling os.fsync, then atomically replacing results.json with os.replace. Reopen results.json with json.load and assert that it contains 128 C0 records, 30 mutant records, exactly 128 case records under every mutant, 3840 mutant records in total, 30 values in every chart array, both run hashes, runtime fields, and a nonempty hypothesis decision. Write results.sha256 containing the SHA-256 of the completed results.json file. Add results.json, results.sha256, and key_result.png with byte sizes and SHA-256 hashes to artifact_manifest; because results.json cannot safely contain its own final hash, record its hash only in results.sha256 and record the manifest hash over the deterministic payload inside results.json. Exit nonzero if any validation or count assertion fails.\n16. Keep the timed computation under 30 minutes. The exact verifier should use integer bitsets or precomputed request masks rather than storing millions of request dictionaries. Report total elapsed seconds and peak optional diagnostic memory if available, but runtime is the only required resource metric.",
+    "metrics": [
+      "C0 parser acceptance: number of the 128 baseline archives accepted by independent_parser.py; required value 128.",
+      "C0 byte fixed points: number of cases satisfying C0(C0(source)) byte-for-byte equals C0(source); required value 128.",
+      "C0 semantic preservation: number of source/C0 pairs with identical 32768-request decision bitsets; required value 128.",
+      "Mutant structural acceptance: accepted mutant archives divided by 3840, with per-mutant and per-case results; the hypothesis requires 3840/3840.",
+      "Mutant byte fixed points: mutant/case pairs satisfying M(M(C0(source))) byte-for-byte equals M(C0(source)), with per-mutant and per-case results; the hypothesis requires 3840/3840.",
+      "Behavioral distance: XOR bit count between the C0 and mutant decision bitsets over all 32768 requests, reported per case and summed and maximized per mutant.",
+      "Semantically rejected mutants: count of mutants having behavioral distance greater than zero for at least one of 128 cases; the support threshold is at least 27 of 30.",
+      "Counterexample-case count: for each mutant, the number of its 128 cases with nonzero behavioral distance; these 30 integers are the key lower-panel chart values.",
+      "Deterministic repeatability: byte-for-byte equality and matching SHA-256 of two complete deterministic payloads produced in fresh subprocesses; required value true.",
+      "Artifact completeness: parsed record counts must be 128 C0 records, 30 mutant aggregates, 3840 mutant case records, and three chart arrays of length 30, with a successfully reparsed atomic results.json.",
+      "Runtime: total wall-clock seconds for both fresh runs and artifact generation; required to be at most 1800 seconds."
+    ],
+    "time_budget_minutes": 30,
+    "expected_if_true": "C0 records 128/128 parser acceptances, 128/128 byte fixed points, and 128/128 exact semantic equivalences; mutants record 3840/3840 parser acceptances and 3840/3840 byte fixed points; at least 27 of the 30 mutants have one or more nonzero exact behavioral distances; repeat_run_equal is true; results.json passes all completeness assertions; key_result.png shows acceptance and fixed-point bars at 128 for every mutant while at least 27 counterexample bars exceed zero; and total runtime is at most 1800 seconds.",
+    "expected_if_false": "The hypothesis is refuted if mutant parser acceptance is below 3840, mutant byte fixed points are below 3840, 26 or fewer mutants are semantically rejected, or deterministic repeat-run equality fails. A C0 count below 128, an incomplete or invalid results.json, missing chart values, or runtime above 1800 seconds also forces a refuted decision because the claimed comparison was not validly reproduced."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T17:49:43+00:00",
+      "finished_at": "2026-07-19T18:05:19+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The supplied results.json is truncated and invalid, ending at \"T06_see\", so it cannot be reliably parsed or audited. Although the visible behavioral-distance entries indicate 29 of 30 mutants have nonzero counterexamples (only M06 has zero), the required C0 baseline, 3840 parser-acceptance checks, 3840 byte-idempotence checks, repeat-run comparison, and runtime are absent.\n\nRevision instructions: Rerun or re-export the experiment with a complete, valid JSON file. Include explicit aggregate and per-case results for C0's 128 checks, all mutant structural-acceptance and byte-fixed-point checks, the number of semantically rejected mutants, deterministic repeat-run equality, elapsed runtime, and the generated chart values."
+    },
+    {
+      "index": 2,
+      "started_at": "2026-07-19T18:07:16+00:00",
+      "finished_at": "2026-07-19T18:15:10+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "C0 achieved 128/128 parser acceptances, byte fixed points, and semantic equivalences, while the 30 mutants achieved 3840/3840 parser acceptances and 3840/3840 fixed points. Exact checking semantically rejected all 30 mutants, exceeding the threshold of 27, with 64–128 counterexample cases per mutant; the experiment did not hit its wall-clock timeout."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.0,
+  "error": ""
+}

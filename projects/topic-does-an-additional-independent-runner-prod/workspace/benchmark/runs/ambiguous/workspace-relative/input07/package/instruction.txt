@@ -1,0 +1,1 @@
+Run package/task.py using data as the input root and write the result to the OUTPUT_ARTIFACT path supplied by the runner.

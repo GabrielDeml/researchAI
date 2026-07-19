@@ -1,0 +1,83 @@
+
+===== codex exec start 2026-07-19T06:15:21 model=gpt-5.6-sol timeout_minutes=28 workspace=/Users/gdeml/git/researchAI/projects/topic-when-that-package-is-independently-execute/workspace =====
+Reading additional input from stdin...
+2026-07-19T13:15:21.823231Z ERROR codex_models_manager::cache: failed to load models cache: missing field `supports_reasoning_summaries` at line 88 column 5
+OpenAI Codex v0.144.1
+--------
+workdir: /Users/gdeml/git/researchAI/projects/topic-when-that-package-is-independently-execute/workspace
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR] (network access enabled)
+reasoning effort: high
+reasoning summaries: none
+session id: 019f7a84-5a37-7473-96c6-ca6f42650673
+--------
+user
+You are an autonomous coding agent running non-interactively inside a sandboxed
+workspace. Implement and RUN the experiment below to completion, entirely within
+the current working directory. You have no one to ask questions of — make
+reasonable decisions and proceed.
+
+## Experiment
+Topic: Topic When that package is independently executed in the locked environment, do the regenerated CSV files reproduce the three stated SHA-256 digests exactly? _(auto-enqueued follow-up from topic-can-a-raw-per-seed-file-be-released-contai)_
+Goal: Execute the locked package four times in fresh isolated environments while streaming syscall traces, then require all 12 regenerated CSVs to be newly created, written before read, path-safe, and byte-for-byte equal to their stated SHA-256 digests.
+
+Protocol to implement:
+1. Require an immutable input file named experiment_spec.json containing: image (a locally available OCI image referenced by repo@sha256 digest), command (an argument-vector template, not a shell string, with the token {output_dir}), output_dir (the absolute directory substituted for that token), and exactly three targets, each with id, path relative to output_dir, and expected_sha256 as 64 lowercase hexadecimal characters. Reject duplicate paths, absolute target paths, paths containing '..', an image not pinned by digest, or a command lacking {output_dir}. Record the image digest and SHA-256 of experiment_spec.json. Do not download, export, copy, or rebuild the image.
+2. Implement one Python driver using only the standard library and the local OCI runner plus strace inside the locked image. If strace is intentionally supplied as a small read-only host binary, record its SHA-256. Network must be disabled for measured executions. If a Python dependency is installed during setup, use pip --no-cache-dir with PIP_NO_CACHE_DIR=1, PIP_DISABLE_PIP_VERSION_CHECK=1, and cache directories under /tmp; however, the preferred implementation uses no added Python packages.
+3. At driver startup, immediately create results.json atomically with flat scalar fields only, including error='experiment_incomplete', decision='inconclusive', expected_observations=12, completed_observations=0, and figure='trace_digest_matrix.png'. Never store lists or nested objects in this file. Update it atomically after parser controls and after every target measurement. Install SIGINT and SIGTERM handlers and a top-level try/except/finally that records a nonempty error message. This precreation ensures results.json remains present even if later execution is terminated.
+4. Keep all large or temporary material outside the workspace in a newly created /tmp directory. Set PIP_CACHE_DIR, XDG_CACHE_HOME, HOME, TMPDIR, and any build-cache variables to subdirectories there. Before setup and before and after every run, measure workspace usage with du and filesystem free space with statvfs. Abort with decision='inconclusive' if workspace usage is at least 1200 MiB, workspace free space is below 400 MiB, or temporary-filesystem free space is below 800 MiB. Record these byte counts in flat results fields. Never place OCI layers, package caches, virtual environments, raw traces, or measured CSVs in the workspace.
+5. Implement a streaming strace parser before running the package. Invoke strace with process following, numeric epoch timestamps, file-descriptor path annotation, successful and failed return values, and tracing of open, openat, openat2, creat, close, read, pread64, readv, write, pwrite64, writev, mmap, dup, dup2, dup3, fcntl duplication, fork/clone/vfork, execve, chdir, fchdir, rename/renameat/renameat2, link/linkat, symlink/symlinkat, unlink, and unlinkat. Parse stderr line by line and discard every line immediately after updating state; retain only counters, first-event timestamps, bounded diagnostic strings, process working directories, descriptor-to-path mappings, and rename/link lineage. Do not create a raw trace file. Redirect package stdout and non-trace diagnostics to bounded 64 KiB ring buffers.
+6. Define events precisely. A target creation is the first successful post-launch operation that makes the initially absent target pathname exist: open/openat/openat2/creat with O_CREAT, or a successful rename/link whose destination is the target. A write is a successful positive-byte write/pwrite/writev through a descriptor mapped to the target or to the source-file lineage later renamed/linked to that target; a writable mmap is conservatively treated as a write event. A read is any successful read/pread/readv attempt, including a zero-byte EOF result, through that lineage; a readable mmap is conservatively treated as a read event. An event is post-launch only when its strace epoch timestamp is not earlier than the launcher's recorded time.time_ns value. If a single mmap is simultaneously the first readable and writable event, classify write-before-read as false. Hashing performed by the driver after traced execution is not part of the traced event sequence.
+7. Run three deterministic parser controls in isolated /tmp directories before measured runs. Control A directly creates an absent file, writes b'abc', closes it, and then reads it; it must report initially_absent=true, created_after_start=true, and write_before_read=true. Control B starts with a preexisting file, reads it, and then overwrites it; it must report initially_absent=false and write_before_read=false. Control C writes b'abc' to an absent temporary file, closes it, atomically renames it to the target, and reads the target; lineage handling must report created_after_start=true and write_before_read=true. Require all expected control fields to match and require SHA-256(b'abc')='ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'. Any mismatch sets error='parser_control_failed', produces the failure figure and results.json, and ends inconclusively without measured executions.
+8. Perform exactly four sequential measured executions, numbered 1 through 4. For each run create a fresh /tmp/run_N parent and verify with lstat that output_dir and all three target paths are absent. Start a new container from the same pinned image with --rm, --network none, a read-only root filesystem wherever compatible with the package, a fresh tmpfs for /tmp capped at 256 MiB, and only run_N bind-mounted writable at the parent corresponding to output_dir. Do not reuse a container or writable layer. Substitute the in-container output_dir into the command and launch it under the streaming tracer. Record launch time immediately before starting strace.
+9. Give each measured execution a 5-minute timeout. Once per second, compute the host-visible size of run_N without following symlinks; terminate the container if it exceeds 600 MiB. Also terminate if total experiment wall time reaches 27 minutes. Record timeout, exit code, peak run bytes, parsed trace-line count, and the last bounded diagnostic text. A timeout, size-limit breach, nonzero exit, malformed trace, dropped/unparsed target-relevant syscall, or unavailable tracer is an infrastructure error and makes the final decision inconclusive rather than refuted.
+10. After a successful process exit and before any cleanup, evaluate each target. Require that it exists, is a regular file, and is path-safe: lstat every path component under output_dir, reject symlink components, and verify the lexical and resolved path remain beneath output_dir. Compute SHA-256 by streaming the file in 1 MiB blocks and compare the lowercase digest to the assigned expected_sha256. Record file size. Separately record initially_absent, created_after_start, first_creation_time_ns, first_write_time_ns, first_read_time_ns or -1, write_before_read, path_safe, actual_sha256, digest_match, and target_pass. target_pass is true only if initially_absent, created_after_start, write_before_read, path_safe, and digest_match are all true.
+11. Flatten every observation into scalar results.json keys such as run_1_target_1_digest_match, run_1_target_1_actual_sha256, and run_1_target_1_target_pass. Also record completed_runs, completed_observations, creation_pass_count, ordering_pass_count, safety_pass_count, digest_pass_count, joint_pass_count, and joint_pass_rate. There must be 12 completed target observations: four runs times three targets.
+12. Immediately after metrics and hashes have been extracted for a run, recursively delete run_N without following symlinks, remove that container's writable layer via --rm, and verify the run directory is gone. Run garbage collection only for Python objects; do not prune or duplicate the shared OCI image. Proceed to the next run only after the disk-budget check passes.
+13. Generate trace_digest_matrix.png in the workspace using a deterministic standard-library PNG writer based on struct and zlib. Draw a 4-row by 3-column matrix in target order from experiment_spec.json: green for target_pass=true, red for target_pass=false, and gray for missing/infrastructure-error observations. Add four narrow indicator bands within each cell for creation, write-before-read, safety, and digest status, plus fixed bitmap labels for run and target numbers. Use a fixed 800 by 600 pixel canvas and no timestamps or nondeterministic metadata. Generate this figure even on failure, using gray for unavailable measurements.
+14. Decision rule: set decision='supported' and error='' only when parser controls pass, all four executions complete successfully, completed_observations=12, and joint_pass_count=12, equivalently joint_pass_rate=1.0. Set decision='refuted' and error='' when all four executions and all 12 observations are usable but at least one target_pass is false. Set decision='inconclusive' with a nonempty error for any setup, parser-control, tracing, timeout, disk-budget, cleanup, or observation-completeness failure. In the finally block, regenerate the PNG if necessary and atomically write the final flat results.json.
+
+Metrics to compute: joint_pass_count: number of the 12 run-target observations for which initially_absent, created_after_start, write_before_read, path_safe, and digest_match are all true, joint_pass_rate: joint_pass_count divided by 12; the support threshold is exactly 1.0, creation_pass_count: number of observations whose target was absent immediately before launch and was created by a successful traced syscall after launch; required value is 12, ordering_pass_count: number of observations whose first write event precedes every read event on the target file lineage; required value is 12, safety_pass_count: number of observations that end as regular files beneath output_dir with no symlink path components; required value is 12, digest_pass_count: number of observations whose streamed SHA-256 equals that target's assigned digest; required value is 12, digest reproducibility by target: number of matching executions out of four for each of the three target paths; each required value is 4, parser_control_pass_count: count of correctly classified deterministic controls A, B, and C; required value is 3, resource metrics: peak temporary bytes per run, workspace bytes before and after each run, free bytes, elapsed seconds, trace-line count, and whether timeout or the 600 MiB run limit was reached
+Expected if hypothesis holds: All parser controls pass; all four executions yield 12 usable observations; creation_pass_count=12, ordering_pass_count=12, safety_pass_count=12, digest_pass_count=12, joint_pass_count=12, and joint_pass_rate=1.0; each target matches its assigned SHA-256 in 4/4 runs; the figure contains twelve green cells.
+Expected if hypothesis fails: With all four executions and 12 observations usable, at least one observation has initially_absent=false, created_after_start=false, write_before_read=false, path_safe=false, or digest_match=false, giving joint_pass_count<12 and joint_pass_rate<1.0; the figure contains at least one red cell. Infrastructure, parser-control, quota, timeout, or missing-observation failures instead produce an inconclusive result with gray cells and a nonempty error.
+Wall-clock budget: about 28 minutes. Keep the experiment inside it; if
+something is slow, reduce sample sizes rather than exceeding the budget.
+
+## Mandatory workspace conventions
+1. Create a Python virtual environment INSIDE this workspace: `python3 -m venv .venv`
+   and install dependencies into it (`.venv/bin/pip install ...`). Do not install
+   anything globally. Assume an Apple-Silicon Mac.
+2. Write all source code as files in this workspace (e.g. `experiment.py`), not as
+   throwaway one-liners. The code must be runnable again by a human.
+3. Use fixed random seeds so the run is deterministic.
+4. Actually EXECUTE the experiment with the venv Python and let it finish.
+5. Save the quantitative results to `results.json` in the workspace root. It MUST
+   be a FLAT JSON object of scalar values (numbers, strings, booleans) — one key
+   per metric, no deep nesting. Include the headline numbers that decide the
+   hypothesis. Example: {"accuracy_a": 0.91, "accuracy_b": 0.87, "p_value": 0.002, "n": 1000}
+6. Save every figure as a PNG under `figures/` (create the directory). Give files
+   descriptive names.
+7. Print a concise final summary to stdout: what you ran, the key numbers, and
+   whether they point toward supporting or refuting the hypothesis.
+
+Do not fabricate results — every number in results.json must come from code that
+actually ran. If a step fails, debug it and retry; if it is truly impossible
+within the budget, write results.json with an "error" field explaining why and
+still print your summary.
+
+warning: Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /Users/gdeml/.codex/config.toml.
+codex
+I’ll implement the reusable standard-library driver, validate the immutable spec and local runner/tracer availability, run the parser controls, then execute all four isolated measurements and verify the flat results plus deterministic PNG. I’ll keep raw traces and generated CSVs out of the workspace; the explicitly required `.venv` and source/results artifacts will remain here.
+exec
+/bin/zsh -lc "pwd && rg --files -g 'experiment_spec.json' -g 'AGENTS.md' -g '"'!**/.git/**'"' . .. 2>/dev/null | head -100 && rg -n \"topic-when-that-package|locked package|experiment_spec\" /Users/gdeml/.codex/memories/MEMORY.md 2>/dev/null | head -30" in /Users/gdeml/git/researchAI/projects/topic-when-that-package-is-independently-execute/workspace
+ succeeded in 0ms:
+/Users/gdeml/git/researchAI/projects/topic-when-that-package-is-independently-execute/workspace
+
+
+!!!!! RESOURCE LIMIT: workspace exceeded 2048MB disk quota; killing experiment !!!!!
+
+!!!!! TIMEOUT: wall-clock limit exceeded, sending SIGTERM to pgid=91208 and 4 descendant process(es) [91209, 91294, 91295, 91479] !!!!!
+
+===== codex exec end exit=0 timed_out=False killed_for=workspace exceeded 2048MB disk quota duration_s=10.2 =====

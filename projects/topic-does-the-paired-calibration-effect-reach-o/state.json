@@ -1,0 +1,237 @@
+{
+  "slug": "topic-does-the-paired-calibration-effect-reach-o",
+  "topic": "Topic Does the paired calibration effect reach or exceed 0.08 when selection is performed over a substantially larger locked parameter grid while retaining 16 calibration seeds per split? _(auto-enqueued follow-up from topic-can-the-optimization-comparison-be-repeate)_",
+  "created_at": "2026-07-19T17:24:40+00:00",
+  "updated_at": "2026-07-19T17:41:04+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Sequential Bootstrap for Out-of-Bag Error Estimation: A 100-Seed Replication Study and Variance-Structure Analysis",
+      "authors": [
+        "Cheng Peng"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2511.18065v2",
+      "source": "arXiv:2511.18065v2"
+    },
+    {
+      "title": "On the marginal likelihood and cross-validation",
+      "authors": [
+        "Edwin Fong",
+        "Chris Holmes"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1905.08737v2",
+      "source": "arXiv:1905.08737v2"
+    },
+    {
+      "title": "Efficient Hyperparameter Tuning with Dynamic Accuracy Derivative-Free Optimization",
+      "authors": [
+        "Matthias J. Ehrhardt",
+        "Lindon Roberts"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2011.03151v1",
+      "source": "arXiv:2011.03151v1"
+    },
+    {
+      "title": "Stabilizing Bi-Level Hyperparameter Optimization using Moreau-Yosida Regularization",
+      "authors": [
+        "Sauptik Dhar",
+        "Unmesh Kurup",
+        "Mohak Shah"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2007.13322v1",
+      "source": "arXiv:2007.13322v1"
+    },
+    {
+      "title": "Gradient-based Bi-level Optimization for Deep Learning: A Survey",
+      "authors": [
+        "Can Chen",
+        "Xi Chen",
+        "Chen Ma",
+        "Zixuan Liu",
+        "Xue Liu"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2207.11719v4",
+      "source": "arXiv:2207.11719v4"
+    },
+    {
+      "title": "Efficient Online Hyperparameter Optimization for Kernel Ridge Regression with Applications to Traffic Time Series Prediction",
+      "authors": [
+        "Hongyuan Zhan",
+        "Gabriel Gomes",
+        "Xiaoye S. Li",
+        "Kamesh Madduri",
+        "Kesheng Wu"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1811.00620v1",
+      "source": "arXiv:1811.00620v1"
+    },
+    {
+      "title": "Bayesian Optimization for Hyperparameters Tuning in Neural Networks",
+      "authors": [
+        "Gabriele Onorato"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2410.21886v1",
+      "source": "arXiv:2410.21886v1"
+    },
+    {
+      "title": "Gaussian Process Priors for Dynamic Paired Comparison Modelling",
+      "authors": [
+        "Martin Ingram"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1902.07378v1",
+      "source": "arXiv:1902.07378v1"
+    },
+    {
+      "title": "Optimal Paired Comparison Block Designs",
+      "authors": [
+        "Eric Nyarko"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1910.06390v1",
+      "source": "arXiv:1910.06390v1"
+    },
+    {
+      "title": "Optimal designs for third-order interactions in paired comparison experiments",
+      "authors": [
+        "Eric Nyarko"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1912.01578v1",
+      "source": "arXiv:1912.01578v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across 48 deterministic outer splits from the synthetic DGP X~N(0,1), P(Y=1|X)=sigmoid(X), with base predictions q=signal(1.8X+0.6), selecting an affine-logit calibrator sigmoid(a*logit(q)+b) from a locked 11-by-11 grid using mean 15-bin ECE over exactly 16 calibration seeds of n=250 each will yield an independently evaluated mean paired ECE reduction of at least 0.08, and at least 60% of split-level reductions will individually reach 0.08.",
+      "rationale": "This directly tests the literature gap using a prespecified larger grid, exactly 16 seeds, paired evaluation, and an explicit 0.08 threshold. Independent n=10000 test samples per split separate selection from final evaluation as recommended by the survey.",
+      "novelty": 8.7,
+      "feasibility": 9.7,
+      "info_gain": 9.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "On the same 48-split affine-logit calibration benchmark, expanding a nested locked grid from 25 to 121 candidates by densifying the same parameter bounds will increase the independently evaluated mean paired ECE reduction by no more than 0.01 while changing the selected parameter pair on at least 40% of splits.",
+      "rationale": "This distinguishes a genuinely larger effect from search saturation: a denser grid may alter the selected configuration without materially moving the paired calibration estimand. None of the surveyed work establishes whether grid density adds practical calibration benefit under a fixed 16-seed budget.",
+      "novelty": 9.0,
+      "feasibility": 9.8,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "Across 48 deterministic splits from P(Y=1|X)=sigmoid(X) with more severely distorted base predictions q=sigmoid(3X+1.2), a locked 121-candidate grid that widens the affine-logit parameter range to include the population-optimal inverse transformation will produce an independently evaluated mean paired ECE reduction at least 0.03 larger than an equally sized 121-candidate grid that only densifies the original narrow range.",
+      "rationale": "This isolates parameter-range coverage from candidate count. Hyperparameter-optimization theory indicates that outcomes depend jointly on the search space and noise, but the survey identifies no empirical comparison of wider versus merely denser locked grids with 16 seeds.",
+      "novelty": 9.3,
+      "feasibility": 9.7,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "Across 60 deterministic splits using 16 calibration seeds of n=75 and a locked 21-by-21 affine-logit grid, estimating the paired ECE reduction on the same seeded samples used for selection will exceed the reduction on independent matched samples by at least 0.015 on average, and at least 20% of splits will cross 0.08 only under the reused-sample estimate.",
+      "rationale": "The survey explicitly leaves unresolved whether the 16 stochastic evaluations are used for selection, estimation, or both. This hypothesis quantifies threshold-specific selection optimism rather than testing only whether the effect differs from zero.",
+      "novelty": 9.1,
+      "feasibility": 9.6,
+      "info_gain": 9.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "For each of 60 deterministic splits evaluated over a locked 121-candidate affine-logit grid, selections made separately from the odd-numbered and even-numbered halves of the same 16-seed manifest will choose the identical parameter pair on no more than 50% of splits, yet their independently evaluated paired ECE reductions will differ by a median of no more than 0.01.",
+      "rationale": "Peng [1] motivates checking seed sensitivity, but configuration instability need not imply estimand instability. This test determines whether 16 seeds are insufficient for identifying a unique winner even when the threshold-level calibration conclusion is stable.",
+      "novelty": 9.2,
+      "feasibility": 9.8,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "Across 30 deterministic outer splits and 10 repeated 16-seed selection manifests per split, evaluating every candidate on common calibration samples will raise pairwise rerun agreement of the selected configuration by at least 15 percentage points and reduce independent-test ECE regret relative to the population-best grid point by at least 0.005 compared with assigning independent calibration samples to every candidate.",
+      "rationale": "This tests the survey's recommendation to preserve pairing across configurations. It determines whether common random numbers materially improve large-grid selection efficiency while retaining exactly the same number of seeds per candidate.",
+      "novelty": 9.4,
+      "feasibility": 9.3,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Across 60 deterministic splits with 16 calibration seeds of n=75 and a locked 21-by-21 affine-logit grid, adding the preregistered selection penalty 0.002*((a-1)^2+b^2) to mean ECE will reduce boundary-parameter selections by at least 50% and improve the independently evaluated mean paired ECE reduction by at least 0.01 relative to unpenalized selection.",
+      "rationale": "Regularization is proposed for unstable bi-level optimization in [4], but its effect on calibration selection and the 0.08 target is untested. This hypothesis asks whether controlling extreme large-grid choices converts search breadth into reproducible calibration gain.",
+      "novelty": 9.5,
+      "feasibility": 9.6,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "Across 80 deterministic splits from a perfectly calibrated null DGP with q=P(Y=1|X), selecting from a locked 21-by-21 affine-logit grid using mean 15-bin ECE over exactly 16 seeds of n=50 will show an apparent reused-sample paired ECE reduction of at least 0.08 on average, while independent n=10000 evaluation will show a mean paired reduction no greater than 0 and will favor the identity calibrator.",
+      "rationale": "This is a threshold-focused negative control for the survey's central gap. It tests whether a substantially larger grid can manufacture an apparent 0.08 effect through noisy selection even when the true calibration improvement is exactly zero, clarifying the risk highlighted by [1] and the selection/evaluation distinction in [2].",
+      "novelty": 9.6,
+      "feasibility": 9.7,
+      "info_gain": 9.8,
+      "chosen": true,
+      "outcome": "supported"
+    }
+  ],
+  "design": {
+    "summary": "Run 80 deterministic null-DGP replicates, select an affine-logit calibrator from a fixed 21-by-21 grid using the mean 15-bin ECE of exactly sixteen n=50 calibration samples, and compare its reused-sample and independent n=10000 paired ECE effects against identity.",
+    "protocol": "1. Use Python 3.11 with numpy==1.26.4 and matplotlib==3.8.4; do not use external data or network resources after installation.\n2. Define the perfectly calibrated null DGP as follows: draw q independently from Uniform(0,1), set X=q, and draw Y as 1{U<q} with an independent U from Uniform(0,1). The unmodified prediction is q=P(Y=1|X), so the identity calibrator has exactly zero population calibration error.\n3. Lock the candidate grid before generating data. Let A=np.linspace(0.0,2.0,21) and B=np.linspace(-2.0,2.0,21), producing 441 ordered candidates by looping over a in ascending order and then b in ascending order. Candidate (a,b) maps q to c_ab(q)=sigmoid(a*logit(clip(q,1e-12,1-1e-12))+b). The identity calibrator is exactly (a,b)=(1,0), which is in the grid. Do not change or refine this grid after observing results.\n4. Implement 15-bin ECE with fixed equal-width bins on [0,1]. For prediction p_i, assign bin index min(floor(15*p_i),14). For each nonempty bin k compute (n_k/n)*abs(mean(Y in k)-mean(p in k)); ECE is the sum over nonempty bins. Do not use adaptive, quantile, debiased, pooled, or cross-fitted bins.\n5. Run split indices s=0,...,79. Within every split generate exactly 16 independent calibration samples, indexed j=0,...,15, each with n=50. For calibration sample (s,j), initialize rng=np.random.Generator(np.random.PCG64(np.random.SeedSequence([20250308,s,0,j]))), draw q=rng.random(50), then draw Y=(rng.random(50)<q).astype(int).\n6. For every split s and every one of the 441 candidates, compute its 15-bin ECE separately on each of the 16 calibration samples and average those 16 ECE values. Select the candidate with the smallest mean ECE. Do not pool the 800 observations before computing ECE. If objective values are exactly tied in float64, choose the first candidate in the fixed ordering from step 3, equivalent to numpy.argmin on the flattened objective array.\n7. On those same reused calibration samples, compute split-level reused paired reduction R_reuse_s=(1/16)*sum_j[ECE(identity on sample s,j)-ECE(selected candidate for split s on sample s,j)]. The identity ECE must be recomputed using predictions q and the same binning function; do not substitute the selected-grid objective unless the selected candidate is identity.\n8. Generate one independent evaluation sample of n=10000 for each split s using rng=np.random.Generator(np.random.PCG64(np.random.SeedSequence([20250308,s,1,0]))), followed by q=rng.random(10000) and Y=(rng.random(10000)<q).astype(int). This sample must not be used for candidate selection.\n9. On each independent evaluation sample, compute E_id_s=ECE(q,Y), E_sel_s=ECE(c_selected_s(q),Y), and the paired reduction R_eval_s=E_id_s-E_sel_s. Positive reduction favors the selected calibrator; negative reduction favors identity.\n10. Compute A=mean_s(R_reuse_s), B=mean_s(R_eval_s), mean identity evaluation ECE=mean_s(E_id_s), mean selected evaluation ECE=mean_s(E_sel_s), and identity win rate=(1/80)*sum_s 1{E_id_s<E_sel_s}. Also report the sample standard deviation and the normal-approximation 95% interval mean +/- 1.96*SD/sqrt(80) for both sets of split-level paired reductions; these intervals are descriptive and do not alter the decision rule.\n11. Declare the hypothesis SUPPORTED if and only if A>=0.08, B<=0, and mean_s(E_id_s)<mean_s(E_sel_s). Otherwise declare it REFUTED. The first condition tests the claimed apparent reused-sample effect; the latter two require that independent evaluation not show a positive improvement and that it favor identity in mean ECE.\n12. Save a CSV named split_results.csv with one row per split and columns split, selected_a, selected_b, selected_calibration_objective, identity_reused_mean_ece, selected_reused_mean_ece, reused_paired_reduction, identity_evaluation_ece, selected_evaluation_ece, and evaluation_paired_reduction. Save summary metrics and the final SUPPORTED/REFUTED decision in summary.json.\n13. Create paired_calibration_effects.png at at least 1600x700 pixels. Use two panels: the left panel plots all 80 R_reuse_s values by split with a horizontal solid line at their mean, a dashed line at 0, and a red dashed threshold line at 0.08; the right panel plots all 80 R_eval_s values by split with a horizontal solid line at their mean and a dashed reference line at 0. Label the y-axis as identity ECE minus selected ECE and state in the caption or title that positive values favor the selected calibrator and negative values favor identity.",
+    "metrics": [
+      "Mean reused-sample paired ECE reduction A: the average over 80 splits of the mean across the same sixteen n=50 calibration samples of ECE(identity)-ECE(selected); the primary apparent-effect threshold is A>=0.08.",
+      "Mean independent paired ECE reduction B: the average over 80 independent n=10000 evaluation samples of ECE(identity)-ECE(selected); B<=0 means independent evaluation shows no positive improvement.",
+      "Mean independent identity and selected ECE: separately average E_id_s and E_sel_s over the 80 splits; identity is favored when mean(E_id_s)<mean(E_sel_s).",
+      "Identity evaluation win rate: the fraction of the 80 splits for which E_id_s<E_sel_s, reported descriptively.",
+      "Selected-parameter distribution: counts and frequencies of the selected (a,b) pairs across the 80 splits, reported to show whether noisy ECE selection systematically chooses non-identity or strongly shrunk calibrators.",
+      "Uncertainty summary: sample SD and normal-approximation 95% interval mean +/- 1.96*SD/sqrt(80) for both reused and independent split-level paired reductions."
+    ],
+    "time_budget_minutes": 20,
+    "expected_if_true": "The result is SUPPORTED when the reused-sample mean paired reduction is at least 0.08, the independent-evaluation mean paired reduction is no greater than 0, and the identity calibrator has lower mean independent ECE than the selected calibrators; the figure should show reused reductions centered at or above 0.08 but evaluation reductions centered below zero.",
+    "expected_if_false": "The result is REFUTED if the reused-sample mean paired reduction is below 0.08, or if the independent mean paired reduction is positive, or if identity does not have lower mean independent ECE than the selected calibrators."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T17:28:04+00:00",
+      "finished_at": "2026-07-19T17:33:25+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "The reused-sample mean paired ECE reduction was 0.1140, exceeding 0.08, with a 95% CI of [0.1112, 0.1169], so this effect is clear and non-trivial. Independent evaluation showed a slightly negative mean paired reduction of -0.00155 (95% CI [-0.00595, 0.00284]), consistent with no genuine benefit from selection, while identity had lower mean ECE than the selected calibrators (0.01239 versus 0.01394). All three prespecified directional criteria were met, although the independent difference itself is small and not distinguishable from zero."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 5.2,
+  "error": ""
+}

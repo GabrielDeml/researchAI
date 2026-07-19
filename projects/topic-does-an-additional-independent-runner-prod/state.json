@@ -1,0 +1,258 @@
+{
+  "slug": "topic-does-an-additional-independent-runner-prod",
+  "topic": "Topic Does an additional independent runner produce the same preflight and artifact-level outcome? _(auto-enqueued follow-up from topic-can-make-reproduce-be-run-from-a-fresh-iso)_",
+  "created_at": "2026-07-19T13:23:45+00:00",
+  "updated_at": "2026-07-19T13:41:15+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Similarity-Based Assessment of Computational Reproducibility in Jupyter Notebooks",
+      "authors": [
+        "A S M Shahadat Hossain",
+        "Colin Brown",
+        "David Koop",
+        "Tanu Malik"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2509.23645v1",
+      "source": "arXiv:2509.23645v1"
+    },
+    {
+      "title": "Understanding Build Reproducibility in the F-Droid Ecosystem",
+      "authors": [
+        "Denise Nanni",
+        "Julien Malka",
+        "Stefano Zacchiroli",
+        "Théo Zimmermann",
+        "Gabriele d'Angelo"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2607.01890v1",
+      "source": "arXiv:2607.01890v1"
+    },
+    {
+      "title": "The Replication Assessment Problem in Software Engineering",
+      "authors": [
+        "Giuseppe Destefanis",
+        "Martin Shepperd",
+        "Leila Yousefi"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2607.13815v1",
+      "source": "arXiv:2607.13815v1"
+    },
+    {
+      "title": "Preparing Reproducible Scientific Artifacts using Docker",
+      "authors": [
+        "Michael Canesche",
+        "Roland Leissa",
+        "Fernando Magno Quintão Pereira"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2308.14122v1",
+      "source": "arXiv:2308.14122v1"
+    },
+    {
+      "title": "Reproducible and User-Controlled Software Environments in HPC with Guix",
+      "authors": [
+        "Ludovic Courtès",
+        "Ricardo Wurmus"
+      ],
+      "year": 2015,
+      "url": "http://arxiv.org/abs/1506.02822v2",
+      "source": "arXiv:1506.02822v2"
+    },
+    {
+      "title": "Case Studies and Challenges in Reproducibility in the Computational Sciences",
+      "authors": [
+        "Sylwester Arabas",
+        "Michael R. Bareford",
+        "Lakshitha R. de Silva",
+        "Ian P. Gent",
+        "Benjamin M. Gorman",
+        "Masih Hajiarabderkani",
+        "Tristan Henderson",
+        "Luke Hutton"
+      ],
+      "year": 2014,
+      "url": "http://arxiv.org/abs/1408.2123v2",
+      "source": "arXiv:1408.2123v2"
+    },
+    {
+      "title": "Rethinking Artifact Evaluation for Software Engineering in the Age of Generative AI",
+      "authors": [
+        "Christoph Treude",
+        "Christopher M. Poskitt",
+        "Rashina Hoda"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2604.16306v1",
+      "source": "arXiv:2604.16306v1"
+    },
+    {
+      "title": "Research Artifacts in Secondary Studies: A Systematic Mapping in Software Engineering",
+      "authors": [
+        "Aleksi Huotala",
+        "Miikka Kuutila",
+        "Mika Mäntylä"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2504.12646v3",
+      "source": "arXiv:2504.12646v3"
+    },
+    {
+      "title": "A FAIR platform for reproducing mutational signature detection on tumor sequencing data",
+      "authors": [
+        "Aaron Ge",
+        "Tongwu Zhang",
+        "Clara Bodelon",
+        "Montserrat Garcia-Closas",
+        "Jonas Almeida",
+        "Jeya Balasubramanian"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2306.01634v1",
+      "source": "arXiv:2306.01634v1"
+    },
+    {
+      "title": "A Reproducible and Fair Evaluation of Partition-aware Collaborative Filtering",
+      "authors": [
+        "Domenico de Gioia",
+        "Claudio Pomo",
+        "Ludovico Boratto",
+        "Tommaso Di Noia"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2512.17015v3",
+      "source": "arXiv:2512.17015v3"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across 20 paired fresh workspaces instantiated from the same locked ISO root filesystem, an independently implemented POSIX-shell runner and Python-standard-library runner consuming the same machine-readable protocol will agree on every preflight field and warning code, return the same exit status, and produce identical generated-file inventories and SHA-256 digests matching all released references in every pair.",
+      "rationale": "This directly tests the survey gap: prior work motivates independent reproduction but does not establish agreement between a first and second operator at both preflight and artifact levels [6]. Independent orchestration implementations reduce the chance that agreement is merely shared runner logic.",
+      "novelty": 9.2,
+      "feasibility": 9.3,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For 16 deterministic permutations of the preflight-check order executed by each of two independent runners in fresh ISO-derived workspaces, the normalized set of preflight results, warnings, and failure codes will be identical across runners and permutations, no declared output will be created during preflight, and every passing permutation will produce the same reference artifact hashes.",
+      "rationale": "The literature does not report whether independent runners encounter the same diagnostics or whether incidental check ordering changes the apparent setup outcome. This separates order-invariant preflight state from subsequent artifact equality, following the distinction between rebuildability and equality in [2].",
+      "novelty": 9.0,
+      "feasibility": 9.5,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "In 12 paired executions, one runner using an empty HOME and XDG configuration tree and another using a deterministically populated tree containing conflicting Git, pip, Matplotlib, and generic application configuration files will obtain identical preflight records and reference artifact hashes; filesystem tracing will show that none of the hostile configuration files influenced execution.",
+      "rationale": "A second operator commonly brings different persistent user configuration even when the ISO and project files are identical. Environment-capture work [4][5] does not establish immunity to such operator-specific home state, and this tests a host-assumption channel not covered by dependency locking alone.",
+      "novelty": 8.8,
+      "feasibility": 9.2,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "Across 10 paired fresh-system trials, an interactive runner attached to a pseudo-terminal and a headless runner with stdin closed and stdout and stderr redirected will both complete without prompts or input reads, report identical preflight outcomes, and generate identical reference artifact hashes.",
+      "rationale": "Independent operators may execute instructions interactively while automated evaluators run headlessly. The survey identifies undocumented manual steps as a possible source of disagreement but provides no controlled test of terminal-dependent behavior, so concordance would demonstrate that success does not rely on implicit interaction.",
+      "novelty": 9.1,
+      "feasibility": 9.4,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "In eight trials where two independent runners start simultaneously in separate fresh workspaces but share the same host temporary directory, both runners will exit successfully, produce identical reference artifact hashes, and show no reads, writes, renames, or deletions of paths created by the other runner.",
+      "rationale": "A second reproduction may overlap temporally with the first or with unrelated work, exposing fixed temporary names and host-global state that a single successful run cannot reveal. This is distinct from internal parallelism and tests whether independent execution remains isolated despite a shared host facility.",
+      "novelty": 9.3,
+      "feasibility": 8.9,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "For 32 deterministic single-fault package variants spanning missing tools, unreadable inputs, malformed lock data, insufficient free-space declarations, unsupported interpreter versions, and unwritable output locations, two independently implemented runners will agree on pass versus fail for all 32 variants, emit the same normalized preflight failure code for at least 30, and invoke no analysis command in every preflight-failing case.",
+      "rationale": "The identified gap includes whether another runner encounters the same setup failures and warnings, not merely whether both succeed. Comparing independent diagnostic implementations also addresses the heterogeneous assessment criteria problem noted in [3].",
+      "novelty": 9.0,
+      "feasibility": 9.4,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Across 24 deterministic synthetic packages whose prose instructions ambiguously specify either the working directory, relative input root, or output destination, two fixed and reasonable runner interpretations will disagree on preflight or artifact outcome in at least 18 cases; after replacing each ambiguous instruction with an equivalent canonical machine-readable command and absolute role mapping, the same runners will agree on all 24 outcomes and artifact hashes.",
+      "rationale": "This tests whether apparent runner dependence can arise from documentation interpretation rather than environment reconstruction. The literature values packaging and instructions [4][6] but does not quantify the incremental disagreement exposed by a second reasonable interpretation or the benefit of canonical executable protocols.",
+      "novelty": 9.5,
+      "feasibility": 9.5,
+      "info_gain": 9.7,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 8,
+      "statement": "For 20 seeded notebook-like bundles executed by two independent runners, every declared deterministic data artifact will be bitwise identical, while runner-specific metadata will make at least 15 of 20 rendered-output pairs hash-unequal; nevertheless, two independently implemented preregistered semantic comparators will assign every such pair a similarity score of at least 0.99 and will differ from each other by no more than 0.01, while rejecting all 20 counterparts containing a seeded substantive numerical or graphical mutation with scores below 0.95.",
+      "rationale": "The survey notes that exact identity and semantic reproducibility must be distinguished for notebooks, plots, and floating-point outputs [1], while rebuildability and bitwise equality are separate outcomes [2]. This tests whether two runners receive the same artifact-level verdict under predefined output-appropriate criteria rather than raw hashes alone.",
+      "novelty": 9.2,
+      "feasibility": 9.1,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Generate 24 deterministic synthetic packages with ambiguous working-directory, input-root, or output-destination instructions, compare two fixed relative-path interpretations before and after replacing the prose with canonical absolute-path execution manifests, and measure outcome and artifact-hash agreement.",
+    "protocol": "1. Use Python 3.11 or newer and install only matplotlib. Set the global seed constant to 20250308, set PYTHONHASHSEED=0 for every child process, and run child processes with LC_ALL=C and TZ=UTC. Do not access the network after dependency installation.\n2. Create a fresh benchmark directory containing 24 independent sandboxes with IDs wd01-wd08, input01-input08, and output01-output08. Every sandbox must contain a package directory named package. All paths recorded in results must be relative to the sandbox root so that temporary-directory prefixes cannot affect comparisons.\n3. Generate each CSV input with columns id,value and exactly 64 data rows. For package i, initialize random.Random(20250308+i), where i is the one-based package index from 1 through 24, and generate each value with randint(-10000,10000). Write CSV files with UTF-8 encoding, newline='\\n', and rows id=0 through 63. When a distinct workspace-root input is required, copy the package input but replace every value v with v+100000+i. Thus the two candidate inputs have the same shape but necessarily different content.\n4. Generate a deterministic task.py for every package. It must read the selected CSV, compute row_count, sum_value, min_value, max_value, and weighted_sum=sum((id+1)*value), and write artifact.json as compact sorted JSON using json.dumps(record, sort_keys=True, separators=(',',':')) followed by one newline. The record must also contain the SHA-256 hash of the exact input CSV bytes and the package ID, but no timestamps, absolute paths, host information, or random values. Use atomic output creation by making the parent directory and then writing the file. The script must return exit code 0 on success and nonzero on invalid arguments or unreadable input.\n5. For wd01-wd08, make task.py take no arguments and always read data/input.csv and write results/artifact.json relative to its current working directory. The prose instruction.txt must be exactly: 'Run task.py from the supplied experiment files; it reads data/input.csv and writes results/artifact.json.' For wd01-wd04, create only package/data/input.csv. For wd05-wd08, create package/data/input.csv and sandbox-root data/input.csv, using the distinct transformed workspace input for the latter.\n6. For input01-input08, make task.py accept required arguments --input-root and --output, read <input-root>/input.csv, and write exactly to --output. The prose instruction.txt must be exactly: 'Run package/task.py using data as the input root and write the result to the OUTPUT_ARTIFACT path supplied by the runner.' For input01-input04, create both package/data/input.csv and sandbox-root data/input.csv, with the latter using the transformed values. For input05-input08, create only package/data/input.csv. Define the runner-supplied OUTPUT_ARTIFACT path as the absolute path sandbox/outputs/artifact.json for both runners.\n7. For output01-output08, make task.py accept required arguments --input and --output-dir, read --input, and write <output-dir>/artifact.json. Create only package/data/input.csv. The prose instruction.txt must be exactly: 'Run package/task.py with the supplied INPUT_FILE and place the result in results.' Define INPUT_FILE for both runners as the absolute path sandbox/package/data/input.csv.\n8. Implement Runner A, named package-relative, with one fixed rule: every relative working directory, input path, and output path mentioned in prose is resolved against sandbox/package. For working-directory cases it executes the absolute task.py path with cwd=sandbox/package. For input cases it passes --input-root sandbox/package/data and the fixed absolute OUTPUT_ARTIFACT. For output cases it passes the fixed absolute INPUT_FILE and --output-dir sandbox/package/results.\n9. Independently implement Runner B, named workspace-relative, with one fixed rule: every relative working directory, input path, and output path mentioned in prose is resolved against the sandbox root. For working-directory cases it executes sandbox/package/task.py with cwd=sandbox. For input cases it passes --input-root sandbox/data and the fixed absolute OUTPUT_ARTIFACT. For output cases it passes the fixed absolute INPUT_FILE and --output-dir sandbox/results. Neither runner may inspect the presence or content of candidate files to choose its interpretation.\n10. Before executing a command, each runner must perform the same preflight checks in this order: cwd exists and is a directory; script exists and is a file; the interpreted input file exists and is a file; and the output parent can be created. Record the first failure as MISSING_CWD, MISSING_SCRIPT, MISSING_INPUT, or OUTPUT_PARENT_ERROR and do not execute after a failure. Otherwise run the task with subprocess.run, shell=False, a 10-second timeout, and the fixed environment. Record RUNTIME_ERROR for a nonzero exit and TIMEOUT for a timeout.\n11. Run every ambiguous package once with each runner in separate, freshly copied sandboxes. After execution, create an outcome record containing status, preflight error code or null, exit code or null, and an artifact manifest. The artifact manifest is a sorted list of every artifact.json produced, with each entry containing its sandbox-relative POSIX path, byte count, and SHA-256 hash. A pair disagrees if its complete outcome records differ in status, error code, exit code, artifact path, artifact size, or artifact hash.\n12. Replace instruction.txt in every package with protocol.json. Materialize all entries as absolute paths before execution. The JSON must contain schema_version=1, an absolute cwd, an argv array beginning with the absolute sys.executable and absolute task.py, and a roles object containing absolute paths for every input and output. For wd cases, set cwd to sandbox/package, use no script arguments, map input_file to sandbox/package/data/input.csv, and map output_artifact to sandbox/package/results/artifact.json. For input cases, set cwd to sandbox/package, pass --input-root sandbox/package/data and --output sandbox/outputs/artifact.json, and map those same paths as input_root and output_artifact. For output cases, set cwd to sandbox/package, pass --input sandbox/package/data/input.csv and --output-dir sandbox/package/results, and map input_file and output_dir to those same paths.\n13. In canonical mode, both runners must use protocol.json verbatim after validating that argv, cwd, and every role path are absolute; they must not apply either relative-path rule. Run every canonical package with both runners in separate fresh copies, using the identical preflight, execution, and outcome-record procedure. Require an artifact from every canonical run.\n14. Write results.json and results.csv with one row per package and mode, including both outcome records, disagreement indicators, statuses, artifact paths, and hashes. Compute counts and rates overall and separately for wd, input, and output categories.\n15. Create disagreement_rates.png using matplotlib. Plot grouped bars for wd, input, output, and all packages, with one bar for ambiguous prose and one for canonical protocol. The y-axis must be disagreement rate from 0 to 1, each bar must be labeled with count/total, and a dashed horizontal line must mark 0.75, corresponding to 18 of 24.\n16. Declare the hypothesis supported if and only if: at least 18 of 24 ambiguous-prose package pairs disagree; both canonical runners succeed on all 24 packages; all 24 canonical outcome records match pairwise; and the SHA-256 hashes of the canonical artifacts match pairwise in all 24 packages. Declare it refuted if any one of these conditions fails.",
+    "metrics": [
+      "Ambiguous outcome-disagreement count: number of the 24 ambiguous-prose packages whose complete Runner A and Runner B outcome records differ; the primary threshold is at least 18.",
+      "Ambiguous disagreement rate: ambiguous outcome-disagreement count divided by 24, also reported separately for wd, input, and output groups using denominator 8 each.",
+      "Preflight-disagreement count: number of package pairs in which status or preflight error code differs between runners.",
+      "Artifact-manifest disagreement count: number of package pairs in which both runners succeed but artifact relative path, byte count, or SHA-256 hash differs.",
+      "Artifact-hash disagreement count: number of package pairs in which both runners produce artifacts but the SHA-256 hashes differ.",
+      "Canonical success count: number of canonical packages for which both runners succeed; it must equal 24.",
+      "Canonical outcome-agreement count: number of canonical packages with identical complete outcome records between runners; it must equal 24.",
+      "Canonical artifact-hash agreement count: number of canonical packages whose artifact SHA-256 hashes match between runners; it must equal 24."
+    ],
+    "time_budget_minutes": 20,
+    "expected_if_true": "At least 18 of 24 ambiguous-prose pairs disagree, while canonical execution yields 24 of 24 paired successes, 24 of 24 identical outcome records, and 24 of 24 matching artifact hashes. Under the specified fixtures, the expected ambiguous disagreement is 24 of 24: working-directory and input-root cases differ through preflight failures or input-dependent hashes, and output-destination cases differ through artifact paths.",
+    "expected_if_false": "The hypothesis is refuted if fewer than 18 ambiguous-prose pairs disagree, or if canonicalization leaves any runner failure, outcome mismatch, artifact-location mismatch, or artifact-hash mismatch in even one of the 24 packages."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T13:27:59+00:00",
+      "finished_at": "2026-07-19T13:35:28+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "All 24 of 24 ambiguous-prose package pairs produced outcome disagreements, exceeding the prespecified threshold of 18 and matching the fixture-specific expectation. After canonicalization, both runners succeeded on all 24 packages, with 24 of 24 outcome agreements, 24 of 24 artifact-manifest agreements, and 24 of 24 artifact-hash agreements."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.2,
+  "error": ""
+}

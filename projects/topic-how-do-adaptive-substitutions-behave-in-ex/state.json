@@ -1,0 +1,258 @@
+{
+  "slug": "topic-how-do-adaptive-substitutions-behave-in-ex",
+  "topic": "Topic **How do adaptive substitutions behave in executable tests?** Add output swaps with recomputed context metadata, paired source-and-output swaps, source swaps, cross-stage swaps, reordered multi-parent lists, schema substitutions and downgrades, path aliases, manifest replacement, and separate authenticated-root and unauthenticated-root conditions. _(auto-enqueued follow-up from topic-can-all-raw-records-be-made-auditable-publ)_",
+  "created_at": "2026-07-19T19:17:16+00:00",
+  "updated_at": "2026-07-19T19:32:26+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Authenticated Contradictions from Desynchronized Provenance and Watermarking",
+      "authors": [
+        "Alexander Nemecek",
+        "Hengzhi He",
+        "Guang Cheng",
+        "Erman Ayday"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2603.02378v2",
+      "source": "arXiv:2603.02378v2"
+    },
+    {
+      "title": "AMP: Authentication of Media via Provenance",
+      "authors": [
+        "Paul England",
+        "Henrique S. Malvar",
+        "Eric Horvitz",
+        "Jack W. Stokes",
+        "Cédric Fournet",
+        "Rebecca Burke-Aguero",
+        "Amaury Chamayou",
+        "Sylvan Clebsch"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2001.07886v3",
+      "source": "arXiv:2001.07886v3"
+    },
+    {
+      "title": "Interoperable Provenance Authentication of Broadcast Media using Open Standards-based Metadata, Watermarking and Cryptography",
+      "authors": [
+        "John C. Simmons",
+        "Joseph M. Winograd"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2405.12336v1",
+      "source": "arXiv:2405.12336v1"
+    },
+    {
+      "title": "SoK: Analysis of Software Supply Chain Security by Establishing Secure Design Properties",
+      "authors": [
+        "Chinenye Okafor",
+        "Taylor R. Schorlemmer",
+        "Santiago Torres-Arias",
+        "James C. Davis"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2406.10109v1",
+      "source": "arXiv:2406.10109v1"
+    },
+    {
+      "title": "Non-repudiable provenance for clinical decision support systems",
+      "authors": [
+        "Elliot Fairweather",
+        "Rudolf Wittner",
+        "Martin Chapman",
+        "Petr Holub",
+        "Vasa Curcin"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2006.11233v1",
+      "source": "arXiv:2006.11233v1"
+    },
+    {
+      "title": "Non-Malleable Coding Against Bit-wise and Split-State Tampering",
+      "authors": [
+        "Mahdi Cheraghchi",
+        "Venkatesan Guruswami"
+      ],
+      "year": 2013,
+      "url": "http://arxiv.org/abs/1309.1151v2",
+      "source": "arXiv:1309.1151v2"
+    },
+    {
+      "title": "Evaluation of Provenance Serialisations for Astronomical Provenance",
+      "authors": [
+        "Michael A. C. Johnson",
+        "Marcus Paradies",
+        "Hans-Rainer Klöckner",
+        "Albina Muzafarova",
+        "Kristen Lackeos",
+        "David J. Champion",
+        "Marta Dembska",
+        "Sirko Schindler"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2407.14290v1",
+      "source": "arXiv:2407.14290v1"
+    },
+    {
+      "title": "EngMeta -- Metadata for Computational Engineering",
+      "authors": [
+        "Björn Schembera",
+        "Dorothea Iglezakis"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2005.01637v2",
+      "source": "arXiv:2005.01637v2"
+    },
+    {
+      "title": "METAL: Metamorphic Testing Framework for Analyzing Large-Language Model Qualities",
+      "authors": [
+        "Sangwon Hyun",
+        "Mingyu Guo",
+        "M. Ali Babar"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2312.06056v1",
+      "source": "arXiv:2312.06056v1"
+    },
+    {
+      "title": "IVOA Recommendation: Resource Metadata for the Virtual Observatory Version 1.12",
+      "authors": [
+        "Robert Hanisch",
+        "the IVOA Resource Registry Working Group",
+        "the NVO Metadata Working Group"
+      ],
+      "year": 2011,
+      "url": "http://arxiv.org/abs/1110.0514v1",
+      "source": "arXiv:1110.0514v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across 96 output-swap mutants in which the attacker replaces a stage output and recomputes every affected payload hash, context field, descendant reference, and signature under an attacker-controlled key, a verifier anchored to the original authenticated root will reject all 96, whereas the same verification logic starting from the attacker-supplied unauthenticated root will accept all 96; both conditions will accept all 32 unmodified controls.",
+      "rationale": "This directly tests whether comprehensive local recomputation can convert an output substitution into a self-consistent but untrusted provenance graph. The survey identifies the authenticated-root versus unauthenticated-root distinction as essential, but reports no systematic executable comparison under adaptive recomputation.",
+      "novelty": 9.1,
+      "feasibility": 9.8,
+      "info_gain": 9.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For 80 paired source-and-output swaps that import a valid source-output pair from another unit while leaving the global artifact inventory unchanged and preserving successful transformation re-execution, an authenticated root committing only to the unordered artifact inventory will accept all 80 altered graphs, whereas an authenticated root also committing to canonical tuples of unit, operation, source edge, and output edge will reject all 80 and accept all 40 unmodified controls.",
+      "rationale": "Paired replacement defeats both artifact-existence checks and execution-based source-output consistency because the imported pair remains behaviorally valid. This isolates the literature gap between authenticating graph members and authenticating their edge-labeled relationships, extending beyond previously tested single-reference context swaps.",
+      "novelty": 9.4,
+      "feasibility": 9.6,
+      "info_gain": 9.8,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 3,
+      "statement": "Across 90 source-only swaps constructed from non-injective transformations such as case folding, comment removal, record sorting, and whitespace normalization, re-execution plus output-hash comparison will accept all 90 because the substituted source produces the original output, while a verifier enforcing an authenticated unit-to-authorized-source mapping will reject all 90 and accept all 30 authorized alternative-source controls.",
+      "rationale": "This tests a case where executable semantic validation is insufficient: distinct sources are observationally equivalent under the recorded transformation. The result would clarify the survey's validity requirement by separating transformation correctness from authorization of source identity.",
+      "novelty": 9.2,
+      "feasibility": 9.7,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "For 96 cross-stage swaps between records having compatible schemas and byte-identical input and output types, a verifier checking only DAG well-formedness, artifact hashes, and membership of the signer in a global trusted-key set will accept all 96, whereas a verifier enforcing authenticated stage-specific signer capabilities and an allowed stage-transition matrix will reject all 96; both verifiers will accept all 32 correctly placed controls.",
+      "rationale": "Cross-stage substitution can preserve every local cryptographic and type-level property while violating which actor or pipeline stage is authorized to make an assertion. This operationalizes the separation property from supply-chain research [4], which the survey notes has not been tested systematically for provenance graph swaps.",
+      "novelty": 9.0,
+      "feasibility": 9.7,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "In a corpus containing 48 order-sensitive multi-parent operations and 48 operations explicitly declared parent-order invariant, reversing each parent list will be accepted in all 96 cases by a verifier that unconditionally sorts parents before hashing, while a declaration-aware verifier will reject all 48 order-sensitive reversals, accept all 48 order-invariant reversals with unchanged semantic identity, and accept all 32 unmodified controls.",
+      "rationale": "The hypothesis distinguishes malicious reordering from legitimate canonicalization instead of assuming that every parent list is either universally ordered or universally set-like. The survey identifies parent ordering as an unresolved graph-level issue, and metamorphic testing [9] supplies a natural operation-dependent oracle.",
+      "novelty": 9.3,
+      "feasibility": 9.8,
+      "info_gain": 9.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "Across 96 adaptive schema mutants comprising 48 substitutions of a structurally permissive schema under an existing schema identifier and 48 downgrades to an older schema that omits source, stage, or parent-binding requirements, a name-based resolver with no authenticated version floor will parse and accept all 96, whereas a verifier whose authenticated root binds the schema-document digest and minimum permitted version will reject all 96 and accept all 32 records using authorized schema versions.",
+      "rationale": "Cryptographic validity of record bytes does not establish which interpretation rules governed those bytes. This directly addresses the survey's gap for schema substitution and downgrade while measuring whether authenticated schema identity, rather than mere schema-name resolution, prevents semantic weakening.",
+      "novelty": 9.4,
+      "feasibility": 9.6,
+      "info_gain": 9.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "For 120 provenance-reference mutants using dot segments, repeated separators, percent-encoding, Unicode normalization variants, case variants, and platform-specific separator aliases that all resolve to an existing artifact, a verifier comparing only the resolved target's content hash will accept all 120, whereas a verifier requiring the reference spelling to equal a root-bound canonical logical path and rejecting non-unique canonical keys will reject all 120; both will accept all 40 canonical-path controls.",
+      "rationale": "These tests concern aliases in provenance references rather than archive extraction paths: identical target bytes can conceal a changed logical identity or namespace. The survey notes that interoperable metadata interpretation must go beyond byte preservation [7][8], but supplies no executable alias-resolution results.",
+      "novelty": 8.9,
+      "feasibility": 9.5,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "For 80 complete-manifest replacements whose manifests are internally consistent and signed by keys valid for a different synthetic project namespace, a verifier beginning from a pinned authenticated delegation root and enforcing namespace- and role-scoped signing authority will reject all 80, while the same verifier beginning from each replacement's self-supplied unauthenticated delegation root will accept all 80; both modes will accept all 40 replacements authorized by the pinned project's delegation policy.",
+      "rationale": "This tests complete replacement without reducing the oracle to whether a root contains one exact manifest digest: the decisive property is authenticated delegation and signer scope. It addresses the survey's concern that an attacker-selected root may make a wholly substituted provenance history cryptographically valid and connects that failure to the separation property in [4].",
+      "novelty": 9.2,
+      "feasibility": 9.7,
+      "info_gain": 9.7,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Generate 40 deterministic transformation graphs and 80 behavior-preserving paired source-output swaps, then compare acceptance under artifact-inventory-only, relationship-committing, and unauthenticated self-declared roots.",
+    "protocol": "1. Use Python 3.11 or later with only the standard library plus matplotlib and scipy; install them with `pip install matplotlib scipy`. Set matplotlib's backend to `Agg`. Set the sole pseudorandom generator to `random.Random(20250308)` and do not use any other randomness or timestamps.\n2. Implement canonical JSON as UTF-8 bytes from `json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True)`. Implement every digest as lowercase hexadecimal SHA-256.\n3. Implement four byte transformations: `reverse_v1(x) = x[::-1]`; `xor_a5_v1(x) = bytes(b ^ 0xA5 for b in x)`; `add_17_v1(x) = bytes((b + 17) % 256 for b in x)`; and `rol1_v1(x) = bytes(((b << 1) & 255) | (b >> 7) for b in x)`.\n4. Generate 40 independent baseline graphs indexed `g = 0..39`. Each graph has 16 units indexed `u = 0..15`. Assign units 0-3 to `reverse_v1`, 4-7 to `xor_a5_v1`, 8-11 to `add_17_v1`, and 12-15 to `rol1_v1`. Set each unit ID to `g{g:02d}_u{u:02d}`.\n5. For each unit, generate a unique 256-byte source. Its first 8 bytes are `g.to_bytes(4, \"big\") + u.to_bytes(4, \"big\")`; its remaining 248 bytes are consecutive `rng.getrandbits(8)` values. Compute the output by applying the assigned transformation.\n6. Store every source and output as a separate artifact. Define an artifact ID as `sha256(b\"artifact-v1\\0\" + kind.encode(\"ascii\") + b\"\\0\" + content).hexdigest()`, where kind is exactly `source` or `output`. Each artifact record contains `artifact_id`, `kind`, `size`, `content_sha256`, and base64-encoded content. Assert that all artifact IDs within a graph are unique.\n7. Each unit record must contain exactly `unit_id`, `operation`, `source_id`, `output_id`, and a `context` object. The context contains `source_size`, `output_size`, `source_sha256`, and `output_sha256`, all derived from the currently referenced artifacts.\n8. Define the unordered artifact-inventory root by projecting every artifact to `[artifact_id, kind, size, content_sha256]`, sorting these rows lexicographically by all fields, and computing `sha256(b\"inventory-root-v1\\0\" + canonical_json(rows))`.\n9. Define the relationship root by creating one tuple `[unit_id, operation, source_id, output_id]` per unit, sorting tuples lexicographically by `unit_id`, and computing `sha256(b\"relationship-root-v1\\0\" + canonical_json({\"inventory_root\": inventory_root, \"tuples\": tuples}))`. This root therefore commits to both the inventory and the edge-labeled unit relationships.\n10. For each baseline graph, save its inventory root and relationship root in a separate immutable trusted-roots object. Treat this object as authenticated out-of-band state: candidate graphs may not modify it. Also place a `declared_relationship_root` field in each candidate manifest; this field is not authenticated.\n11. Create one unmodified control candidate from each baseline graph, for 40 controls total. Its declared relationship root equals the baseline relationship root.\n12. Create two altered candidates from each baseline graph, for 80 altered graphs total. Alteration A exchanges both `source_id` and `output_id` between units 0 and 1. Alteration B independently starts from the baseline and exchanges both IDs between units 8 and 9. Each altered candidate therefore contains exactly one paired source-and-output exchange between units with the same operation.\n13. After each exchange, recompute the context object of both affected units from their newly referenced artifacts. Do not change, add, remove, or reorder the artifact inventory. Recompute the candidate's relationship root and replace `declared_relationship_root` with that recomputed value, modeling unauthenticated manifest replacement. Do not change either trusted baseline root.\n14. Implement common validation that: validates the stated schema and types; decodes every artifact; recomputes and verifies every artifact ID, size, and content hash; confirms all references resolve; recomputes and verifies every unit context field; reruns every unit's named operation on its referenced source bytes; and requires exact byte equality with its referenced output. Record common validation as passed only if every check passes for every unit.\n15. Implement three root conditions, each combined with common validation. `AUTH_INVENTORY` accepts only if the candidate's recomputed inventory root equals the immutable trusted baseline inventory root. `AUTH_RELATIONSHIP` accepts only if the candidate's recomputed relationship root equals the immutable trusted baseline relationship root. `UNAUTH_RELATIONSHIP` accepts only if the candidate's recomputed relationship root equals the candidate-provided `declared_relationship_root`; it must not consult the trusted relationship root.\n16. For every altered candidate, additionally assert and record: exact equality of the candidate and baseline artifact-record dictionaries; equality of their inventory roots; inequality of their relationship roots; successful re-execution of all 16 units; and exactly four changed edge fields relative to baseline, consisting of `source_id` and `output_id` in each of the two exchanged units.\n17. Evaluate all three conditions on all 80 altered candidates and all 40 controls. Save one CSV row per candidate with graph index, candidate type, alteration, invariant results, common-validation result, all recomputed and trusted roots, and the three Boolean acceptance outcomes.\n18. For `AUTH_RELATIONSHIP`, form the 2x2 table `[[altered accepted, altered rejected], [control accepted, control rejected]]` and run `scipy.stats.fisher_exact(table, alternative=\"less\")`. Also report the acceptance-rate difference `control rate - altered rate`.\n19. Create `acceptance_rates.png` as a grouped bar chart. The x-axis has `Unmodified controls (n=40)` and `Paired swaps (n=80)`; each group has bars for `Authenticated inventory`, `Authenticated relationships`, and `Unauthenticated relationships`. Plot acceptance proportions on a y-axis from 0 to 1, annotate every bar with its numerator, denominator, and proportion, and use a minimum size of 1200 by 700 pixels at 150 DPI.\n20. Classify the hypothesis as supported only if all 80 alterations satisfy every invariant and common validation, `AUTH_INVENTORY` accepts exactly 80/80 alterations and 40/40 controls, `AUTH_RELATIONSHIP` accepts exactly 0/80 alterations and 40/40 controls, its acceptance-rate difference is exactly 1.0, and its one-sided Fisher exact p-value is below 0.001. Treat `UNAUTH_RELATIONSHIP` acceptance of 80/80 alterations and 40/40 controls as a required negative-control sanity check. Any failure of these exact count criteria refutes the stated hypothesis.",
+    "metrics": [
+      "Altered-graph inventory preservation: number of altered candidates whose complete artifact-record dictionary and inventory root exactly equal their baseline; required value is 80/80.",
+      "Transformation re-execution success: number of altered candidates for which all 16 operations reproduce their referenced outputs byte-for-byte; required value is 80/80.",
+      "Authenticated inventory-root acceptance: accepted candidates divided by candidates, reported separately for 80 alterations and 40 controls.",
+      "Authenticated relationship-root acceptance: accepted candidates divided by candidates, reported separately for 80 alterations and 40 controls.",
+      "Unauthenticated relationship-root acceptance: candidates whose recomputed root equals their replaceable declared root, reported separately for alterations and controls.",
+      "Relationship-root acceptance-rate difference: control acceptance proportion minus altered acceptance proportion under AUTH_RELATIONSHIP; support requires exactly 1.0.",
+      "One-sided Fisher exact test: use table [[altered accepted, altered rejected], [control accepted, control rejected]] under AUTH_RELATIONSHIP with alternative='less'; support requires p < 0.001.",
+      "Mutation-shape validity: number of altered candidates with exactly four changed edge fields across exactly two units, no changed operation fields, and a changed relationship root; required value is 80/80."
+    ],
+    "time_budget_minutes": 10,
+    "expected_if_true": "All 80 paired swaps preserve the artifact inventory, pass context checks, and successfully re-execute every transformation. AUTH_INVENTORY accepts 80/80 altered graphs and 40/40 controls; AUTH_RELATIONSHIP accepts 0/80 altered graphs and 40/40 controls, giving an acceptance-rate difference of 1.0 and Fisher p < 0.001; UNAUTH_RELATIONSHIP accepts 80/80 altered graphs and 40/40 controls. The PNG shows mutation acceptance rates of 1.0, 0.0, and 1.0 for authenticated inventory, authenticated relationships, and unauthenticated relationships respectively.",
+    "expected_if_false": "The hypothesis is refuted if any altered graph changes the artifact inventory or fails re-execution, if authenticated inventory verification rejects at least one altered graph, if authenticated relationship verification accepts at least one altered graph, if either authenticated verifier rejects any unmodified control, if the relationship acceptance-rate difference is below 1.0 or Fisher p is at least 0.001, or if the unauthenticated negative-control condition fails to accept all internally consistent candidates."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T19:20:50+00:00",
+      "finished_at": "2026-07-19T19:26:59+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "All 80 altered candidates preserved the artifact inventory, passed common validation, and successfully re-executed. AUTH_INVENTORY accepted 80/80 altered graphs and 40/40 controls, while AUTH_RELATIONSHIP accepted 0/80 altered graphs and 40/40 controls, yielding the required rate difference of 1.0 and Fisher p = 8.73e-33. UNAUTH_RELATIONSHIP accepted all 80/80 altered graphs and 40/40 controls, confirming the negative-control sanity check."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
+  "error": ""
+}

@@ -1,0 +1,15 @@
+{
+  "base_image_inspect_exit_code": 1,
+  "docker_info_exit_code": 1,
+  "docker_ps_exit_code": 1,
+  "docker_version_exit_code": 1,
+  "error": "docker_info failed with exit code 1: WARNING: Plugin \"/Users/gdeml/.docker/cli-plugins/docker-dev\" is not valid: failed to fetch metadata: fork/exec /Users/gdeml/.docker/cli-plugins/docker-dev: no such file or directory\nWARNING: Plugin \"/Users/gdeml/.docker/cli-plugins/docker-feedback\" is not valid: failed to fetch metadata: fork/exec /Users/gdeml/.docker/cli-plugins/docker-feedback: no such file or directory\nCannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?; docker_version failed with exit code 1: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?; docker_ps failed with exit code 1: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?; base_image_inspect failed with exit code 1: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?",
+  "execution_success_count": 0,
+  "execution_target_count": 24,
+  "hypothesis_evaluated": false,
+  "hypothesis_supported": false,
+  "infrastructure_failure": true,
+  "status": "infrastructure_failure",
+  "timed_section_seconds": 0.0,
+  "timed_section_started": false
+}

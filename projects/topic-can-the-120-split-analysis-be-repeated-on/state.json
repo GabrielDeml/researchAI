@@ -1,0 +1,244 @@
+{
+  "slug": "topic-can-the-120-split-analysis-be-repeated-on",
+  "topic": "Topic Can the 120-split analysis be repeated on a genuinely untouched replication set under a time-stamped protocol that fixes the split count, grid, tie-breaking rules, regime check, bootstrap, robustness interval, and secondary analyses before any outcomes are inspected? _(auto-enqueued follow-up from topic-can-the-optimization-comparison-be-repeate)_",
+  "created_at": "2026-07-19T16:08:44+00:00",
+  "updated_at": "2026-07-19T16:27:57+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "The 2008 election: A preregistered replication analysis",
+      "authors": [
+        "Rayleigh Lei",
+        "Andrew Gelman",
+        "Yair Ghitza"
+      ],
+      "year": 2016,
+      "url": "http://arxiv.org/abs/1607.04157v1",
+      "source": "arXiv:1607.04157v1"
+    },
+    {
+      "title": "DOME: Recommendations for supervised machine learning validation in biology",
+      "authors": [
+        "Ian Walsh",
+        "Dmytro Fishman",
+        "Dario Garcia-Gasulla",
+        "Tiina Titma",
+        "Gianluca Pollastri",
+        "The ELIXIR Machine Learning focus group",
+        "Jen Harrow",
+        "Fotis E. Psomopoulos"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2006.16189v4",
+      "source": "arXiv:2006.16189v4"
+    },
+    {
+      "title": "Nested cross-validation when selecting classifiers is overzealous for most practical applications",
+      "authors": [
+        "Jacques Wainer",
+        "Gavin Cawley"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1809.09446v1",
+      "source": "arXiv:1809.09446v1"
+    },
+    {
+      "title": "Combined Pruning for Nested Cross-Validation to Accelerate Automated Hyperparameter Optimization for Embedded Feature Selection in High-Dimensional Data with Very Small Sample Sizes",
+      "authors": [
+        "Sigrun May",
+        "Sven Hartmann",
+        "Frank Klawonn"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2202.00598v2",
+      "source": "arXiv:2202.00598v2"
+    },
+    {
+      "title": "On the marginal likelihood and cross-validation",
+      "authors": [
+        "Edwin Fong",
+        "Chris Holmes"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1905.08737v2",
+      "source": "arXiv:1905.08737v2"
+    },
+    {
+      "title": "Learning Curves for Decision Making in Supervised Machine Learning: A Survey",
+      "authors": [
+        "Felix Mohr",
+        "Jan N. van Rijn"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2201.12150v2",
+      "source": "arXiv:2201.12150v2"
+    },
+    {
+      "title": "Design-Based Cross-Validation for Comparing Small Area Estimators",
+      "authors": [
+        "Qianyu Dong",
+        "Zehang Richard Li"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2604.23464v3",
+      "source": "arXiv:2604.23464v3"
+    },
+    {
+      "title": "Second Order Correctness of Perturbation Bootstrap M-Estimator of Multiple Linear Regression Parameter",
+      "authors": [
+        "Debraj Das",
+        "Soumendra Nath Lahiri"
+      ],
+      "year": 2016,
+      "url": "http://arxiv.org/abs/1605.01440v2",
+      "source": "arXiv:1605.01440v2"
+    },
+    {
+      "title": "On the failure of the bootstrap for Chatterjee's rank correlation",
+      "authors": [
+        "Zhexiao Lin",
+        "Fang Han"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2303.14088v2",
+      "source": "arXiv:2303.14088v2"
+    },
+    {
+      "title": "Specification tests in semiparametric transformation models - a multiplier bootstrap approach",
+      "authors": [
+        "Nick Kloodt",
+        "Natalie Neumeyer"
+      ],
+      "year": 2017,
+      "url": "http://arxiv.org/abs/1709.06855v2",
+      "source": "arXiv:1709.06855v2"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Let Δ_orig be the original 120-split mean paired performance difference between the originally favored optimization procedure and its comparator, with positive values favoring the original winner. On the access-controlled replication set, the frozen protocol will pass its preregistered regime check, produce sign(Δ_rep) = sign(Δ_orig), yield |Δ_rep| at least 0.50|Δ_orig|, and return a prespecified dependence-aware 95% bootstrap interval for Δ_rep that excludes zero in the original direction.",
+      "rationale": "This is the central confirmatory test of the survey's gap: no source establishes that the original optimization comparison survives a single preregistered execution on genuinely untouched data [1]. The magnitude-retention criterion distinguishes substantive replication from a merely directionally consistent near-zero result.",
+      "novelty": 8.4,
+      "feasibility": 9.1,
+      "info_gain": 10.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "Across the complete preregistered robustness set, at least 90% of the paired-effect estimates will have the original direction, the minimum estimate will remain above zero, and the separately defined robustness interval will exclude zero; additionally, none of the prespecified secondary analyses will significantly favor the comparator after Holm correction at family-wise alpha 0.05.",
+      "rationale": "A conventional confidence interval and a robustness interval answer different questions, as emphasized by the survey and the design-based comparison literature [7]. This tests whether confirmation is stable across frozen perturbations rather than being driven by one primary specification or contradicted by selectively reported secondary results.",
+      "novelty": 8.6,
+      "feasibility": 9.0,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "Two independent implementations written from the time-stamped protocol, given the same replication data and deterministic seed manifest, will produce identical membership for all 120 splits, identical evaluated grid points, identical selected configurations including every tie, identical split-level scores, primary estimates agreeing within 1e-12, and identical bootstrap and robustness-interval endpoints.",
+      "rationale": "The survey's DOME-based gap concerns whether the protocol is executable without discretionary intervention [2]. Exact cross-implementation agreement would show that the split construction, grid, tie rules, resampling, and analysis order are sufficiently specified to eliminate hidden implementation choices.",
+      "novelty": 9.0,
+      "feasibility": 9.4,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "In 200 deterministic null simulations matching the replication sample size and 120-split dependence structure, a protocol selected before outcome reveal will declare a positive optimization advantage in no more than 7% of simulations, whereas choosing after reveal among 20 plausible variants of the split seed, grid boundary, tie rule, bootstrap construction, or secondary-analysis subset will declare an advantage in at least 20%.",
+      "rationale": "Lei, Gelman, and Ghitza argue that existing but uninspected data remain vulnerable to forking paths unless choices are frozen before inspection [1]. This simulation directly quantifies the inferential value of untouchedness and preregistration rather than treating the timestamp as merely administrative.",
+      "novelty": 9.4,
+      "feasibility": 8.8,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "For 60 deterministic tie-rich synthetic datasets evaluated under 25 permutations of the same fixed grid, the preregistered total-order tie-breaking rule will select the same configuration and produce the same final 120-split estimate under every permutation; a first-encountered-maximum rule will select different configurations on at least 40 datasets and change the reported optimization winner on at least 15.",
+      "rationale": "The survey identifies tie-breaking as an undocumented route to outcome-dependent selection, but the retrieved literature does not test its practical consequences in the 120-split setting. The comparison isolates tie handling while holding scores, grid contents, and splits fixed.",
+      "novelty": 9.2,
+      "feasibility": 9.7,
+      "info_gain": 8.8,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 6,
+      "statement": "Across 150 deterministic no-signal synthetic datasets with 12 equally predictive candidate configurations and 120 outer splits, flat reuse of split outcomes for both grid selection and performance estimation will produce a nominal 95% interval excluding zero in favor of the selected procedure in at least 15% of datasets, while the preregistered nested procedure will do so in no more than 8%; the flat estimate's mean optimism relative to nested evaluation will be at least 0.01 on a unit-scale score.",
+      "rationale": "The validation literature distinguishes flat selection-and-estimation from nested evaluation and predicts optimism when the same outcomes serve both purposes [3,4]. This tests whether that distinction is material at the exact split count and grid scale relevant to the replication.",
+      "novelty": 8.8,
+      "feasibility": 8.7,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "In 200 deterministic simulations reproducing the overlap of observations across 120 splits, a naive bootstrap that resamples split-level estimates as independent units will have no more than 88% coverage for a nominal 95% interval, whereas the preregistered observation-level multiplier or cluster bootstrap will achieve 92% to 98% coverage and have median interval width at least 10% greater than the naive interval.",
+      "rationale": "The survey notes that bootstrap validity depends on the exact statistic, studentization, and dependence structure and cannot be assumed from asymptotic normality [8-10]. This hypothesis tests whether treating overlapping splits as independent yields materially anti-conservative inference.",
+      "novelty": 9.3,
+      "feasibility": 8.5,
+      "info_gain": 9.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "On 100 deterministic synthetic datasets satisfying the exact assumptions encoded by the preregistered regime check and 100 matched datasets each violating one encoded assumption, the frozen check will accept at least 95 satisfying datasets and reject at least 95 violating datasets; on the violating datasets, proceeding despite failure will reduce the primary interval's empirical coverage below 85%, compared with coverage between 92% and 98% on accepted datasets.",
+      "rationale": "The survey's gap requires failed regime checks to be treated as prespecified outcomes rather than invitations to revise the analysis. This calibration test determines whether the check actually distinguishes conditions under which the primary inferential procedure is reliable, instead of serving as an arbitrary gate.",
+      "novelty": 9.1,
+      "feasibility": 8.6,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "A preregistered synthetic classification experiment will compare permutation-invariant lexicographic tie-breaking with first-encountered-maximum tie-breaking across 60 untouched replication datasets, 25 fixed grid permutations, and 120 fixed evaluation splits.",
+    "protocol": "1. Use Python 3.11 with numpy==1.26.4, pandas==2.2.2, scikit-learn==1.4.2, and matplotlib==3.8.4; run single-threaded by setting OMP_NUM_THREADS=1, MKL_NUM_THREADS=1, and OPENBLAS_NUM_THREADS=1. 2. Before generating any arrays, write preregistration.json containing every constant and rule in this protocol, the implementation version, and the current UTC timestamp; write its SHA-256 digest to preregistration.sha256. No parameter may subsequently be changed. 3. Define a fixed grid of 12 deterministic configurations C00 through C11. Configuration Cj predicts the binary values in feature column X[:,j]. Label C00-C05 as optimizer-A and C06-C11 as optimizer-B. Define the reported optimization winner as the optimizer label of the selected configuration. Define the preregistered total order as ascending numeric configuration ID. 4. Generate 25 grid permutations once and reuse them for all datasets: for permutation k=0,...,24, compute numpy.random.default_rng(400000+k).permutation(12). Save the resulting integer matrix before generating data. 5. Generate 60 tuning datasets indexed d=0,...,59, each with n=400 observations and exactly 200 observations per class. Set y to 200 zeros followed by 200 ones and permute observation order with numpy.random.default_rng(100000+d). Define the four maximum-score configurations as T_d={(d+0) mod 12,(d+1) mod 12,(d+6) mod 12,(d+7) mod 12}. For each configuration j, independently within each class choose error positions without replacement using numpy.random.default_rng(110000+100*d+j). If j is in T_d, choose exactly 50 errors among each class's 200 observations, giving balanced accuracy 0.75; otherwise choose exactly 60 errors per class, giving balanced accuracy 0.70. Set X[:,j]=y XOR error_indicator. Do not fit a model or round scores. 6. Compute each configuration's tuning balanced accuracy as the unweighted mean of sensitivity and specificity. Run a pre-outcome regime check requiring, for every dataset, exactly four configurations tied at the exact maximum 0.75, all other configurations equal to 0.70, and the maximum set equal to T_d. Save the check results; any failure is an implementation-invalidating error, not grounds for altering the protocol. 7. For each dataset and each of the 25 permutations, select a configuration using two rules. Total-order rule: find the exact maximum tuning score and choose the tied configuration with the smallest numeric ID, regardless of encounter order. First-encountered rule: scan configurations in permutation order, initialize the first as incumbent, replace the incumbent only when score > incumbent_score, and never replace it when scores are equal. 8. Freeze all 60x25 selections before replication outcomes exist by saving selections.csv and its SHA-256 digest. Verify that no replication-generation function has yet been called. 9. Generate the untouched replication dataset for each d only after selections.csv is frozen. Use n=1200 observations with 600 zeros and 600 ones; permute their order using numpy.random.default_rng(200000+d). For configuration j, set q=(j+5*d) mod 12 and target balanced accuracy p=0.55+0.01*q. Independently for each class, choose exactly 600-(330+6*q) error positions without replacement using numpy.random.default_rng(210000+100*d+j), then set X_rep[:,j]=y_rep XOR error_indicator. Thus configurations have distinct full-replication balanced accuracies from 0.55 through 0.66, while replication outcomes cannot influence tuning or selection. 10. For each dataset, create exactly 120 shared replication splits with sklearn.model_selection.StratifiedShuffleSplit(n_splits=120,test_size=0.25,random_state=300000+d). Each test set must contain 300 observations, 150 per class. Apply every configuration to the same test indices and compute balanced accuracy on each split. Define a configuration's final 120-split estimate as the arithmetic mean of its 120 test balanced accuracies. Do not use training indices because configurations are fixed deterministic predictors. 11. For each rule, dataset, and permutation, report the selected configuration, optimizer label, and corresponding final 120-split estimate. Use unrounded float64 values for all comparisons and round only displayed tables to four decimal places. 12. For each dataset, define total-order invariance as one unique selected ID across all 25 permutations and a maximum-minus-minimum final-estimate range no greater than 1e-12. Define first-rule configuration variation as more than one unique selected ID across its 25 permutations. Define a reported-winner change as at least one first-rule permutation whose optimizer label differs from the total-order optimizer label. Define the preregistered robustness interval, or ROPE, as [-0.005,0.005] balanced-accuracy units around the total-order estimate; a material estimate change occurs when at least one first-rule estimate lies outside that interval. 13. The hypothesis is supported if and only if all 60 datasets satisfy total-order invariance, at least 40 of 60 datasets satisfy first-rule configuration variation, and at least 15 of 60 datasets satisfy reported-winner change. Failure of any one threshold refutes the joint hypothesis. Material-change counts are prespecified corroborating results but do not alter this primary decision. 14. Perform a dataset-level nonparametric bootstrap with seed 987654 and 10000 replicates. In each replicate sample 60 dataset IDs with replacement and recompute the proportions exhibiting first-rule configuration variation, reported-winner change, and material estimate change. Report percentile 95% intervals using numpy.quantile at 0.025 and 0.975 with method='linear'. Bootstrap intervals are descriptive and do not replace the fixed-count decision thresholds. 15. Prespecified secondary analyses are: the number of distinct first-rule selections per dataset; the within-dataset range of first-rule final estimates; the fraction of the 1500 dataset-permutation cases selecting a different ID, optimizer label, or materially different estimate from total order; and sensitivity counts using absolute estimate-change thresholds 0, 0.0025, 0.005, and 0.01. These analyses cannot change the primary conclusion. 16. Save results.csv, dataset_summary.csv, bootstrap.csv, and a PNG named tie_breaking_results.png at 180 dpi. The figure must have two panels: a 60-by-25 heatmap of first-rule selected configuration IDs with optimizer-A IDs colored from one palette and optimizer-B IDs from another, and a bar chart showing the counts of datasets satisfying total-order invariance, first-rule configuration variation, reported-winner change, and material estimate change, with horizontal reference lines at 60, 40, and 15 where applicable. 17. Print the three primary counts and exactly one final label, SUPPORTED or REFUTED, according to Step 13.",
+    "metrics": [
+      "Total-order invariant datasets: count out of 60 having exactly one selected configuration across 25 permutations and final-estimate range <=1e-12; the required threshold is 60.",
+      "First-rule configuration-varying datasets: count out of 60 having more than one selected configuration across 25 permutations; the required threshold is at least 40.",
+      "Reported-winner-change datasets: count out of 60 for which at least one first-encountered permutation selects the opposite optimizer label from the total-order selection; the required threshold is at least 15.",
+      "Material-estimate-change datasets: count out of 60 with at least one first-rule final estimate differing from the total-order estimate by more than 0.005 balanced-accuracy units.",
+      "Permutation-level selection-change rate: number of the 1500 dataset-permutation cases whose first-rule selected ID differs from the corresponding total-order ID, divided by 1500.",
+      "Within-dataset estimate instability: maximum minus minimum first-rule 120-split estimates over the 25 permutations, summarized by median, interquartile range, and maximum.",
+      "Bootstrap uncertainty: 95% dataset-level percentile intervals from 10000 resamples for the proportions with configuration variation, winner change, and material estimate change."
+    ],
+    "time_budget_minutes": 20,
+    "expected_if_true": "All 60 datasets will have exactly one total-order configuration and a final-estimate range <=1e-12 across permutations; at least 40 will have multiple first-rule selections; and at least 15 will switch the reported optimizer winner relative to total order. The heatmap will show permutation-dependent configuration and optimizer colors under first encounter while total-order results remain invariant.",
+    "expected_if_false": "The joint hypothesis is refuted if even one dataset fails total-order invariance, fewer than 40 datasets have multiple first-rule selections, or fewer than 15 datasets change the reported optimizer winner; a largely uniform first-rule heatmap and near-zero estimate ranges would indicate that encounter order had little practical effect."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T16:12:33+00:00",
+      "finished_at": "2026-07-19T16:20:26+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "All 60 datasets satisfied total-order invariance, meeting the required 60/60 criterion. First-encounter selection varied on 60/60 datasets versus the preregistered minimum of 40, and the reported optimizer winner changed on 60/60 versus the minimum of 15. The effect was non-trivial: 1,168 of 1,500 permutation cases had absolute estimate changes greater than 0.005, with a median within-dataset estimate range of 0.06983."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.5,
+  "error": ""
+}

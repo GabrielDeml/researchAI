@@ -1,0 +1,228 @@
+{
+  "slug": "topic-what-canonical-path-grammar-and-archive-po",
+  "topic": "Topic What canonical path grammar and archive policy should be used to reject duplicate names, traversal, absolute paths, Unicode normalization collisions, case-folding collisions, platform-specific aliases, and ambiguous parser behavior? _(auto-enqueued follow-up from topic-can-the-complete-repository-and-release-pa)_",
+  "created_at": "2026-07-19T15:43:35+00:00",
+  "updated_at": "2026-07-19T16:04:49+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Treatment of Unicode canoncal decomposition among operating systems",
+      "authors": [
+        "Efstratios Rappos"
+      ],
+      "year": 2017,
+      "url": "http://arxiv.org/abs/1711.10481v1",
+      "source": "arXiv:1711.10481v1"
+    },
+    {
+      "title": "Cross-Language Differential Testing of JSON Parsers",
+      "authors": [
+        "Jonas Möller",
+        "Felix Weissberg",
+        "Lukas Pirch",
+        "Thorsten Eisenhofer",
+        "Konrad Rieck"
+      ],
+      "year": 2024,
+      "url": "https://www.semanticscholar.org/paper/a1cb590397899bee3547e12a8b8f7565cb70328b",
+      "source": "S2:a1cb590397899bee3547e12a8b8f7565cb70328b"
+    },
+    {
+      "title": "PDF Investigation With Parser Differentials and Ontology",
+      "authors": [
+        "Denley Lam",
+        "Letitia W. Li",
+        "C. Anderson"
+      ],
+      "year": 2024,
+      "url": "https://www.semanticscholar.org/paper/2207b642c8fd3b0ea2b418dd97c2feeebf69cf6e",
+      "source": "S2:2207b642c8fd3b0ea2b418dd97c2feeebf69cf6e"
+    },
+    {
+      "title": "Unicode Normalization and Grapheme Parsing of Indic Languages",
+      "authors": [
+        "Nazmuddoha Ansary",
+        "Quazi Adibur Rahman Adib",
+        "Tahsin Reasat",
+        "Asif Shahriyar Sushmit",
+        "Ahmed Imtiaz Humayun",
+        "Sazia Mehnaz",
+        "Kanij Fatema",
+        "Mohammad Mamun Or Rashid"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2306.01743v2",
+      "source": "arXiv:2306.01743v2"
+    },
+    {
+      "title": "The ESO Science Archive",
+      "authors": [
+        "Martino Romaniello",
+        "the ESO Science Archive operations",
+        "development team"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2209.11605v1",
+      "source": "arXiv:2209.11605v1"
+    },
+    {
+      "title": "Using the Parkes Pulsar Data Archive",
+      "authors": [
+        "J. Khoo",
+        "G. Hobbs",
+        "R. N. Manchester",
+        "D. Miller",
+        "J. Dempsey"
+      ],
+      "year": 2012,
+      "url": "http://arxiv.org/abs/1206.2982v1",
+      "source": "arXiv:1206.2982v1"
+    },
+    {
+      "title": "Ambiguity resolution in a reductionistic parser",
+      "authors": [
+        "Atro Voutilainen",
+        "Pasi Tapanainen"
+      ],
+      "year": 1995,
+      "url": "http://arxiv.org/abs/cmp-lg/9502013v1",
+      "source": "arXiv:cmp-lg/9502013v1"
+    },
+    {
+      "title": "Semantic Ambiguity and Perceived Ambiguity",
+      "authors": [
+        "Massimo Poesio"
+      ],
+      "year": 1995,
+      "url": "http://arxiv.org/abs/cmp-lg/9505034v1",
+      "source": "arXiv:cmp-lg/9505034v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "An exhaustive scan of all Unicode scalar values will find no non-ASCII scalar whose NFC form introduces U+002E FULL STOP, U+002F SOLIDUS, or U+005C REVERSE SOLIDUS when that character was absent from the input, whereas NFKC will have at least five such scalars; consequently, in a 60-path corpus built from those scalars, NFKC-before-tokenization will create at least one new dot component, separator, or rooted path while NFC-before-tokenization will create none.",
+      "rationale": "The survey does not determine which normalization form is appropriate. This directly tests whether NFC preserves the structural path alphabet while NFKC can turn compatibility characters into traversal-relevant syntax, providing evidence for choosing NFC without broadly excluding compatibility characters used in international names.",
+      "novelty": 9.4,
+      "feasibility": 9.8,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "On 160 deterministic name pairs derived from Unicode CaseFolding.txt, the comparison key NFC(full_casefold(NFC(component))) applied component-wise will identify every pair labeled equivalent by Unicode full case folding, while NFC plus locale-independent lowercase will miss at least 20 pairs and ASCII-only folding will miss at least 40; all three methods will keep every one of 80 seeded non-equivalent controls distinct.",
+      "rationale": "Case-folding policy is an explicit gap in the survey. Comparing full folding, lowercase mapping, and ASCII folding against public Unicode case-fold data tests a precise pipeline rather than assuming that normalization handles case collisions.",
+      "novelty": 9.1,
+      "feasibility": 9.7,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "For 96 synthetic path components covering mixed-case device names, extensions on device names, trailing dots or spaces, COM1-COM9 and LPT1-LPT9 forms, superscript-digit COM/LPT forms, drive prefixes, UNC prefixes, and alternate-data-stream colons, a Win32 portability profile that applies trailing-dot/space trimming before reserved-basename testing and rejects namespace syntax will classify all 96 according to two independent implementations of the published Win32 naming rules, whereas the common regex ^(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])$ applied to the raw component will misclassify at least 24.",
+      "rationale": "Rappos documents Windows restrictions and reserved aliases [1], but the literature does not specify the transformation order or complete alias profile. This hypothesis tests whether alias recognition must occur after Win32-style trimming and extension handling and whether less obvious namespace aliases materially affect portability.",
+      "novelty": 9.3,
+      "feasibility": 9.6,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "A component trie that rejects canonical-path prefix conflicts will reject all 72 archives containing a regular file or symbolic link at canonical path p together with an entry below p, a file-directory type conflict at p, or two differently spelled implicit directories mapping to p, regardless of entry order; an exact-key-only duplicate detector will accept at least 48 of these archives, while both validators will accept all 24 nonconflicting controls.",
+      "rationale": "The existing work addresses duplicate normalized names but not collisions between an entry and descendants whose extraction requires that entry to be a directory. Prefix conflicts can produce order-dependent replacement or traversal through links, so they require a stronger archive-wide invariant than ordinary duplicate detection.",
+      "novelty": 9.5,
+      "feasibility": 9.7,
+      "info_gain": 9.7,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 5,
+      "statement": "Across 72 adversarial archives—36 ZIP files with conflicting local-header, central-directory, UTF-8-flag, and Unicode-path-extra-field names, and 36 TAR files with conflicting header, PAX path, and GNU long-name values—a policy that rejects any disagreement among applicable name sources will reject all 72 before extraction, while three independently selected archive parsers will disagree on the reported member name or destination for at least 24; all parsers and the policy will agree on all 24 unambiguous controls.",
+      "rationale": "Parser-differential research [2,3] shows that ambiguous specifications lead to divergent semantics, but the surveyed work does not test archive formats with multiple authoritative-looking pathname fields. This experiment makes unique agreement among encoded name sources part of correctness rather than relying on parser consensus.",
+      "novelty": 9.7,
+      "feasibility": 9.0,
+      "info_gain": 9.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "For a corpus containing every code point that was unassigned in Unicode 12.1 but has a canonical decomposition or nontrivial case-fold mapping in Unicode 15.1, canonical keys computed with the two versions will differ for at least 20 names; two implementations pinned to the same bundled Unicode 15.1 tables will agree on every key, whereas implementations using their runtime's unrecorded Unicode tables will disagree on at least those 20 when run against the two table versions.",
+      "rationale": "The survey recommends a named normalization algorithm and version but does not quantify version sensitivity. Unicode normalization stability does not eliminate differences caused by newly assigned characters, so this tests whether recording and bundling the Unicode data version is necessary for reproducible archive decisions.",
+      "novelty": 9.6,
+      "feasibility": 9.2,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "A canonical encoding policy that accepts ASCII ZIP names without an encoding flag, requires valid shortest-form UTF-8 for every non-ASCII effective ZIP or TAR name, and rejects surrogate, overlong, truncated, and legacy-encoding ambiguity will accept all 80 multilingual UTF-8 controls and reject all 80 adversarial byte-name fixtures; a replacement-decoding validator will map at least 20 distinct adversarial names to the same comparison key or to the same key as a control.",
+      "rationale": "The survey calls for well-formed Unicode but does not define how raw archive bytes become Unicode identifiers. Strict UTF-8 prevents malformed sequences and decoder replacement behavior from creating collisions, while the ASCII exception preserves compatibility with archives whose unflagged names are encoding-independent.",
+      "novelty": 9.2,
+      "feasibility": 9.6,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "For 40 archives each containing two or more faults drawn from malformed encoding, absolute or rooted syntax, dot components, Unicode or case-fold collisions, Windows aliases, exact duplicates, and prefix conflicts, a verifier that first parses all entries and then applies a documented fixed validation precedence to a canonical sorted inventory will emit the same primary rejection code for all 20 deterministic entry-order permutations of each archive; a streaming first-error verifier will emit different primary codes or construct different partial destination inventories for at least 25 of the 40 archives.",
+      "rationale": "The survey specifically identifies order independence as an outcome but does not prescribe how multi-fault archives receive deterministic results. Fixed validation phases over a complete inventory separate correctness from archive order and parser recovery behavior, addressing the shared-bias concern raised by parser-differential studies [2,3].",
+      "novelty": 9.4,
+      "feasibility": 9.5,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Generate 72 adversarial and 24 control PAX archives, then compare an archive-wide canonical component-trie validator with an exact-canonical-key duplicate detector under both entry orders.",
+    "protocol": "1. Use Python 3.11 or later with only the standard library plus matplotlib. Set `random.seed(20250308)`, although corpus generation must otherwise be fully enumerated and nonrandom. Do not extract any archive to the filesystem.\n2. Represent archive entries as `(raw_name, type)`, where `type` is exactly one of `regular`, `directory`, or `symlink`. Regular files contain one byte `b'x'`; directories contain no data; symbolic links have inert target `safe-target`, which neither validator resolves.\n3. Implement one shared path parser used by both validators. Convert backslashes to `/`. Reject a name if it is empty; begins with `/` before or after separator conversion; matches an ASCII drive prefix `^[A-Za-z]:`; contains a colon anywhere; contains NUL, a C0 control character U+0001 through U+001F, or DEL U+007F; or contains an empty component, including from repeated or trailing separators. For every component, compute `unicodedata.normalize('NFKC', component).casefold().rstrip(' .')`; reject if the result is empty, `.` or `..`, or if its substring before the first `.` is one of `con`, `prn`, `aux`, `nul`, `com1` through `com9`, or `lpt1` through `lpt9`. The canonical path is the transformed components joined by `/`. Preserve, separately, the tuple of original Unicode components after only converting backslashes to `/`; call this the raw-component tuple.\n4. Before the main experiment, test the parser against a fixed oracle. Valid input-to-canonical-output pairs are: `a/b` to `a/b`; `A/B` to `a/b`; `a\\\\b` to `a/b`; `café/x` to `café/x`; `cafe` followed by U+0301 then `/x` to `café/x`; `Ａlpha/x` to `alpha/x`; `Data./x` to `data/x`; `Data ` followed by `/x` to `data/x`; `Straße/x` to `strasse/x`; and `x/y-z_1` to `x/y-z_1`. Inputs that must be rejected are: empty string, `/abs`, `\\\\abs`, `C:/abs`, `c:\\\\abs`, `\\\\\\\\server\\\\share\\\\x`, `//server/share/x`, `../x`, `a/../x`, `..\\\\x`, `a\\\\..\\\\x`, two fullwidth full stops followed by `/x`, `a/` followed by two fullwidth full stops then `/x`, `a//b`, `a\\\\\\\\b`, `a/ /b`, `.`, `a/.`, `a:b`, `file:stream`, `a` plus `chr(0)` plus `b`, `a` plus `chr(10)` plus `b`, `a` plus `chr(127)` plus `b`, `CON`, `nul.txt`, `a/COM1`, and `Lpt9/data`. Require exact agreement with all oracle outcomes.\n5. Implement the baseline validator, named `exact-key`. Parse every entry and reject the entire archive on any parser error. Otherwise reject if any two entries have the same complete canonical path, regardless of entry type. Ignore prefix relationships, descendants, and raw-component spelling. Accept otherwise.\n6. Implement the comparison validator, named `component-trie`, as an archive-wide, order-independent analysis. Parse all entries first. Build a trie keyed by canonical components. At each complete canonical path, record all explicit entry types. At every trie node used as a proper directory prefix of an entry, record the corresponding prefix of that entry's raw-component tuple. Reject if any complete canonical path occurs more than once; if a node has both a directory and a regular-file or symlink entry; if a node containing an explicit regular file or symlink has any proper descendant; or if any node used as a proper prefix has more than one distinct raw-prefix tuple. Accept otherwise. Compute these predicates after collecting all entries rather than making an irreversible first-entry-wins decision.\n7. Generate 24 ancestor-conflict archives. For index `i` from 0 through 23, set `p = f'ancestor{i:02d}/node'`. Add an entry at `p`, using type `regular` for `i < 12` and `symlink` otherwise, plus a regular entry at `p + '/child.txt'`. Each archive has exactly these two entries.\n8. Generate 24 file-directory type-conflict archives. For index `i` from 0 through 23, set `p = f'type{i:02d}/node'`. Add a `directory` entry at `p` and a second entry at exactly `p`, using type `regular` for `i < 12` and `symlink` otherwise.\n9. Generate 24 implicit-directory spelling-collision archives from the Cartesian product of six alias pairs and four contexts. The alias pairs are `('Alpha','alpha')`, `('café','cafe' + U+0301)`, `('Ａlpha','Alpha')`, `('data.','data')`, `('data ','data')`, and `('Straße','STRASSE')`. The contexts are the empty prefix, `outer`, `outer/deep`, and `x/y/z`. For each pair `(left_alias, right_alias)` and context, form `left_prefix` and `right_prefix` by appending the alias as the next component of the context. Add regular entries `left_prefix + '/left.txt'` and `right_prefix + '/right.txt'`. Their complete canonical paths must differ, while their proper parent canonical paths must be equal and their raw parent tuples must differ.\n10. Generate 24 nonconflicting controls. Controls 0 through 7 contain a directory at `ctrl-dir{i}/node` and a regular file at `ctrl-dir{i}/node/child.txt`. Controls 8 through 15 contain regular files at `ctrl-file{i}/node` and `ctrl-file{i}/node2/child.txt`, where `i` runs from 0 through 7; these are component-wise siblings, not prefix conflicts. Controls 16 through 23 contain regular files at `ctrl-implicit{i}/node/left.txt` and `ctrl-implicit{i}/node/right.txt`, using identical raw spelling for their shared implicit directories.\n11. Materialize every two-entry manifest as an in-memory tar archive using `tarfile.PAX_FORMAT`, once in listed order and once in reversed order, for a total of 192 tar streams: 144 conflict streams and 48 control streams. Read each stream back with `tarfile`, preserving member order. Before validation, assert that the two decoded member names and types exactly match the source manifest; terminate with a corpus-integrity failure if they do not.\n12. Run both validators on all 192 decoded streams. Save one CSV row per validator-stream pair with archive ID, class (`ancestor`, `type`, `implicit_alias`, or `control`), order (`forward` or `reverse`), validator, accepted boolean, and rejection reason. Also save a JSON summary containing all aggregate counts and parser-oracle results.\n13. For each validator and class, compute the accepted-run count out of 48 runs for each 24-archive conflict class and out of 48 runs for controls. Also compute archive-level acceptance, where an archive counts as accepted only if both orders are accepted, and order disagreement, where the two orders produce different booleans.\n14. Create `acceptance_by_class.png` as a grouped bar chart with classes `ancestor`, `type`, `implicit alias`, and `control` on the x-axis; one bar each for `exact-key` and `component-trie`; and y-axis equal to percentage of the 48 order-specific runs accepted. Fix the y-axis to 0 through 100, label every bar with its integer accepted-run count, and annotate the total order-disagreement count for each validator.\n15. Declare the hypothesis supported only if all of the following exact thresholds hold: parser-oracle accuracy is 100%; `component-trie` rejects all 72 conflict archives in both orders, equivalently 0 of 144 conflict runs accepted; `exact-key` accepts at least 48 of the 72 conflict archives in both orders, equivalently at least 96 of 144 conflict runs accepted with no order disagreements; both validators accept all 24 controls in both orders, equivalently 48 of 48 control runs each; and `component-trie` has zero order disagreements. Any failed condition refutes the hypothesis.",
+    "metrics": [
+      "Parser-oracle accuracy: number of valid and invalid path cases matching their specified canonicalization or rejection outcome divided by the total oracle cases; support threshold is 100%.",
+      "Component-trie conflict rejection rate: conflict runs rejected divided by 144; support threshold is 144/144, with all 72 archive IDs rejected in both orders.",
+      "Exact-key conflict acceptance count: conflict archive IDs accepted in both orders; support threshold is at least 48/72, with the predicted count exactly 48/72.",
+      "Per-class run acceptance: accepted runs out of 48 separately for ancestor, type, implicit-alias, and control classes for each validator.",
+      "Control acceptance rate: control runs accepted divided by 48 for each validator; support threshold is 48/48 for both.",
+      "Order-disagreement count: number of archive IDs for which forward and reverse orders yield different decisions; support threshold is zero for component-trie and, for the stated baseline result, zero for exact-key.",
+      "Corpus-integrity rate: reconstructed tar member name-and-type sequences exactly matching generated manifests; required threshold is 192/192."
+    ],
+    "time_budget_minutes": 10,
+    "expected_if_true": "Parser and corpus-integrity checks are perfect. Component-trie acceptance is 0/48 for each of the ancestor, type, and implicit-alias run groups and 48/48 for controls, with zero order disagreements. Exact-key acceptance is 48/48 for ancestor, 0/48 for type, 48/48 for implicit alias, and 48/48 for controls, corresponding to exactly 48 of 72 conflict archives accepted in both orders and 96 of 144 conflict runs accepted.",
+    "expected_if_false": "The hypothesis is refuted if component-trie accepts even one conflict archive in either order, exact-key accepts fewer than 48 conflict archives in both orders, either validator rejects any control in either order, component-trie has any order-dependent decision, or the mandatory parser-oracle or corpus-integrity check is not 100%."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T15:48:01+00:00",
+      "finished_at": "2026-07-19T15:59:16+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "The component trie rejected all 144/144 conflict runs across all 72 conflict archives, accepted all 48/48 control runs, and had zero order disagreements. The exact-key detector accepted exactly 96/144 conflict runs—48/48 ancestor, 0/48 type-conflict, and 48/48 implicit-alias runs—while accepting all 48/48 control runs with zero order disagreements. Parser-oracle accuracy and corpus-integrity checks were both 100% (37/37 and 192/192), so the results exactly match the prespecified supported pattern."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.0,
+  "error": ""
+}

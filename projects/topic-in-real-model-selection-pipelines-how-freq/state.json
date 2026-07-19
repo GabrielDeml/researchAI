@@ -1,0 +1,249 @@
+{
+  "slug": "topic-in-real-model-selection-pipelines-how-freq",
+  "topic": "Topic In real model-selection pipelines, how frequently does first-encountered tie-breaking change only an internal identifier, an optimizer-family conclusion, or held-out performance? _(auto-enqueued follow-up from topic-can-the-120-split-analysis-be-repeated-on)_",
+  "created_at": "2026-07-19T16:32:25+00:00",
+  "updated_at": "2026-07-19T16:49:25+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "On the marginal likelihood and cross-validation",
+      "authors": [
+        "Edwin Fong",
+        "Chris Holmes"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1905.08737v2",
+      "source": "arXiv:1905.08737v2"
+    },
+    {
+      "title": "Estimating the standard error of cross-Validation-Based estimators of classifier performance",
+      "authors": [
+        "Waleed A. Yousef"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1908.00325v4",
+      "source": "arXiv:1908.00325v4"
+    },
+    {
+      "title": "Model Selection versus Model Averaging in Dose Finding Studies",
+      "authors": [
+        "Kirsten Schorning",
+        "Björn Bornkamp",
+        "Frank Bretz",
+        "Holger Dette"
+      ],
+      "year": 2015,
+      "url": "http://arxiv.org/abs/1508.00281v1",
+      "source": "arXiv:1508.00281v1"
+    },
+    {
+      "title": "Efficient Online Hyperparameter Optimization for Kernel Ridge Regression with Applications to Traffic Time Series Prediction",
+      "authors": [
+        "Hongyuan Zhan",
+        "Gabriel Gomes",
+        "Xiaoye S. Li",
+        "Kamesh Madduri",
+        "Kesheng Wu"
+      ],
+      "year": 2018,
+      "url": "http://arxiv.org/abs/1811.00620v1",
+      "source": "arXiv:1811.00620v1"
+    },
+    {
+      "title": "Forward and Reverse Gradient-Based Hyperparameter Optimization",
+      "authors": [
+        "Luca Franceschi",
+        "Michele Donini",
+        "Paolo Frasconi",
+        "Massimiliano Pontil"
+      ],
+      "year": 2017,
+      "url": "http://arxiv.org/abs/1703.01785v3",
+      "source": "arXiv:1703.01785v3"
+    },
+    {
+      "title": "Stabilizing Bi-Level Hyperparameter Optimization using Moreau-Yosida Regularization",
+      "authors": [
+        "Sauptik Dhar",
+        "Unmesh Kurup",
+        "Mohak Shah"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2007.13322v1",
+      "source": "arXiv:2007.13322v1"
+    },
+    {
+      "title": "Deep Ranking Ensembles for Hyperparameter Optimization",
+      "authors": [
+        "Abdus Salam Khazi",
+        "Sebastian Pineda Arango",
+        "Josif Grabocka"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2303.15212v2",
+      "source": "arXiv:2303.15212v2"
+    },
+    {
+      "title": "Cross-validated covariance estimators for high-dimensional minimum-variance portfolios",
+      "authors": [
+        "Sven Husmann",
+        "Antoniya Shivarova",
+        "Rick Steinert"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1910.13960v5",
+      "source": "arXiv:1910.13960v5"
+    },
+    {
+      "title": "Design-Based Cross-Validation for Comparing Small Area Estimators",
+      "authors": [
+        "Qianyu Dong",
+        "Zehang Richard Li"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2604.23464v3",
+      "source": "arXiv:2604.23464v3"
+    },
+    {
+      "title": "HyperMorph: Amortized Hyperparameter Learning for Image Registration",
+      "authors": [
+        "Andrew Hoopes",
+        "Malte Hoffmann",
+        "Bruce Fischl",
+        "John Guttag",
+        "Adrian V. Dalca"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2101.01035v2",
+      "source": "arXiv:2101.01035v2"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across five bundled scikit-learn classification datasets, 30 deterministic stratified train-validation-test splits per dataset, and a fixed 24-candidate grid spanning linear, kernel, tree, and neighbor families, reversing candidate encounter order after rounding validation balanced accuracy to three decimals will change the selected internal identifier on at least 20% of splits and the selected family on at least 5%, but will change held-out balanced accuracy by at least 0.02 on fewer than one-third of the family-changing splits.",
+      "rationale": "This directly estimates the missing three-level frequency decomposition on small real datasets rather than inferring substantive instability from identifier or family changes. It addresses the survey's central gap and follows [2] by aggregating over repeated splits rather than relying on one partition.",
+      "novelty": 8.8,
+      "feasibility": 9.2,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "In 100 deterministic synthetic classification tasks whose candidate grids contain four differently labeled but parameter-identical aliases of each of six fitted configurations, forward versus reverse first-encountered tie-breaking will change the selected identifier on at least 95 tasks, while canonical hyperparameters, held-out predictions, and held-out scores will remain identical within 1e-12 on all 100.",
+      "rationale": "This isolates purely representational instability, which the survey identifies as a possible reason identifier changes exaggerate model-selection instability but does not quantify. Canonicalization makes the hypothesis distinct from tests that merely ask whether grid permutation changes the winning identifier.",
+      "novelty": 8.1,
+      "feasibility": 9.9,
+      "info_gain": 8.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "Across 120 deterministic split-level selections on four small public datasets, reducing recorded validation-score precision from four decimal places to two will increase the forward-versus-reverse identifier-change frequency by at least a factor of three and the family-change frequency by at least a factor of two; it will also increase the frequency of absolute held-out score differences above 0.01 by at least five percentage points.",
+      "rationale": "Fong and Holmes [1] imply that ties are protocol- and precision-dependent, but the literature supplies no empirical precision-response curve for identifier, family, and test-performance consequences. Holding predictions and splits fixed isolates score quantization from other pipeline variation.",
+      "novelty": 8.8,
+      "feasibility": 9.5,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "Using the same probabilistic predictions from 20 fixed classifiers on 150 deterministic validation splits, selection by validation accuracy will produce at least four times as many first-encountered ties and at least twice as many family changes under reversed order as selection by unrounded validation log loss; among accuracy-tied family switches, at least 15% will yield an absolute held-out log-loss difference above 0.02.",
+      "rationale": "This tests whether discreteness of the scoring rule, rather than genuine predictive equivalence, drives consequential ties. The survey notes that a tie is meaningful only relative to the scoring protocol [1], but does not compare coarse and continuous metrics using identical candidate predictions.",
+      "novelty": 9.0,
+      "feasibility": 9.4,
+      "info_gain": 9.3,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "For 40 deterministic tie fixtures in which one family contributes eight validation-tied configuration identifiers and a second family contributes one, 1,000 seeded uniform random candidate orders per fixture will select the eight-identifier family in 85% to 92% of orders; after collapsing semantically identical configurations and sampling tied families uniformly, its selection frequency will fall to 47% to 53%.",
+      "rationale": "This tests a previously unmeasured grid-cardinality bias: first-encountered selection implicitly weights a family by its number of tied identifiers. It distinguishes optimizer-family conclusions caused by duplicated search representation from conclusions supported by validation performance.",
+      "novelty": 9.4,
+      "feasibility": 9.9,
+      "info_gain": 9.1,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 6,
+      "statement": "Across 150 deterministic selections on five small public datasets, replacing exact three-decimal ties with a preregistered tolerance tie defined as scores within 0.005 of the recorded maximum will at least double the frequency with which reversed encounter order selects different families, yet no more than 15% of those tolerance-induced family switches will produce an absolute held-out balanced-accuracy difference above 0.02.",
+      "rationale": "Dong and Li [9] motivate distinguishing exact equality from differences too small to resolve, while the survey reports no consequences of doing so. This hypothesis tests whether tolerance rules expose more family-level ambiguity without proportionally increasing material held-out differences.",
+      "novelty": 9.0,
+      "feasibility": 9.3,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Among at least 100 validation-tied candidate pairs collected from deterministic repeated splits of four public datasets, the median absolute held-out score difference for cross-family pairs will be at least twice that for nonalias within-family pairs, while parameter-identical alias pairs will have a maximum held-out difference below 1e-12.",
+      "rationale": "The survey proposes a hierarchy from identifier to family to held-out performance but does not test whether tie-set composition predicts substantive consequences. Comparing aliases, within-family alternatives, and cross-family alternatives reveals whether family changes are a useful risk marker rather than merely another label change.",
+      "novelty": 8.7,
+      "feasibility": 9.4,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "Across all family-spanning validation ties found in 150 deterministic splits of five small public classification datasets, an equal-weight soft-voting ensemble containing one canonical representative from every tied family will reduce mean held-out log-loss regret relative to the oracle-best tied candidate by at least 25% compared with first-encountered selection, and will match or beat both the forward-order and reverse-order selections on at least 55% of tie events.",
+      "rationale": "Model averaging is identified as an alternative to committing to one ambiguous winner [3], but the literature does not evaluate it specifically for encounter-order ties. This tests whether the ambiguity revealed by family-changing ties can be converted into better and order-invariant held-out performance.",
+      "novelty": 8.9,
+      "feasibility": 9.0,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Construct 40 synthetic exact-validation-tie fixtures and compare first-encountered selection over nine identifiers with duplicate-collapsed, family-uniform selection across 1,000 deterministic random orders per fixture.",
+    "protocol": "1. Use Python 3.11 or later with numpy, pandas, and matplotlib. Set the global master seed metadata to 20250308 and use numpy.random.default_rng with the per-step seeds specified below. Do not use network data.\n2. Generate 40 binary-classification fixtures indexed f=0,...,39. Each fixture has 100 validation examples and 200 held-out examples. Use RNG seed 10000+f. Generate each label vector independently as integers uniformly sampled from {0,1}.\n3. In every fixture create two optimizer families named A and B. Family A has eight configuration identifiers A_0 through A_7, all with semantic signature A_semantic_0. Family B has one identifier B_0 with semantic signature B_semantic_0. The eight A identifiers must reference identical validation and held-out prediction arrays; only their identifier strings differ.\n4. Construct validation predictions with exact accuracy 0.80 for both semantic configurations. Draw one random permutation of the 100 validation indices using the fixture RNG. Family A predictions equal the labels except that indices permutation[0:20] are flipped. Family B predictions equal the labels except that indices permutation[20:40] are flipped. For binary labels, flip with 1-label. Assert that all eight A identifiers have byte-for-byte identical predictions, A and B predictions differ, and every candidate's validation accuracy is exactly 80/100.\n5. Construct held-out predictions so that family A always has accuracy 0.80 and family B has a fixture-stratified accuracy. For fixtures 0-9 set B accuracy to 0.70; for 10-19 set it to 0.78; for 20-29 set it to 0.82; and for 30-39 set it to 0.90. Thus A-minus-B held-out gaps are +0.10, +0.02, -0.02, and -0.10 in four equal strata. Draw a fresh permutation of the 200 held-out indices. Flip permutation[0:40] for A. For B, flip the last 60, 44, 36, or 20 permutation indices, respectively. Assert all intended accuracies exactly.\n6. Implement the first-encountered baseline exactly as follows. For each fixture, define the candidate list [A_0,A_1,...,A_7,B_0]. Initialize an RNG with seed 20000+f. For each of 1,000 repetitions, obtain a fresh uniform permutation of all nine candidates, scan it from first to last, initialize best_score to negative infinity, and replace the incumbent only when candidate_validation_accuracy > best_score. Do not replace on equality. Record the selected identifier, family, validation accuracy, and held-out accuracy. This is equivalent to selecting the first candidate in the random order because all validation scores tie, but the scan must still be implemented to test actual tie behavior.\n7. Implement the comparison procedure independently for each fixture using RNG seed 30000+f. First collapse candidates by semantic signature, verifying that A_0 through A_7 form one semantic configuration. Determine the optimizer families attaining the maximum validation accuracy after collapse; both A and B must qualify. For each of 1,000 repetitions, sample one qualifying family uniformly with rng.choice over the sorted list [A,B]. Use A_0 or B_0 as the canonical reporting identifier after the family is selected. Record family, validation accuracy, and held-out accuracy.\n8. Combine the 40,000 records from each method. Compute the pooled family-A selection frequency separately for the baseline and comparison. Also compute each frequency separately for every fixture. Compute 95% Wilson binomial confidence intervals for the two pooled frequencies, using z=1.959963984540054.\n9. For the baseline, compute the pooled selection frequency of each of the nine identifiers. Also calculate the empirical probability that two independent baseline draws differ only in the selected A identifier while retaining family A: p_A^2 minus the sum over A_0,...,A_7 of p_identifier^2. The theoretical value is 56/81, approximately 0.69136.\n10. Quantify the family-level grid-cardinality effect as baseline_A_frequency minus comparison_A_frequency. Also report the odds ratio [p_baseline/(1-p_baseline)] divided by [p_comparison/(1-p_comparison)]. The theoretical frequency difference is 7/18, approximately 0.38889, and the theoretical odds ratio is 8.\n11. Quantify held-out consequences by computing, for every fixture and method, the mean held-out accuracy of selected candidates. Subtract comparison from baseline within each fixture, then report the mean difference in each held-out-gap stratum and the mean absolute difference across all 40 fixtures. The theoretical baseline-minus-comparison shifts are approximately +0.03889, +0.00778, -0.00778, and -0.03889 for the four strata; the overall signed mean is zero by construction, while the theoretical mean absolute shift is approximately 0.02333.\n12. Save all repetition-level records as selection_records.csv and fixture-level summaries as fixture_summary.csv. Save a machine-readable summary containing all metrics and the final decision as results.json.\n13. Create selection_frequency.png at 1600x700 pixels or larger. The left panel must show the 40 per-fixture family-A selection frequencies for both methods as jittered points plus pooled-frequency markers and 95% Wilson intervals; add horizontal reference lines at 8/9 and 1/2 and shaded acceptance bands [0.85,0.92] and [0.47,0.53]. The right panel must show the mean baseline-minus-comparison held-out accuracy shift for each of the four gap strata, with a horizontal zero line and theoretical shift markers.\n14. Declare the hypothesis SUPPORTED if and only if all fixture-integrity assertions pass, the pooled baseline family-A frequency is between 0.85 and 0.92 inclusive, the pooled comparison family-A frequency is between 0.47 and 0.53 inclusive, and their difference is at least 0.32. Otherwise declare it REFUTED. The pooled 40,000 selections per method are the preregistered decision statistics; per-fixture frequencies and confidence intervals are descriptive and do not alter the decision.",
+    "metrics": [
+      "Baseline family-A selection frequency: number of first-encountered runs selecting any A identifier divided by 40,000.",
+      "Collapsed family-uniform family-A selection frequency: number of comparison runs selecting family A divided by 40,000.",
+      "Grid-cardinality effect: baseline family-A frequency minus collapsed family-A frequency; support requires at least 0.32.",
+      "Selection odds ratio: odds of selecting A under first-encountered selection divided by the corresponding odds under family-uniform selection.",
+      "Per-fixture family-A frequencies: A selections divided by 1,000 for each fixture and method.",
+      "Identifier-only instability: p_A squared minus the sum of squared selection frequencies for A_0 through A_7, representing the probability that two independent baseline draws select different A identifiers but the same family.",
+      "Held-out performance shift: within each fixture, mean selected held-out accuracy under the baseline minus that under the comparison, summarized by gap stratum and by mean absolute shift over all fixtures.",
+      "Validation-tie integrity: all nine identifiers in every fixture must have validation accuracy exactly 0.80, and all eight A identifiers must have identical predictions and one shared semantic signature."
+    ],
+    "time_budget_minutes": 10,
+    "expected_if_true": "The baseline selects family A in 85% to 92% of the 40,000 orders, near 8/9, while duplicate-collapsed family-uniform selection chooses A in 47% to 53%, near 1/2; the frequency difference is about 0.389, the odds ratio is about 8, baseline identifiers are individually selected near 1/9, identifier-only instability is near 0.691, and held-out shifts follow the preregistered signs and approximate magnitudes +0.0389, +0.0078, -0.0078, and -0.0389.",
+    "expected_if_false": "The hypothesis is refuted if the pooled first-encountered A frequency falls outside 0.85 to 0.92, the collapsed family-uniform A frequency falls outside 0.47 to 0.53, their difference is below 0.32, or any fixture fails the exact-tie and semantic-duplication integrity assertions."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T16:35:46+00:00",
+      "finished_at": "2026-07-19T16:41:11+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "All integrity checks passed, including exact validation ties and semantic-duplication assertions. Baseline family-A selection was 0.8862 (35,448/40,000), within the preregistered 0.85–0.92 band and near 8/9, while collapsed family-uniform selection was 0.4994 (19,976/40,000), within 0.47–0.53 and near 1/2. The difference was 0.3868, well above 0.32 and near the theoretical 0.3889; the odds ratio was 7.806, identifier-only instability was 0.6872, and all held-out shifts had the preregistered signs and approximate magnitudes."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 5.0,
+  "error": ""
+}

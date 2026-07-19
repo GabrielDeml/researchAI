@@ -1,0 +1,231 @@
+{
+  "bootstrap": {
+    "interval": "Percentile 95% interval",
+    "quantile_method": "linear",
+    "quantiles": [
+      0.025,
+      0.975
+    ],
+    "replicates": 10000,
+    "role": "Descriptive; does not replace fixed-count decision thresholds.",
+    "sample_size_per_replicate": 60,
+    "sampling": "Dataset IDs sampled with replacement.",
+    "seed": 987654,
+    "statistics": [
+      "first-rule configuration variation proportion",
+      "reported-winner change proportion",
+      "material-estimate change proportion"
+    ],
+    "unit": "dataset"
+  },
+  "configurations": {
+    "count": 12,
+    "ids": [
+      "C00",
+      "C01",
+      "C02",
+      "C03",
+      "C04",
+      "C05",
+      "C06",
+      "C07",
+      "C08",
+      "C09",
+      "C10",
+      "C11"
+    ],
+    "numeric_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "optimizer_A_numeric_ids": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "optimizer_B_numeric_ids": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "prediction_rule": "Configuration Cj predicts binary feature column X[:, j].",
+    "reported_winner_rule": "The optimizer label of the selected configuration.",
+    "total_order": "Ascending numeric configuration ID."
+  },
+  "dataset_definitions": {
+    "first_rule_configuration_variation": "More than one unique first-rule selected ID across 25 permutations.",
+    "material_estimate_change": "At least one first-rule estimate has absolute difference from the total-order estimate >0.005.",
+    "reported_winner_change": "At least one first-rule optimizer label differs from the total-order optimizer label.",
+    "rope": [
+      -0.005,
+      0.005
+    ],
+    "total_order_invariance": "One unique total-order selected ID across 25 permutations and final-estimate max-minus-min range <=1e-12.",
+    "total_order_range_tolerance": 1e-12
+  },
+  "environment": {
+    "required_versions": {
+      "matplotlib": "3.8.4",
+      "numpy": "1.26.4",
+      "pandas": "2.2.2",
+      "python": "3.11",
+      "scikit_learn": "1.4.2"
+    },
+    "single_threaded": true,
+    "thread_environment": {
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1"
+    }
+  },
+  "grid_permutations": {
+    "count": 25,
+    "generator": "numpy.random.default_rng(seed).permutation(12)",
+    "output": "grid_permutations.csv",
+    "reuse_rule": "Generate once, save before data generation, and reuse for all datasets.",
+    "seed_formula": "400000 + k for k=0,...,24"
+  },
+  "hypothesis": "Permutation-invariant lexicographic tie-breaking will be stable while first-encountered-maximum tie-breaking will vary across fixed grid permutations.",
+  "implementation_version": "1.0.0",
+  "outputs": {
+    "figure": "figures/tie_breaking_results.png",
+    "figure_dpi": 180,
+    "figure_panels": [
+      "60-by-25 heatmap of first-rule selected IDs using distinct optimizer-A and optimizer-B palettes",
+      "bar chart of the four dataset counts with reference lines at 60, 40, and 15"
+    ],
+    "flat_metrics": "results.json",
+    "tables": [
+      "results.csv",
+      "dataset_summary.csv",
+      "bootstrap.csv"
+    ]
+  },
+  "preregistration_utc_timestamp": "2026-07-19T16:18:22.305972Z",
+  "primary_decision": {
+    "first_rule_configuration_varying_minimum": 40,
+    "material_change_role": "Prespecified corroborating result only.",
+    "reported_winner_change_minimum": 15,
+    "supported_if_and_only_if": "All three thresholds are satisfied; failure of any one threshold yields REFUTED.",
+    "total_order_invariant_required": 60
+  },
+  "regime_check": {
+    "failure_rule": "Any failure invalidates the implementation and cannot alter the protocol.",
+    "output": "regime_check.csv",
+    "requirements": [
+      "Exactly four configurations tie at the exact maximum 0.75 for every dataset.",
+      "All remaining configurations equal exactly 0.70.",
+      "The observed maximum set equals T_d."
+    ],
+    "timing": "Before any replication outcomes are generated."
+  },
+  "replication_data": {
+    "class_0_count": 600,
+    "class_1_count": 600,
+    "correct_per_class_formula": "330+6*q",
+    "dataset_count": 60,
+    "error_seed_formula": "210000 + 100*d + j",
+    "errors_per_class_formula": "600-(330+6*q)",
+    "full_balanced_accuracy_max": 0.66,
+    "full_balanced_accuracy_min": 0.55,
+    "n": 1200,
+    "observation_permutation_seed_formula": "200000 + d",
+    "prediction_construction": "X_rep[:,j] = y_rep XOR error_indicator; choose errors independently without replacement within each class.",
+    "q_formula": "q=(j+5*d) mod 12",
+    "target_balanced_accuracy_formula": "p=0.55+0.01*q",
+    "timing": "Generate only after selections.csv is frozen and hashed."
+  },
+  "replication_splits": {
+    "final_estimate": "Arithmetic mean of the 120 test balanced accuracies.",
+    "n_splits": 120,
+    "random_state_formula": "300000 + d",
+    "sharing_rule": "Apply every configuration to the same test indices within each dataset.",
+    "splitter": "sklearn.model_selection.StratifiedShuffleSplit",
+    "test_class_0_count": 150,
+    "test_class_1_count": 150,
+    "test_n": 300,
+    "test_size": 0.25,
+    "training_indices_used": false
+  },
+  "reporting": {
+    "comparison_values": "Unrounded float64",
+    "display_rounding_decimal_places": 4,
+    "fields": [
+      "selected configuration",
+      "optimizer label",
+      "final 120-split estimate"
+    ],
+    "unit": "rule x dataset x permutation"
+  },
+  "sample_size_reduction_rule": "No reductions are permitted in this run because the fixed protocol fits the wall-clock budget.",
+  "secondary_analyses": {
+    "absolute_estimate_change_sensitivity_thresholds": [
+      0.0,
+      0.0025,
+      0.005,
+      0.01
+    ],
+    "case_fraction_events": [
+      "different selected ID from total order",
+      "different optimizer label from total order",
+      "absolute estimate difference >0.005 from total order"
+    ],
+    "case_fractions_denominator": 1500,
+    "decision_role": "Cannot change the primary conclusion.",
+    "distinct_first_rule_selections_per_dataset": true,
+    "within_dataset_first_rule_estimate_range": true
+  },
+  "selection_freeze": {
+    "outputs": [
+      "selections.csv",
+      "selections.sha256"
+    ],
+    "rule": "Freeze and hash every selection before calling the replication-generation function; verify its call count is zero at freeze time.",
+    "shape": "60 datasets x 25 permutations"
+  },
+  "selection_rules": {
+    "cases": 1500,
+    "first_encountered": "Scan in permutation order; initialize the first configuration; replace only when score is strictly greater; never replace on equality.",
+    "total_order": "Find the exact maximum and select the tied configuration with the smallest numeric ID, independent of encounter order."
+  },
+  "stdout_rule": "Print the three primary counts and exactly one final SUPPORTED or REFUTED label, plus a concise run summary.",
+  "topic": "Can the 120-split analysis be repeated on a genuinely untouched replication set under a time-stamped fixed protocol?",
+  "tuning_data": {
+    "class_0_count": 200,
+    "class_1_count": 200,
+    "dataset_count": 60,
+    "dataset_ids": "d=0,...,59",
+    "error_seed_formula": "110000 + 100*d + j",
+    "fit_model": false,
+    "maximum_balanced_accuracy": 0.75,
+    "maximum_configuration_errors_per_class": 50,
+    "maximum_set_formula": "T_d={(d+0) mod 12,(d+1) mod 12,(d+6) mod 12,(d+7) mod 12}",
+    "n": 400,
+    "observation_permutation_seed_formula": "100000 + d",
+    "other_balanced_accuracy": 0.7,
+    "other_configuration_errors_per_class": 60,
+    "prediction_construction": "X[:,j] = y XOR error_indicator; choose errors independently without replacement within each class.",
+    "score_rounding": false
+  },
+  "tuning_score": {
+    "comparison_precision": "Unrounded float64 exact comparisons.",
+    "definition": "Unweighted arithmetic mean of sensitivity and specificity.",
+    "metric": "Balanced accuracy"
+  }
+}

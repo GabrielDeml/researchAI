@@ -1,0 +1,385 @@
+archive_id,class,order,validator,accepted,rejection_reason
+ancestor-00,ancestor,forward,exact-key,True,
+ancestor-00,ancestor,forward,component-trie,False,non-directory has descendant: ancestor00/node
+ancestor-00,ancestor,reverse,exact-key,True,
+ancestor-00,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor00/node
+ancestor-01,ancestor,forward,exact-key,True,
+ancestor-01,ancestor,forward,component-trie,False,non-directory has descendant: ancestor01/node
+ancestor-01,ancestor,reverse,exact-key,True,
+ancestor-01,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor01/node
+ancestor-02,ancestor,forward,exact-key,True,
+ancestor-02,ancestor,forward,component-trie,False,non-directory has descendant: ancestor02/node
+ancestor-02,ancestor,reverse,exact-key,True,
+ancestor-02,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor02/node
+ancestor-03,ancestor,forward,exact-key,True,
+ancestor-03,ancestor,forward,component-trie,False,non-directory has descendant: ancestor03/node
+ancestor-03,ancestor,reverse,exact-key,True,
+ancestor-03,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor03/node
+ancestor-04,ancestor,forward,exact-key,True,
+ancestor-04,ancestor,forward,component-trie,False,non-directory has descendant: ancestor04/node
+ancestor-04,ancestor,reverse,exact-key,True,
+ancestor-04,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor04/node
+ancestor-05,ancestor,forward,exact-key,True,
+ancestor-05,ancestor,forward,component-trie,False,non-directory has descendant: ancestor05/node
+ancestor-05,ancestor,reverse,exact-key,True,
+ancestor-05,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor05/node
+ancestor-06,ancestor,forward,exact-key,True,
+ancestor-06,ancestor,forward,component-trie,False,non-directory has descendant: ancestor06/node
+ancestor-06,ancestor,reverse,exact-key,True,
+ancestor-06,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor06/node
+ancestor-07,ancestor,forward,exact-key,True,
+ancestor-07,ancestor,forward,component-trie,False,non-directory has descendant: ancestor07/node
+ancestor-07,ancestor,reverse,exact-key,True,
+ancestor-07,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor07/node
+ancestor-08,ancestor,forward,exact-key,True,
+ancestor-08,ancestor,forward,component-trie,False,non-directory has descendant: ancestor08/node
+ancestor-08,ancestor,reverse,exact-key,True,
+ancestor-08,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor08/node
+ancestor-09,ancestor,forward,exact-key,True,
+ancestor-09,ancestor,forward,component-trie,False,non-directory has descendant: ancestor09/node
+ancestor-09,ancestor,reverse,exact-key,True,
+ancestor-09,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor09/node
+ancestor-10,ancestor,forward,exact-key,True,
+ancestor-10,ancestor,forward,component-trie,False,non-directory has descendant: ancestor10/node
+ancestor-10,ancestor,reverse,exact-key,True,
+ancestor-10,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor10/node
+ancestor-11,ancestor,forward,exact-key,True,
+ancestor-11,ancestor,forward,component-trie,False,non-directory has descendant: ancestor11/node
+ancestor-11,ancestor,reverse,exact-key,True,
+ancestor-11,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor11/node
+ancestor-12,ancestor,forward,exact-key,True,
+ancestor-12,ancestor,forward,component-trie,False,non-directory has descendant: ancestor12/node
+ancestor-12,ancestor,reverse,exact-key,True,
+ancestor-12,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor12/node
+ancestor-13,ancestor,forward,exact-key,True,
+ancestor-13,ancestor,forward,component-trie,False,non-directory has descendant: ancestor13/node
+ancestor-13,ancestor,reverse,exact-key,True,
+ancestor-13,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor13/node
+ancestor-14,ancestor,forward,exact-key,True,
+ancestor-14,ancestor,forward,component-trie,False,non-directory has descendant: ancestor14/node
+ancestor-14,ancestor,reverse,exact-key,True,
+ancestor-14,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor14/node
+ancestor-15,ancestor,forward,exact-key,True,
+ancestor-15,ancestor,forward,component-trie,False,non-directory has descendant: ancestor15/node
+ancestor-15,ancestor,reverse,exact-key,True,
+ancestor-15,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor15/node
+ancestor-16,ancestor,forward,exact-key,True,
+ancestor-16,ancestor,forward,component-trie,False,non-directory has descendant: ancestor16/node
+ancestor-16,ancestor,reverse,exact-key,True,
+ancestor-16,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor16/node
+ancestor-17,ancestor,forward,exact-key,True,
+ancestor-17,ancestor,forward,component-trie,False,non-directory has descendant: ancestor17/node
+ancestor-17,ancestor,reverse,exact-key,True,
+ancestor-17,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor17/node
+ancestor-18,ancestor,forward,exact-key,True,
+ancestor-18,ancestor,forward,component-trie,False,non-directory has descendant: ancestor18/node
+ancestor-18,ancestor,reverse,exact-key,True,
+ancestor-18,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor18/node
+ancestor-19,ancestor,forward,exact-key,True,
+ancestor-19,ancestor,forward,component-trie,False,non-directory has descendant: ancestor19/node
+ancestor-19,ancestor,reverse,exact-key,True,
+ancestor-19,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor19/node
+ancestor-20,ancestor,forward,exact-key,True,
+ancestor-20,ancestor,forward,component-trie,False,non-directory has descendant: ancestor20/node
+ancestor-20,ancestor,reverse,exact-key,True,
+ancestor-20,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor20/node
+ancestor-21,ancestor,forward,exact-key,True,
+ancestor-21,ancestor,forward,component-trie,False,non-directory has descendant: ancestor21/node
+ancestor-21,ancestor,reverse,exact-key,True,
+ancestor-21,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor21/node
+ancestor-22,ancestor,forward,exact-key,True,
+ancestor-22,ancestor,forward,component-trie,False,non-directory has descendant: ancestor22/node
+ancestor-22,ancestor,reverse,exact-key,True,
+ancestor-22,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor22/node
+ancestor-23,ancestor,forward,exact-key,True,
+ancestor-23,ancestor,forward,component-trie,False,non-directory has descendant: ancestor23/node
+ancestor-23,ancestor,reverse,exact-key,True,
+ancestor-23,ancestor,reverse,component-trie,False,non-directory has descendant: ancestor23/node
+type-00,type,forward,exact-key,False,duplicate canonical path: type00/node
+type-00,type,forward,component-trie,False,duplicate canonical path: type00/node
+type-00,type,reverse,exact-key,False,duplicate canonical path: type00/node
+type-00,type,reverse,component-trie,False,duplicate canonical path: type00/node
+type-01,type,forward,exact-key,False,duplicate canonical path: type01/node
+type-01,type,forward,component-trie,False,duplicate canonical path: type01/node
+type-01,type,reverse,exact-key,False,duplicate canonical path: type01/node
+type-01,type,reverse,component-trie,False,duplicate canonical path: type01/node
+type-02,type,forward,exact-key,False,duplicate canonical path: type02/node
+type-02,type,forward,component-trie,False,duplicate canonical path: type02/node
+type-02,type,reverse,exact-key,False,duplicate canonical path: type02/node
+type-02,type,reverse,component-trie,False,duplicate canonical path: type02/node
+type-03,type,forward,exact-key,False,duplicate canonical path: type03/node
+type-03,type,forward,component-trie,False,duplicate canonical path: type03/node
+type-03,type,reverse,exact-key,False,duplicate canonical path: type03/node
+type-03,type,reverse,component-trie,False,duplicate canonical path: type03/node
+type-04,type,forward,exact-key,False,duplicate canonical path: type04/node
+type-04,type,forward,component-trie,False,duplicate canonical path: type04/node
+type-04,type,reverse,exact-key,False,duplicate canonical path: type04/node
+type-04,type,reverse,component-trie,False,duplicate canonical path: type04/node
+type-05,type,forward,exact-key,False,duplicate canonical path: type05/node
+type-05,type,forward,component-trie,False,duplicate canonical path: type05/node
+type-05,type,reverse,exact-key,False,duplicate canonical path: type05/node
+type-05,type,reverse,component-trie,False,duplicate canonical path: type05/node
+type-06,type,forward,exact-key,False,duplicate canonical path: type06/node
+type-06,type,forward,component-trie,False,duplicate canonical path: type06/node
+type-06,type,reverse,exact-key,False,duplicate canonical path: type06/node
+type-06,type,reverse,component-trie,False,duplicate canonical path: type06/node
+type-07,type,forward,exact-key,False,duplicate canonical path: type07/node
+type-07,type,forward,component-trie,False,duplicate canonical path: type07/node
+type-07,type,reverse,exact-key,False,duplicate canonical path: type07/node
+type-07,type,reverse,component-trie,False,duplicate canonical path: type07/node
+type-08,type,forward,exact-key,False,duplicate canonical path: type08/node
+type-08,type,forward,component-trie,False,duplicate canonical path: type08/node
+type-08,type,reverse,exact-key,False,duplicate canonical path: type08/node
+type-08,type,reverse,component-trie,False,duplicate canonical path: type08/node
+type-09,type,forward,exact-key,False,duplicate canonical path: type09/node
+type-09,type,forward,component-trie,False,duplicate canonical path: type09/node
+type-09,type,reverse,exact-key,False,duplicate canonical path: type09/node
+type-09,type,reverse,component-trie,False,duplicate canonical path: type09/node
+type-10,type,forward,exact-key,False,duplicate canonical path: type10/node
+type-10,type,forward,component-trie,False,duplicate canonical path: type10/node
+type-10,type,reverse,exact-key,False,duplicate canonical path: type10/node
+type-10,type,reverse,component-trie,False,duplicate canonical path: type10/node
+type-11,type,forward,exact-key,False,duplicate canonical path: type11/node
+type-11,type,forward,component-trie,False,duplicate canonical path: type11/node
+type-11,type,reverse,exact-key,False,duplicate canonical path: type11/node
+type-11,type,reverse,component-trie,False,duplicate canonical path: type11/node
+type-12,type,forward,exact-key,False,duplicate canonical path: type12/node
+type-12,type,forward,component-trie,False,duplicate canonical path: type12/node
+type-12,type,reverse,exact-key,False,duplicate canonical path: type12/node
+type-12,type,reverse,component-trie,False,duplicate canonical path: type12/node
+type-13,type,forward,exact-key,False,duplicate canonical path: type13/node
+type-13,type,forward,component-trie,False,duplicate canonical path: type13/node
+type-13,type,reverse,exact-key,False,duplicate canonical path: type13/node
+type-13,type,reverse,component-trie,False,duplicate canonical path: type13/node
+type-14,type,forward,exact-key,False,duplicate canonical path: type14/node
+type-14,type,forward,component-trie,False,duplicate canonical path: type14/node
+type-14,type,reverse,exact-key,False,duplicate canonical path: type14/node
+type-14,type,reverse,component-trie,False,duplicate canonical path: type14/node
+type-15,type,forward,exact-key,False,duplicate canonical path: type15/node
+type-15,type,forward,component-trie,False,duplicate canonical path: type15/node
+type-15,type,reverse,exact-key,False,duplicate canonical path: type15/node
+type-15,type,reverse,component-trie,False,duplicate canonical path: type15/node
+type-16,type,forward,exact-key,False,duplicate canonical path: type16/node
+type-16,type,forward,component-trie,False,duplicate canonical path: type16/node
+type-16,type,reverse,exact-key,False,duplicate canonical path: type16/node
+type-16,type,reverse,component-trie,False,duplicate canonical path: type16/node
+type-17,type,forward,exact-key,False,duplicate canonical path: type17/node
+type-17,type,forward,component-trie,False,duplicate canonical path: type17/node
+type-17,type,reverse,exact-key,False,duplicate canonical path: type17/node
+type-17,type,reverse,component-trie,False,duplicate canonical path: type17/node
+type-18,type,forward,exact-key,False,duplicate canonical path: type18/node
+type-18,type,forward,component-trie,False,duplicate canonical path: type18/node
+type-18,type,reverse,exact-key,False,duplicate canonical path: type18/node
+type-18,type,reverse,component-trie,False,duplicate canonical path: type18/node
+type-19,type,forward,exact-key,False,duplicate canonical path: type19/node
+type-19,type,forward,component-trie,False,duplicate canonical path: type19/node
+type-19,type,reverse,exact-key,False,duplicate canonical path: type19/node
+type-19,type,reverse,component-trie,False,duplicate canonical path: type19/node
+type-20,type,forward,exact-key,False,duplicate canonical path: type20/node
+type-20,type,forward,component-trie,False,duplicate canonical path: type20/node
+type-20,type,reverse,exact-key,False,duplicate canonical path: type20/node
+type-20,type,reverse,component-trie,False,duplicate canonical path: type20/node
+type-21,type,forward,exact-key,False,duplicate canonical path: type21/node
+type-21,type,forward,component-trie,False,duplicate canonical path: type21/node
+type-21,type,reverse,exact-key,False,duplicate canonical path: type21/node
+type-21,type,reverse,component-trie,False,duplicate canonical path: type21/node
+type-22,type,forward,exact-key,False,duplicate canonical path: type22/node
+type-22,type,forward,component-trie,False,duplicate canonical path: type22/node
+type-22,type,reverse,exact-key,False,duplicate canonical path: type22/node
+type-22,type,reverse,component-trie,False,duplicate canonical path: type22/node
+type-23,type,forward,exact-key,False,duplicate canonical path: type23/node
+type-23,type,forward,component-trie,False,duplicate canonical path: type23/node
+type-23,type,reverse,exact-key,False,duplicate canonical path: type23/node
+type-23,type,reverse,component-trie,False,duplicate canonical path: type23/node
+implicit-alias-00,implicit_alias,forward,exact-key,True,
+implicit-alias-00,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: alpha
+implicit-alias-00,implicit_alias,reverse,exact-key,True,
+implicit-alias-00,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: alpha
+implicit-alias-01,implicit_alias,forward,exact-key,True,
+implicit-alias-01,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/alpha
+implicit-alias-01,implicit_alias,reverse,exact-key,True,
+implicit-alias-01,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/alpha
+implicit-alias-02,implicit_alias,forward,exact-key,True,
+implicit-alias-02,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/deep/alpha
+implicit-alias-02,implicit_alias,reverse,exact-key,True,
+implicit-alias-02,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/deep/alpha
+implicit-alias-03,implicit_alias,forward,exact-key,True,
+implicit-alias-03,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: x/y/z/alpha
+implicit-alias-03,implicit_alias,reverse,exact-key,True,
+implicit-alias-03,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: x/y/z/alpha
+implicit-alias-04,implicit_alias,forward,exact-key,True,
+implicit-alias-04,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: café
+implicit-alias-04,implicit_alias,reverse,exact-key,True,
+implicit-alias-04,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: café
+implicit-alias-05,implicit_alias,forward,exact-key,True,
+implicit-alias-05,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/café
+implicit-alias-05,implicit_alias,reverse,exact-key,True,
+implicit-alias-05,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/café
+implicit-alias-06,implicit_alias,forward,exact-key,True,
+implicit-alias-06,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/deep/café
+implicit-alias-06,implicit_alias,reverse,exact-key,True,
+implicit-alias-06,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/deep/café
+implicit-alias-07,implicit_alias,forward,exact-key,True,
+implicit-alias-07,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: x/y/z/café
+implicit-alias-07,implicit_alias,reverse,exact-key,True,
+implicit-alias-07,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: x/y/z/café
+implicit-alias-08,implicit_alias,forward,exact-key,True,
+implicit-alias-08,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: alpha
+implicit-alias-08,implicit_alias,reverse,exact-key,True,
+implicit-alias-08,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: alpha
+implicit-alias-09,implicit_alias,forward,exact-key,True,
+implicit-alias-09,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/alpha
+implicit-alias-09,implicit_alias,reverse,exact-key,True,
+implicit-alias-09,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/alpha
+implicit-alias-10,implicit_alias,forward,exact-key,True,
+implicit-alias-10,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/deep/alpha
+implicit-alias-10,implicit_alias,reverse,exact-key,True,
+implicit-alias-10,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/deep/alpha
+implicit-alias-11,implicit_alias,forward,exact-key,True,
+implicit-alias-11,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: x/y/z/alpha
+implicit-alias-11,implicit_alias,reverse,exact-key,True,
+implicit-alias-11,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: x/y/z/alpha
+implicit-alias-12,implicit_alias,forward,exact-key,True,
+implicit-alias-12,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: data
+implicit-alias-12,implicit_alias,reverse,exact-key,True,
+implicit-alias-12,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: data
+implicit-alias-13,implicit_alias,forward,exact-key,True,
+implicit-alias-13,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/data
+implicit-alias-13,implicit_alias,reverse,exact-key,True,
+implicit-alias-13,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/data
+implicit-alias-14,implicit_alias,forward,exact-key,True,
+implicit-alias-14,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/deep/data
+implicit-alias-14,implicit_alias,reverse,exact-key,True,
+implicit-alias-14,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/deep/data
+implicit-alias-15,implicit_alias,forward,exact-key,True,
+implicit-alias-15,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: x/y/z/data
+implicit-alias-15,implicit_alias,reverse,exact-key,True,
+implicit-alias-15,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: x/y/z/data
+implicit-alias-16,implicit_alias,forward,exact-key,True,
+implicit-alias-16,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: data
+implicit-alias-16,implicit_alias,reverse,exact-key,True,
+implicit-alias-16,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: data
+implicit-alias-17,implicit_alias,forward,exact-key,True,
+implicit-alias-17,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/data
+implicit-alias-17,implicit_alias,reverse,exact-key,True,
+implicit-alias-17,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/data
+implicit-alias-18,implicit_alias,forward,exact-key,True,
+implicit-alias-18,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/deep/data
+implicit-alias-18,implicit_alias,reverse,exact-key,True,
+implicit-alias-18,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/deep/data
+implicit-alias-19,implicit_alias,forward,exact-key,True,
+implicit-alias-19,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: x/y/z/data
+implicit-alias-19,implicit_alias,reverse,exact-key,True,
+implicit-alias-19,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: x/y/z/data
+implicit-alias-20,implicit_alias,forward,exact-key,True,
+implicit-alias-20,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: strasse
+implicit-alias-20,implicit_alias,reverse,exact-key,True,
+implicit-alias-20,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: strasse
+implicit-alias-21,implicit_alias,forward,exact-key,True,
+implicit-alias-21,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/strasse
+implicit-alias-21,implicit_alias,reverse,exact-key,True,
+implicit-alias-21,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/strasse
+implicit-alias-22,implicit_alias,forward,exact-key,True,
+implicit-alias-22,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: outer/deep/strasse
+implicit-alias-22,implicit_alias,reverse,exact-key,True,
+implicit-alias-22,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: outer/deep/strasse
+implicit-alias-23,implicit_alias,forward,exact-key,True,
+implicit-alias-23,implicit_alias,forward,component-trie,False,raw-prefix spelling collision: x/y/z/strasse
+implicit-alias-23,implicit_alias,reverse,exact-key,True,
+implicit-alias-23,implicit_alias,reverse,component-trie,False,raw-prefix spelling collision: x/y/z/strasse
+control-00,control,forward,exact-key,True,
+control-00,control,forward,component-trie,True,
+control-00,control,reverse,exact-key,True,
+control-00,control,reverse,component-trie,True,
+control-01,control,forward,exact-key,True,
+control-01,control,forward,component-trie,True,
+control-01,control,reverse,exact-key,True,
+control-01,control,reverse,component-trie,True,
+control-02,control,forward,exact-key,True,
+control-02,control,forward,component-trie,True,
+control-02,control,reverse,exact-key,True,
+control-02,control,reverse,component-trie,True,
+control-03,control,forward,exact-key,True,
+control-03,control,forward,component-trie,True,
+control-03,control,reverse,exact-key,True,
+control-03,control,reverse,component-trie,True,
+control-04,control,forward,exact-key,True,
+control-04,control,forward,component-trie,True,
+control-04,control,reverse,exact-key,True,
+control-04,control,reverse,component-trie,True,
+control-05,control,forward,exact-key,True,
+control-05,control,forward,component-trie,True,
+control-05,control,reverse,exact-key,True,
+control-05,control,reverse,component-trie,True,
+control-06,control,forward,exact-key,True,
+control-06,control,forward,component-trie,True,
+control-06,control,reverse,exact-key,True,
+control-06,control,reverse,component-trie,True,
+control-07,control,forward,exact-key,True,
+control-07,control,forward,component-trie,True,
+control-07,control,reverse,exact-key,True,
+control-07,control,reverse,component-trie,True,
+control-08,control,forward,exact-key,True,
+control-08,control,forward,component-trie,True,
+control-08,control,reverse,exact-key,True,
+control-08,control,reverse,component-trie,True,
+control-09,control,forward,exact-key,True,
+control-09,control,forward,component-trie,True,
+control-09,control,reverse,exact-key,True,
+control-09,control,reverse,component-trie,True,
+control-10,control,forward,exact-key,True,
+control-10,control,forward,component-trie,True,
+control-10,control,reverse,exact-key,True,
+control-10,control,reverse,component-trie,True,
+control-11,control,forward,exact-key,True,
+control-11,control,forward,component-trie,True,
+control-11,control,reverse,exact-key,True,
+control-11,control,reverse,component-trie,True,
+control-12,control,forward,exact-key,True,
+control-12,control,forward,component-trie,True,
+control-12,control,reverse,exact-key,True,
+control-12,control,reverse,component-trie,True,
+control-13,control,forward,exact-key,True,
+control-13,control,forward,component-trie,True,
+control-13,control,reverse,exact-key,True,
+control-13,control,reverse,component-trie,True,
+control-14,control,forward,exact-key,True,
+control-14,control,forward,component-trie,True,
+control-14,control,reverse,exact-key,True,
+control-14,control,reverse,component-trie,True,
+control-15,control,forward,exact-key,True,
+control-15,control,forward,component-trie,True,
+control-15,control,reverse,exact-key,True,
+control-15,control,reverse,component-trie,True,
+control-16,control,forward,exact-key,True,
+control-16,control,forward,component-trie,True,
+control-16,control,reverse,exact-key,True,
+control-16,control,reverse,component-trie,True,
+control-17,control,forward,exact-key,True,
+control-17,control,forward,component-trie,True,
+control-17,control,reverse,exact-key,True,
+control-17,control,reverse,component-trie,True,
+control-18,control,forward,exact-key,True,
+control-18,control,forward,component-trie,True,
+control-18,control,reverse,exact-key,True,
+control-18,control,reverse,component-trie,True,
+control-19,control,forward,exact-key,True,
+control-19,control,forward,component-trie,True,
+control-19,control,reverse,exact-key,True,
+control-19,control,reverse,component-trie,True,
+control-20,control,forward,exact-key,True,
+control-20,control,forward,component-trie,True,
+control-20,control,reverse,exact-key,True,
+control-20,control,reverse,component-trie,True,
+control-21,control,forward,exact-key,True,
+control-21,control,forward,component-trie,True,
+control-21,control,reverse,exact-key,True,
+control-21,control,reverse,component-trie,True,
+control-22,control,forward,exact-key,True,
+control-22,control,forward,component-trie,True,
+control-22,control,reverse,exact-key,True,
+control-22,control,reverse,component-trie,True,
+control-23,control,forward,exact-key,True,
+control-23,control,forward,component-trie,True,
+control-23,control,reverse,exact-key,True,
+control-23,control,reverse,component-trie,True,

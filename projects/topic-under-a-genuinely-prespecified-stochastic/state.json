@@ -1,0 +1,246 @@
+{
+  "slug": "topic-under-a-genuinely-prespecified-stochastic",
+  "topic": "Topic Under a genuinely prespecified stochastic data-generating process, how often do exact or practically indistinguishable tuning ties arise without forcing their number, optimizer composition, or post-selection performance ordering? _(auto-enqueued follow-up from topic-can-the-120-split-analysis-be-repeated-on)_",
+  "created_at": "2026-07-19T17:05:00+00:00",
+  "updated_at": "2026-07-19T17:20:26+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "On the Stability of Empirical Risk Minimization in the Presence of Multiple Risk Minimizers",
+      "authors": [
+        "Benjamin I. P. Rubinstein",
+        "Aleksandr Simma"
+      ],
+      "year": 2010,
+      "url": "http://arxiv.org/abs/1002.2044v1",
+      "source": "arXiv:1002.2044v1"
+    },
+    {
+      "title": "Blocked Cross-Validation: A Precise and Efficient Method for Hyperparameter Tuning",
+      "authors": [
+        "Giovanni Maria Merola"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2306.06591v2",
+      "source": "arXiv:2306.06591v2"
+    },
+    {
+      "title": "Intervention Efficiency and Perturbation Validation Framework: Capacity-Aware and Robust Clinical Model Selection under the Rashomon Effect",
+      "authors": [
+        "Yuwen Zhang",
+        "Viet Tran",
+        "Paul Weng"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2511.14317v7",
+      "source": "arXiv:2511.14317v7"
+    },
+    {
+      "title": "Efficient Exploration of the Rashomon Set of Rule Set Models",
+      "authors": [
+        "Martino Ciaperoni",
+        "Han Xiao",
+        "Aristides Gionis"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2406.03059v1",
+      "source": "arXiv:2406.03059v1"
+    },
+    {
+      "title": "Exploring the Rashomon Set for Concept-Based Models",
+      "authors": [
+        "Shihan Feng",
+        "Cheng Zhang",
+        "Michael Xi",
+        "Ethan Hsu",
+        "Lesia Semenova",
+        "Chudi Zhong"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2511.19636v2",
+      "source": "arXiv:2511.19636v2"
+    },
+    {
+      "title": "From Rashomon Theory to PRAXIS: Efficient Decision Tree Rashomon Sets",
+      "authors": [
+        "Zakk Heile",
+        "Hayden McTavish",
+        "Varun Babbar",
+        "Margo Seltzer",
+        "Cynthia Rudin"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2606.00202v1",
+      "source": "arXiv:2606.00202v1"
+    },
+    {
+      "title": "Rashomon Sets and Model Multiplicity in Federated Learning",
+      "authors": [
+        "Xenia Heilmann",
+        "Luca Corbucci",
+        "Mattia Cerrato"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2602.09520v3",
+      "source": "arXiv:2602.09520v3"
+    },
+    {
+      "title": "On the marginal likelihood and cross-validation",
+      "authors": [
+        "Edwin Fong",
+        "Chris Holmes"
+      ],
+      "year": 2019,
+      "url": "http://arxiv.org/abs/1905.08737v2",
+      "source": "arXiv:1905.08737v2"
+    },
+    {
+      "title": "Stabilizing Bi-Level Hyperparameter Optimization using Moreau-Yosida Regularization",
+      "authors": [
+        "Sauptik Dhar",
+        "Unmesh Kurup",
+        "Mohak Shah"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2007.13322v1",
+      "source": "arXiv:2007.13322v1"
+    },
+    {
+      "title": "Efficient Hyperparameter Tuning with Dynamic Accuracy Derivative-Free Optimization",
+      "authors": [
+        "Matthias J. Ehrhardt",
+        "Lindon Roberts"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2011.03151v1",
+      "source": "arXiv:2011.03151v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across 120 independent datasets at each of n=250 and n=2000 from a fixed 10-dimensional Gaussian-logistic classification DGP, using the same 12 nonalias candidate configurations and blocked five-fold balanced-accuracy validation, increasing n from 250 to 2000 will reduce the probability of an exact top-score tie by at least 50%, while changing the probability of a practical tie within 0.005 of the maximum by no more than 15 percentage points.",
+      "rationale": "This separates finite-score quantization from persistent near-equivalence as sample size grows. The stability results in [1] do not measure either repeated-sampling tie probability, and the Rashomon literature [4–6] does not establish whether practical multiplicity persists while literal equality vanishes.",
+      "novelty": 8.8,
+      "feasibility": 9.3,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "On 150 independent n=600 samples from one prespecified Gaussian-logistic DGP, replacing one blocked five-fold validation run with the mean of five prespecified blocked five-fold runs will reduce exact top-score tie incidence among a fixed 12-candidate grid by at least 30%, but the practical-tie incidence within 0.005 will differ by no more than 10 percentage points and the median Jaccard similarity of the two practical-tie sets will be at least 0.75.",
+      "rationale": "Averaging more validation blocks increases score resolution and reduces resampling noise without changing the DGP or candidates. This directly tests whether exact ties are numerical-resampling artifacts while tolerance-based sets represent more stable multiplicity, a distinction absent from [1] and [4–6].",
+      "novelty": 8.6,
+      "feasibility": 9.4,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "Across 100 independent n=800 datasets tuned over 12 small random-forest and extremely-randomized-tree configurations, two independently seeded repetitions of blocked validation that use common folds and matched learner seeds across candidates will have a mean practical-tie-set Jaccard similarity at least 0.15 higher and a top-candidate agreement rate at least 10 percentage points higher than repetitions giving every candidate independent folds and learner seeds.",
+      "rationale": "Merola [2] argues that blocking improves comparison precision, but does not test whether it makes naturally occurring tie membership reproducible. This hypothesis quantifies that effect while keeping the candidate set, computational budget, tolerance, and stochastic DGP fixed.",
+      "novelty": 9.0,
+      "feasibility": 8.9,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "For 500 independent n=300 samples from a prespecified asymmetric one-dimensional logistic DGP, tuning 11 fixed probability-threshold classifiers whose population accuracies are all distinct by deterministic quadrature will nevertheless produce an exact validation-accuracy tie for the empirical optimum in at least 15% of samples; at least 80% of those tie events will contain candidates whose population accuracies differ by more than 0.001.",
+      "rationale": "This directly distinguishes accidental equality of noisy finite-sample scores from genuine multiple population-risk minimizers. Rubinstein and Simma [1] analyze consequences conditional on population multiplicity, but do not estimate how often empirical ties arise when the population optimum is unique.",
+      "novelty": 9.4,
+      "feasibility": 9.8,
+      "info_gain": 9.6,
+      "chosen": true,
+      "outcome": "supported"
+    },
+    {
+      "id": 5,
+      "statement": "Across 12 preregistered Gaussian-logistic DGP regimes varying only intercept and signal strength, with 100 independent n=400 datasets per regime and the same 11-threshold candidate grid, the Spearman correlation between the deterministically computed population top-two accuracy gap and the observed frequency of practical validation ties within 0.005 will be at most -0.80; regimes with a population gap below 0.003 will have at least twice the tie incidence of regimes with a gap above 0.010.",
+      "rationale": "This tests whether spontaneous tie frequency is quantitatively predictable from population-risk geometry rather than merely being a property of score rounding or optimizer behavior. Neither the stability work [1] nor Rashomon-set methods [4–6] provide this repeated-sampling relationship.",
+      "novelty": 9.2,
+      "feasibility": 9.7,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "Across 120 independent n=600 datasets from a fixed nonlinear binary-classification DGP, replacing a nested 12-candidate coarse grid with a 36-candidate dense grid containing no prediction-identical aliases will at least double the median size of the 0.005 practical-tie set, while at least 80% of newly admitted tied candidates will belong to the same model family as a coarse-grid minimizer and the cross-family tie-event rate will change by no more than 10 percentage points.",
+      "rationale": "This tests whether grid density enlarges naturally observed multiplicity mainly through local hyperparameter neighborhoods rather than by creating new cross-family ambiguity. Existing Rashomon work constructs or explores large near-optimal sets [4–6] but does not measure how ordinary, nonalias grid refinement changes their spontaneous size and composition.",
+      "novelty": 9.1,
+      "feasibility": 9.1,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "Among all candidate pairs falling within 0.005 of the best blocked-validation balanced accuracy across 150 independent n=500 datasets from a fixed Gaussian-mixture classification DGP, evaluation on two independent n=1000 test samples will reverse the pairwise performance ordering for at least 25% of pairs, and at least 20% of validation tie events will contain no candidate that ranks first on both test samples.",
+      "rationale": "The survey identifies reversible post-selection ordering as an unmeasured consequence of validation-indistinguishable candidates. This hypothesis tests that gap directly without fixing the number, families, or eventual ordering of tied candidates.",
+      "novelty": 9.3,
+      "feasibility": 9.3,
+      "info_gain": 9.5,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "Across 150 independent n=600 datasets from a prespecified nonlinear classification DGP and a fixed 16-candidate cross-family grid, retaining every candidate within 0.005 of the best blocked-validation balanced accuracy will include the independently determined best-generalizing fitted candidate at least 20 percentage points more often than retaining only the validation winner, while the practical-tie set will have median size no greater than four.",
+      "rationale": "This tests whether naturally arising practical ties provide efficient coverage of the post-fit oracle rather than merely documenting multiplicity. Rashomon-set studies [4–7] motivate retaining near-optimal alternatives, but do not estimate this coverage benefit under repeated samples from an unchanged stochastic DGP and tuning pipeline.",
+      "novelty": 9.0,
+      "feasibility": 9.0,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Simulate 500 fixed validation samples from an asymmetric one-dimensional logistic DGP, tune 11 prespecified probability-threshold classifiers by integer validation accuracy, and compare empirical optimum ties with their deterministically quadrature-computed distinct population accuracies.",
+    "protocol": "1. Use Python 3 with numpy, scipy, pandas, and matplotlib; record Python and package versions in the output. Set the sole simulation RNG to numpy.random.Generator(numpy.random.PCG64(20250308)). Do not rerun, discard, condition on, or replace any sample based on its results.\n2. Prespecify the asymmetric DGP as follows. Let a=5, delta=a/sqrt(1+a^2), and independently draw U,V~N(0,1). Set X=-1+1.5*(delta*abs(U)+sqrt(1-delta^2)*V), which is a skew-normal variable with shape 5, location -1, and scale 1.5. Given X=x, draw Y~Bernoulli(expit(x)). Generate Bernoulli outcomes as Y=1[R<expit(X)] with independent R~Uniform(0,1). This has logistic intercept 0, slope 1, and Bayes probability cutoff 0.5.\n3. Prespecify exactly 11 candidates indexed j=0,...,10 with probability cutoffs q_j=0.30+0.04*j, namely [0.30,0.34,0.38,0.42,0.46,0.50,0.54,0.58,0.62,0.66,0.70]. Candidate j predicts h_j(x)=1[expit(x)>=q_j], equivalently 1[x>=log(q_j/(1-q_j))]. Do not add, remove, reorder, or adapt candidates.\n4. Before simulation, compute each candidate's population accuracy A_j by deterministic quadrature. Use the skew-normal density f(x)=2*phi(z)*Phi(5z)/1.5 with z=(x+1)/1.5 and calculate A_j=integral from -infinity to t_j of (1-expit(x))*f(x) dx plus integral from t_j to infinity of expit(x)*f(x) dx, where t_j=logit(q_j). Use scipy.integrate.quad separately on the two intervals with epsabs=1e-12, epsrel=1e-12, and limit=500. Save all A_j values with at least 12 decimal places.\n5. Verify the prespecified population-risk conditions numerically: all 11 A_j values must be finite; the minimum absolute difference over all 55 pairs must exceed 1e-8; and q=0.50 must be the sole population-accuracy maximizer. If any check fails, terminate and report the experiment as invalid rather than changing the DGP, candidates, tolerances, or seed.\n6. Generate exactly 500 independent validation samples, each of size n=300, sequentially from the RNG in step 1. These samples are used only for evaluation because the classifiers are fixed and require no training.\n7. For every sample s and candidate j, compute the integer correct-classification count C_sj=sum_i 1[h_j(X_si)=Y_si]. Use these integer counts, not rounded floating-point accuracies, for optimization and equality testing. Let M_s=max_j C_sj and O_s={j:C_sj=M_s}.\n8. Define an exact empirical-optimum tie as T_s=1[|O_s|>=2]. For each tied sample define its optimizer population-accuracy range D_s=max_{j in O_s} A_j-min_{j in O_s} A_j. Define a wide-population-gap tie as W_s=1[T_s=1 and D_s>0.001]. Set D_s to missing for non-tied samples. Also record the optimizer count |O_s|, optimizer cutoff list, M_s/300, whether q=0.50 belongs to O_s, and the population-best candidate's empirical rank using competition ranking.\n9. Compute N_tie=sum_s T_s, the tie rate N_tie/500, N_wide=sum_s W_s, and the conditional wide-gap proportion N_wide/N_tie. If N_tie=0, define the conditional proportion as 0 for the decision rule. Compute descriptive 95% Wilson binomial intervals for the tie rate using denominator 500 and for the conditional wide-gap proportion using denominator N_tie; these intervals are reported but do not replace the prespecified count-based decision rule.\n10. Use the unique population optimizer as the baseline/comparison: report its cutoff and accuracy, all other candidates' population-accuracy deficits, how often it is the sole empirical optimizer, how often it is among tied empirical optimizers, and how often it is absent from the empirical optimizer set. This comparison distinguishes empirical score equality from multiple population maximizers.\n11. Save a sample-level CSV named tie_samples.csv containing sample index, all 11 integer scores, M_s, optimizer count, optimizer cutoff list, T_s, D_s, W_s, and membership of q=0.50 in O_s. Save population_accuracies.csv with cutoff, x-threshold, population accuracy, and deficit from the population optimum. Save summary_metrics.json with all aggregate metrics, seed, n, number of samples, quadrature settings, and the final decision.\n12. Create tuning_tie_results.png at 1600x700 pixels with two panels. The left panel must show bars for the exact tie rate and conditional wide-gap proportion, with horizontal dashed reference lines at 0.15 and 0.80 and Wilson interval error bars. The right panel must show a histogram of D_s over tied samples, with a vertical dashed line at 0.001 and an annotation giving N_tie and N_wide; if there are no ties, display an explicit 'No tie events' annotation instead.\n13. Declare the hypothesis SUPPORTED if and only if the population checks in step 5 pass, N_tie>=75, and N_wide/N_tie>=0.80, equivalently N_wide>=ceil(0.80*N_tie). Declare it REFUTED if the population checks pass but either N_tie<75 or N_wide<ceil(0.80*N_tie). An invalid population check is reported as INVALID, not supported or refuted.",
+    "metrics": [
+      "Population distinctness: min_{j<k}|A_j-A_k| from deterministic quadrature; it must exceed 1e-8, with exactly one population maximizer.",
+      "Exact empirical-optimum tie count and rate: N_tie=sum_s 1[at least two candidates share the maximum integer correct count], reported as N_tie/500 with a 95% Wilson interval.",
+      "Wide-population-gap tie count: N_wide=sum_s 1[tied empirical optimizers have max(A_j)-min(A_j)>0.001].",
+      "Conditional wide-gap proportion: N_wide/N_tie, defined as 0 if N_tie=0 and reported with a 95% Wilson interval when N_tie>0.",
+      "Tie multiplicity distribution: counts and proportions of samples with 1, 2, 3, and at least 4 empirical optimizers.",
+      "Population-optimum comparison: proportions where q=0.50 is the sole empirical optimizer, belongs to a tied optimizer set, or is absent from the optimizer set.",
+      "Decision statistic: SUPPORTED exactly when N_tie>=75 and N_wide>=ceil(0.80*N_tie), conditional on valid distinct population accuracies."
+    ],
+    "time_budget_minutes": 10,
+    "expected_if_true": "All 11 quadrature accuracies are distinct with q=0.50 uniquely best; at least 75 of the 500 samples have an exact maximum-accuracy tie, and at least 80% of those tied samples have an optimizer population-accuracy range greater than 0.001.",
+    "expected_if_false": "With valid distinct population accuracies, fewer than 75 of 500 samples have an exact empirical-optimum tie, or fewer than 80% of tied samples have optimizer population accuracies spanning more than 0.001; either failure refutes the conjunction."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T17:08:36+00:00",
+      "finished_at": "2026-07-19T17:13:06+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "supported",
+      "notes": "The population checks passed: all 11 population accuracies were distinct, with a unique optimum at q=0.50 and a minimum pairwise difference of 0.0002549. Exact empirical-optimum ties occurred in 84 of 500 samples (16.8%), exceeding the prespecified requirement of 75. Of those ties, 80 of 84 (95.24%; Wilson 95% CI 88.39%–98.13%) spanned more than 0.001 in population accuracy, comfortably exceeding the required 80%."
+    }
+  ],
+  "verdict": "supported",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.0,
+  "error": ""
+}

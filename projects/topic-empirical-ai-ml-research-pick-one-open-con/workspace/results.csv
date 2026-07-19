@@ -1,0 +1,5 @@
+seed,checkpoint_step,threshold,checkpoint_n_core,initial_n_int,threshold_crossing_delay,baseline_grokking_delay,intervention_grokking_delay,relative_grokking_shift,softmax_invariance_error,centered_logit_invariance_error,norm_doubling_relative_error,error
+101,,,,,,,,,,,,"calibration seeds 11,22,33,44 did not provide valid grokking thresholds"
+202,,,,,,,,,,,,"calibration seeds 11,22,33,44 did not provide valid grokking thresholds"
+303,,,,,,,,,,,,"calibration seeds 11,22,33,44 did not provide valid grokking thresholds"
+404,,,,,,,,,,,,"calibration seeds 11,22,33,44 did not provide valid grokking thresholds"

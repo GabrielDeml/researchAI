@@ -1,0 +1,33 @@
+# Literature survey: Can all raw records be made auditable?
+
+Mutation-based equivalence experiments produce layered evidence: source programs, generated mutants, parser results, executions, behavioral observations, classifications, and counterexamples. Prior mutation-testing work shows why retaining this evidence matters. Equivalent mutants remain difficult to identify automatically, and even partial approaches combine static analysis with behavioral testing to classify mutants as equivalent or non-equivalent [2]. Mutation outcomes can also support quantitative behavioral-diversity measures by comparing pass/fail patterns across mutated systems [3]. These uses require reliable, inspectable execution logs; Oliveira Neto et al. explicitly note that missing, limited, or flaky logs undermine behavior-based analysis [3]. Dataset work likewise treats public availability and screening decisions as prerequisites for reproducible mutation research: STMutants publishes a curated corpus and reports how mutants were retained after observability and equivalence screening [5]. However, the retrieved material does not establish a standard record schema covering every baseline and case–mutant pair.
+
+ScratchLens provides the closest methodological precedent for detailed, per-case evidence. It treats behavioral equivalence as dependent on an explicit observation lens, such as final state, frame traces, monitors, event causality, or debug traces [1]. Its checker combines canonicalization, partial-order reasoning, SMT obligations, and targeted execution, while distinguishing conclusive equivalence, witnessed difference, and unresolved cases. Crucially, every conclusive verdict carries evidence: equivalence through a bijection and trace quotient, or difference through a typed witness [1]. This supports publishing semantic bitsets or stable hashes, behavioral distances, fixed-point outcomes, and first counterexamples rather than only aggregate accuracy. It also cautions that a single output field is insufficient: audit records must identify the observation lens, schedules or scenarios explored, and whether an outcome is proved, witnessed, or unknown. Fresh-process payloads would further expose whether results depend on hidden runtime state, although none of the retrieved sources directly evaluates that practice.
+
+The reproducibility literature frames such records as provenance rather than merely supplementary data. Missier et al. argue that computational results can become irreproducible when intermediate objects are unavailable or services change, and use provenance-trace comparison to analyze reproduced workflows [6]. Docker-based artifact guidance similarly emphasizes packaging documentation, data, code, and execution environments so others can replicate and validate empirical results [7]. Version-and-provenance systems extend this principle by making source versions, transformations, intermediate products, and final results jointly queryable [10]. For the proposed experiment, machine-readable records should therefore connect each baseline and mutant to exact source archives, parser and fixed-point stages, semantic observations, distance calculations, and counterexample artifacts. Containerization can preserve the environment, but it does not replace record-level provenance or immutable artifact identifiers.
+
+Cryptographic hashes and non-repudiable provenance address integrity rather than reproducibility alone. Fairweather et al. describe provenance mechanisms that record the construction process itself and generate non-repudiation evidence [8]. This supports hashing every source archive, output archive, payload, bitset, and counterexample, while also recording which process produced each object. Provenance serialization remains an engineering choice: Johnson et al. compare JSON- and Turtle-oriented storage and querying, showing that representation affects provenance efficiency at scale [9]. JSON or another stable machine-readable format is therefore plausible for 128 baseline cases and 3,840 pairs, but canonical serialization rules are necessary; otherwise semantically identical records may hash differently.
+
+## Gap
+
+The open question is whether *complete* pair-level auditability is practical and sufficient: can every one of the 3,968 experimental units be reconstructed from fresh-process payloads, linked to immutable source and output hashes, and independently checked through parser, fixed-point, semantic, distance, and counterexample records? Existing work motivates evidence-bearing verdicts, provenance, reproducible environments, and cryptographic integrity, but the retrieved sources do not test an end-to-end schema at this granularity. A new experiment should measure record completeness, deterministic re-execution, hash agreement, provenance-link validity, storage cost, and whether an independent auditor can reproduce every reported verdict and first counterexample.
+
+## References
+
+[1] Yuan Si, Jialu Zhang (2026). *ScratchLens: Lens-Parametric Behavioral Equivalence for Scratch Programs*. https://www.semanticscholar.org/paper/0fd950683038f38cb9bad10afe634b44314c63a7
+
+[2] Samuel Amorim, Leo Fernandes, Márcio Ribeiro, Rohit Gheyi et al. (2024). *Reducing Manual Efforts in Equivalence Analysis in Mutation Testing*. https://www.semanticscholar.org/paper/30b41e09abbd01c0b82cd0ca9d5d6cbb635d3d6a
+
+[3] Francisco Gomes de Oliveira Neto, Felix Dobslaw, Robert Feldt (2020). *Using mutation testing to measure behavioural test diversity*. http://arxiv.org/abs/2010.09144v1
+
+[5] M. H. Kabir, Md Rakibul Islam, Helen Lou (2026). *STMutants: A Mutation Testing Dataset for Structured Text Programs in Industrial Automation*. https://www.semanticscholar.org/paper/71ad5551d6e36a7d781a230af7ccf3db31096453
+
+[6] Paolo Missier, Simon Woodman, Hugo Hiden, Paul Watson (2014). *Provenance and data differencing for workflow reproducibility analysis*. http://arxiv.org/abs/1406.0905v1
+
+[7] Michael Canesche, Roland Leissa, Fernando Magno Quintão Pereira (2023). *Preparing Reproducible Scientific Artifacts using Docker*. http://arxiv.org/abs/2308.14122v1
+
+[8] Elliot Fairweather, Rudolf Wittner, Martin Chapman, Petr Holub et al. (2020). *Non-repudiable provenance for clinical decision support systems*. http://arxiv.org/abs/2006.11233v1
+
+[9] Michael A. C. Johnson, Marcus Paradies, Hans-Rainer Klöckner, Albina Muzafarova et al. (2024). *Evaluation of Provenance Serialisations for Astronomical Provenance*. http://arxiv.org/abs/2407.14290v1
+
+[10] Amit Chavan, Silu Huang, Amol Deshpande, Aaron Elmore et al. (2015). *Towards a unified query language for provenance and versioning*. http://arxiv.org/abs/1506.04815v1

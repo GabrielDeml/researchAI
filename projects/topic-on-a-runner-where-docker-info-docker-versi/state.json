@@ -1,0 +1,290 @@
+{
+  "slug": "topic-on-a-runner-where-docker-info-docker-versi",
+  "topic": "Topic On a runner where `docker info`, `docker version`, and `docker ps` pass, do all six primary and six replay executions complete within the 1,200-second timed section? _(auto-enqueued follow-up from topic-can-make-reproduce-be-run-from-a-fresh-iso)_",
+  "created_at": "2026-07-19T13:44:56+00:00",
+  "updated_at": "2026-07-19T15:05:38+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Sustainability and Reproducibility via Containerized Computing",
+      "authors": [
+        "Robert Nagler",
+        "David Bruhwiler",
+        "Paul Moeller",
+        "Stephen Webb"
+      ],
+      "year": 2015,
+      "url": "http://arxiv.org/abs/1509.08789v1",
+      "source": "arXiv:1509.08789v1"
+    },
+    {
+      "title": "Taming Timeout Flakiness: An Empirical Study of SAP HANA",
+      "authors": [
+        "Alexander Berndt",
+        "Sebastian Baltes",
+        "Thomas Bach"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2402.05223v3",
+      "source": "arXiv:2402.05223v3"
+    },
+    {
+      "title": "Case Studies and Challenges in Reproducibility in the Computational Sciences",
+      "authors": [
+        "Sylwester Arabas",
+        "Michael R. Bareford",
+        "Lakshitha R. de Silva",
+        "Ian P. Gent",
+        "Benjamin M. Gorman",
+        "Masih Hajiarabderkani",
+        "Tristan Henderson",
+        "Luke Hutton"
+      ],
+      "year": 2014,
+      "url": "http://arxiv.org/abs/1408.2123v2",
+      "source": "arXiv:1408.2123v2"
+    },
+    {
+      "title": "Reproducible Pattern Recognition Research: The Case of Optimistic SSL",
+      "authors": [
+        "Jesse H. Krijthe",
+        "Marco Loog"
+      ],
+      "year": 2016,
+      "url": "http://arxiv.org/abs/1612.08650v1",
+      "source": "arXiv:1612.08650v1"
+    },
+    {
+      "title": "CORE-Bench: Fostering the Credibility of Published Research Through a Computational Reproducibility Agent Benchmark",
+      "authors": [
+        "Zachary S. Siegel",
+        "Sayash Kapoor",
+        "Nitya Nadgir",
+        "Benedikt Stroebl",
+        "Arvind Narayanan"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2409.11363v2",
+      "source": "arXiv:2409.11363v2"
+    },
+    {
+      "title": "Similarity-Based Assessment of Computational Reproducibility in Jupyter Notebooks",
+      "authors": [
+        "A S M Shahadat Hossain",
+        "Colin Brown",
+        "David Koop",
+        "Tanu Malik"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2509.23645v1",
+      "source": "arXiv:2509.23645v1"
+    },
+    {
+      "title": "KubeAdaptor: A Docking Framework for Workflow Containerization on Kubernetes",
+      "authors": [
+        "Chenggang Shan",
+        "Guan Wang",
+        "Yuanqing Xia",
+        "Yufeng Zhan",
+        "Jinhui Zhang"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2207.01222v1",
+      "source": "arXiv:2207.01222v1"
+    },
+    {
+      "title": "Reproducible Builds for Quantum Computing",
+      "authors": [
+        "Iyán Méndez Veiga",
+        "Esther Hänggi"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2510.02251v1",
+      "source": "arXiv:2510.02251v1"
+    },
+    {
+      "title": "AI Copilots for Reproducibility in Science: A Case Study",
+      "authors": [
+        "Adrien Bibal",
+        "Steven N. Minton",
+        "Deborah Khider",
+        "Yolanda Gil"
+      ],
+      "year": 2025,
+      "url": "http://arxiv.org/abs/2506.20130v4",
+      "source": "arXiv:2506.20130v4"
+    },
+    {
+      "title": "Flow-Bench: A Dataset for Computational Workflow Anomaly Detection",
+      "authors": [
+        "George Papadimitriou",
+        "Hongwei Jin",
+        "Cong Wang",
+        "Rajiv Mayani",
+        "Krishnan Raghavan",
+        "Anirban Mandal",
+        "Prasanna Balaprakash",
+        "Ewa Deelman"
+      ],
+      "year": 2023,
+      "url": "http://arxiv.org/abs/2306.09930v2",
+      "source": "arXiv:2306.09930v2"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "On a runner where `docker info`, `docker version`, and `docker ps` all exit 0 immediately before testing, each of six primary executions and its six seed-matched replay executions will exit 0 within 1,200 seconds, yielding a strict completion count of 12/12 and no maximum elapsed time above 1,000 seconds.",
+      "rationale": "This directly tests the survey's central gap: no cited work establishes that successful Docker diagnostics predict timely end-to-end completion. The 1,000-second secondary threshold also measures whether success has a meaningful margin rather than barely satisfying the deadline.",
+      "novelty": 7.8,
+      "feasibility": 8.4,
+      "info_gain": 9.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 2,
+      "statement": "For all six seed-matched primary-replay pairs that terminate successfully, replay elapsed time will not exceed its corresponding primary elapsed time by more than 10%, and the median replay elapsed time will be at least 5% lower than the median primary elapsed time.",
+      "rationale": "The survey identifies cache warming and persistent-state effects as plausible but unmeasured. Pairwise timing, rather than only aggregate completion, can determine whether replay systematically benefits from warmed images, filesystem caches, or previously created state.",
+      "novelty": 8.2,
+      "feasibility": 9.2,
+      "info_gain": 8.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "When the six replay executions use newly created workspaces, anonymous volumes, container names, and temporary directories rather than retaining primary-run state, their exit-status and under-1,200-second classifications will match those of six state-retaining replays in every seed-matched case, with median elapsed times differing by no more than 15%.",
+      "rationale": "This separates genuine replay reliability from accidental dependence on files, volumes, or container state left by primary executions. The literature does not establish whether replay outcomes in this exact setting are independent of persistent Docker state.",
+      "novelty": 9.0,
+      "feasibility": 8.8,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "After all required images are locally available, restarting the Docker daemon between the six primary and six replay executions will not change any replay terminal status or image digest, and every replay will still exit 0 within 1,200 seconds with daemon-restart recovery adding less than 30 seconds to any measured execution.",
+      "rationale": "Passing diagnostics may conceal dependence on daemon-local runtime state. A controlled restart tests whether completion is robust to daemon lifecycle boundaries while holding image content and workflow inputs fixed, an issue not resolved by the surveyed containerization literature.",
+      "novelty": 8.8,
+      "feasibility": 8.5,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Across the twelve primary and replay executions, host-side `CLOCK_MONOTONIC` timing and elapsed time reconstructed from Docker event timestamps will differ by no more than one second per execution and will assign identical before-versus-after-1,200-second classifications in all twelve cases.",
+      "rationale": "The survey stresses that timing boundaries must be explicit and identical, but it does not validate a measurement implementation. Agreement between two independently sourced clocks would show that the strict completion result is not an artifact of timestamp choice or wall-clock adjustment.",
+      "novelty": 9.1,
+      "feasibility": 9.3,
+      "info_gain": 8.9,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "In twelve deterministic boundary tests using a dependency-injected monotonic clock—four each ending at 1,199.999, 1,200.000, and 1,200.001 seconds—the timing harness will classify all 1,199.999-second executions as within the timed section and all 1,200.000- and 1,200.001-second executions as outside it, while preserving the underlying process exit status separately.",
+      "rationale": "A conjunctive 12/12 claim can change because of an undocumented equality rule at exactly 1,200 seconds. Fast clock-injected tests make that boundary semantics explicit without waiting hours and address the survey's warning that timeout expiration must be distinguished from other terminal states.",
+      "novelty": 9.3,
+      "feasibility": 9.8,
+      "info_gain": 8.7,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "For twelve synthetic Docker workflows comprising three successful controls and nine runtime-failure cases—invalid entrypoint, missing bind-mount input, read-only output, memory-limit termination, nonzero application exit, killed daemon connection, unavailable local image, exhausted quota-backed output volume, and an internal timeout—all three Docker diagnostics will pass before every case, while the execution harness will correctly classify all nine failures and accept only the three controls.",
+      "rationale": "This constructs direct counterexamples to treating Docker readiness as workflow readiness. It operationalizes the survey's principal gap by measuring the diagnostics' lack of sufficiency and verifies that distinct runtime failure modes are not collapsed into a generic timeout.",
+      "novelty": 9.2,
+      "feasibility": 9.1,
+      "info_gain": 9.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "For six paired synthetic container fixtures in which the container's designated parent process exits 0 but a descendant either continues computing or keeps a declared output open, a naive parent-exit monitor will report all six as completed, whereas a process-tree-aware monitor will reject all six until every descendant has terminated and all declared outputs are closed; both monitors will accept six matched clean controls.",
+      "rationale": "The literature calls for complete-run observation but does not define whether parent-process exit alone constitutes completion. This test determines whether a nominal 12/12 result could be inflated by orphaned work that survives beyond the measured section.",
+      "novelty": 9.5,
+      "feasibility": 9.4,
+      "info_gain": 9.2,
+      "chosen": true,
+      "outcome": "broken"
+    }
+  ],
+  "design": {
+    "summary": "Run 24 deterministic Docker executions—six dirty fixtures and six matched clean controls, followed by exact replays—to compare parent-exit-only completion against process-tree-and-output-aware completion within one 1,200-second timed section.",
+    "protocol": "1. Implement a single Python 3.12 harness using only the standard library. Set PYTHONHASHSEED=1729 and random.seed(1729). Do not use runtime network access, external datasets, or Docker image pulls. Use a locally available, pinned Linux Python image, recorded by immutable image ID; prefer python:3.12-slim if already present. If no suitable local image exists, load a matching pre-provisioned OCI archive from the experiment bundle before the timed section. Build the fixture image before timing with docker build --network=none and FROM <immutable-local-image-ID>. Record the base and resulting image IDs.\n2. Before scheduling any execution, set DOCKER_HOST=unix:///var/run/docker.sock and make that exact endpoint usable by the current runner user. On Linux, if necessary start the system daemon with systemctl start docker or service docker start; add the runner to the docker group and re-exec the harness with the new supplementary group, or grant that user access to /var/run/docker.sock. On macOS, start Docker Desktop, wait for its daemon, and ensure /var/run/docker.sock resolves to the active Docker Desktop socket. Never silently switch to a different endpoint and never run individual experiment commands through sudo.\n3. From the final, non-root harness process, run docker info, docker version, and docker ps separately with 30-second timeouts. Require all three to exit 0 and save command, exit code, stdout, and stderr. Also run a pre-timing smoke container from the built image that executes python -c 'print(1729)' and require exit 0 and exact output 1729. If any gate fails, schedule zero fixtures, mark the run infrastructure_invalid and hypothesis_evaluated=false, and do not classify the hypothesis as refuted. Do not start the timed-section clock until every gate passes.\n4. The container entry point is a Python monitor running as PID 1. For each execution it launches a designated parent process, records that parent's container PID and /proc/<pid>/stat starttime, and observes the same execution with two logical monitors. The naive monitor declares completion at the instant waitpid reports that the designated parent exited with code 0. The aware monitor polls every 0.01 seconds, recursively discovers descendants from /proc/*/stat PPID relationships while the parent or previously discovered descendants are alive, and identifies processes by the tuple (PID, /proc starttime) to prevent PID-reuse errors. It retains discovered descendants after reparenting. It declares completion only after the parent has exited 0, every discovered descendant identity has disappeared, and no process in the container has a file descriptor referring to a declared output. Detect open outputs by comparing device and inode from each /proc/<pid>/fd/* target with the device and inode of each declared output. Ignore permission-denied entries only if the process disappeared during the scan; any persistent scan error fails that execution.\n5. Generate six dirty fixture types, each with one declared output /work/result.dat. All durations use time.monotonic(), and computing workers repeatedly calculate hashlib.sha256 over a fixed 4096-byte byte string until their specified duration expires. D1 cpu-child: one child computes for 3.0 seconds. D2 output-child: one child opens result.dat in append mode, writes and fsyncs 4096 deterministic bytes, then keeps the descriptor open while sleeping for 3.0 seconds. D3 cpu-output-child: one child opens and fsyncs result.dat and computes for 3.0 seconds while retaining the descriptor. D4 cpu-grandchild: an intermediate child spawns a grandchild that computes for 3.0 seconds; the intermediate remains alive for 0.75 seconds and then exits. D5 output-grandchild: an intermediate child spawns a grandchild that opens, writes, fsyncs, and retains result.dat for 3.0 seconds; the intermediate exits after 0.75 seconds. D6 split-children: one child computes for 3.0 seconds and a second child opens, writes, fsyncs, and retains result.dat for 3.0 seconds.\n6. In every dirty fixture, each terminal worker first signals readiness only after computation has begun or the output descriptor has been opened. The designated parent waits for all readiness signals, then remains alive for exactly 1.0 second so the 0.01-second observer can discover the complete tree, and exits with code 0 without waiting for terminal workers. Thus terminal workers must remain active for approximately 2.0 seconds after parent exit. Treat failure to observe at least 50 polls during the readiness grace period as an invalid execution rather than a hypothesis result.\n7. Create matched clean controls C1-C6 with exactly the same process topology, computation, output operations, and 3.0-second worker durations as D1-D6. The sole difference is that each clean designated parent waits for all descendants to exit and verifies result.dat is closed before it exits 0. Intermediate processes in grandchild controls are also waited for. This makes each dirty fixture plus its corresponding clean control one fixture pair.\n8. Start CLOCK_MONOTONIC immediately before the first primary docker run. Execute sequentially in this fixed order: D1,C1,D2,C2,D3,C3,D4,C4,D5,C5,D6,C6, then replay the identical order as R-D1,R-C1 through R-D6,R-C6. These are six primary pairs plus six replay pairs, totaling exactly 24 container executions. Derive an execution seed as 1729 + fixture_index for primary executions and reuse the identical seed for the corresponding replay. Give each docker run a 30-second timeout, use --network=none, --init=false, --cap-drop=ALL, a read-only root filesystem, tmpfs for /tmp, and a unique bind-mounted result directory. Do not overlap executions.\n9. For every execution, write an atomic JSON record containing fixture ID, dirty/control status, primary/replay status, seed, image ID, parent PID/starttime, parent exit code, all discovered descendant PID/starttime identities, declared-output open/closed samples, parent-exit timestamp, naive-completion timestamp, aware-completion timestamp, last-descendant-exit timestamp, final-output-close timestamp, docker start/end timestamps, timeout status, and invariant failures. Require each container and docker run to exit 0 and produce exactly one valid record.\n10. At the exact parent-exit sample, compute naive_accept_at_parent_exit and aware_accept_at_parent_exit. Also verify the aware monitor never accepted at any earlier sample. For dirty executions require at least one tracked descendant to be alive or result.dat to be open at parent exit. For clean executions require no descendant alive and no declared output open at parent exit. Define aware safety lag as aware-completion time minus parent-exit time; define closure lag as max(last-descendant-exit time, final-output-close time) minus parent-exit time.\n11. After all 24 runs, but before stopping the timed clock, validate records and create key_result.png with four bars showing the completion-at-parent-exit rate for naive/dirty, aware/dirty, naive/clean, and aware/clean. Use a fixed 0-to-1 y-axis, label every bar with its numerator over 12, and use deterministic colors. Write results.json containing all records, aggregate metrics, gate outputs, timed-section duration, hypothesis_evaluated, and verdict. Stop CLOCK_MONOTONIC only after results.json and key_result.png have been flushed and fsynced.\n12. The timed section passes only if all 24 scheduled executions finish and both artifacts are written in at most 1200.000 seconds. The full experiment, including daemon/image preparation and gates, must finish within 30 wall-clock minutes. Classify the hypothesis as supported only if the timed-section condition holds; all 12 dirty executions have naive_accept_at_parent_exit=true and aware_accept_at_parent_exit=false; all 12 clean executions have both values true; every dirty aware completion occurs no earlier than max(last-descendant-exit, final-output-close), allowing only the 0.01-second polling resolution; every execution eventually receives aware acceptance before its 30-second timeout; and every primary/replay classification matches exactly. If all infrastructure and fixture-validity checks pass but any of those support conditions fails, classify it as refuted. Infrastructure or fixture invalidity yields hypothesis_evaluated=false, not refuted.",
+    "metrics": [
+      "Timed-section completion: number of valid executions completed out of 24 and elapsed CLOCK_MONOTONIC seconds from immediately before the first docker run through fsync of results.json and key_result.png; pass threshold is 24/24 and <=1200.000 seconds.",
+      "Dirty naive completion-at-parent-exit rate: count of the 12 dirty primary/replay executions with naive_accept_at_parent_exit=true divided by 12; support requires 12/12.",
+      "Dirty aware rejection-at-parent-exit rate: count of the 12 dirty executions with aware_accept_at_parent_exit=false divided by 12; support requires 12/12.",
+      "Clean monitor acceptance rates: for the 12 clean executions, separately count naive_accept_at_parent_exit=true and aware_accept_at_parent_exit=true; support requires 12/12 for each monitor.",
+      "Aware completion safety: for each execution compute aware_completion_time - max(last_descendant_exit_time, final_output_close_time); support requires every value to be >=-0.01 seconds and no earlier aware-accept sample.",
+      "Dirty aware safety lag: aware_completion_time minus parent_exit_time; every dirty execution must have positive lag, while its parent must have exited 0 and at least one descendant or declared-output descriptor must still be active at parent exit.",
+      "Clean monitor latency difference: absolute value of aware_completion_time minus naive_completion_time; require <=0.10 seconds for every clean execution, corresponding to at most ten polling intervals.",
+      "Replay agreement: compare the dirty/control classification, parent exit code, naive parent-exit decision, aware parent-exit decision, and final aware decision between each primary execution and its replay; support requires exact agreement for all 12 matched primary/replay executions.",
+      "Execution reliability: valid result records, successful docker exit, and eventual aware acceptance before the 30-second per-execution timeout; require 24/24."
+    ],
+    "time_budget_minutes": 30,
+    "expected_if_true": "All Docker gates exit 0; exactly 24/24 executions complete within 1200 seconds; dirty fixtures show naive completion at parent exit in 12/12 and aware completion at parent exit in 0/12, followed by aware completion only after descendants terminate and outputs close; clean controls show completion at parent exit for both monitors in 12/12; and all 12 primary/replay classifications agree. The figure therefore has bar heights 1.0, 0.0, 1.0, and 1.0 for naive/dirty, aware/dirty, naive/clean, and aware/clean.",
+    "expected_if_false": "With all infrastructure and validity checks passing, the hypothesis is refuted if any dirty execution is not accepted by the naive monitor at parent exit, any dirty execution is accepted by the aware monitor while a descendant or declared output remains active, either monitor rejects any clean control at parent exit, the aware monitor accepts before final descendant termination/output closure, any replay changes a classification, any execution fails to reach eventual aware completion, or fewer than 24 executions finish within 1200 seconds."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T13:48:32+00:00",
+      "finished_at": "2026-07-19T13:58:26+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment never entered the timed section (timed_section_started=false; timed_section_seconds=0.0) and completed 0 of 24 targeted executions. All Docker preflight commands failed with exit code 1 because the runner could not connect to the Docker daemon, so hypothesis_evaluated=false and no monitor behavior was tested.\n\nRevision instructions: Run on a host with a reachable, running Docker daemon and verify that docker info, docker version, and docker ps all exit 0 before starting. Remove or repair the stale docker-dev and docker-feedback CLI plugin entries, confirm the required base image is locally available, then rerun all 24 primary/replay executions and record the full timing, monitor decisions, descendant/output-descriptor evidence, release completion times, and digest matches."
+    },
+    {
+      "index": 2,
+      "started_at": "2026-07-19T14:00:47+00:00",
+      "finished_at": "2026-07-19T14:15:24+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment stopped during preflight because two stale Docker CLI plugins could not be quarantined due to permission errors. The timed section never started, 0 of 24 target executions completed, and hypothesis_evaluated was false, so the hypothesis was not tested.\n\nRevision instructions: Run in an environment where the Docker CLI plugin directory is writable, or avoid mutating the user's plugin directory by setting DOCKER_CONFIG to a fresh experiment-owned directory containing only required configuration/plugins. Add a preflight that detects inaccessible stale plugins and either excludes them safely or exits with a clear remediation before scheduling the experiment, then rerun all 24 executions."
+    },
+    {
+      "index": 3,
+      "started_at": "2026-07-19T14:17:41+00:00",
+      "finished_at": "2026-07-19T14:43:48+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment never started because the required Docker checks did not pass: results.json reports an error requiring the daemon at unix:///var/run/docker.sock. It scheduled and completed 0 executions, spent 0.0 seconds in the timed section, and set hypothesis_evaluated to false, so none of the required 24 executions tested the hypothesis.\n\nRevision instructions: Start or correctly expose the Docker daemon at unix:///var/run/docker.sock, ensure the runner user has permission to access it, and gate execution on docker info, docker version, and docker ps all exiting 0. Then rerun the full six primary and six replay fixture pairs and record all 24 executions within the 1,200-second timed section."
+    },
+    {
+      "index": 4,
+      "started_at": "2026-07-19T14:47:54+00:00",
+      "finished_at": "2026-07-19T15:01:56+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "All three required Docker gates failed with exit code 1 because the daemon was unreachable at unix:///var/run/docker.sock. The timed section never started, 0 fixtures were scheduled, and 0/24 executions completed, so the hypothesis was not evaluated.\n\nRevision instructions: Start or correctly configure the Docker daemon and ensure the selected Docker context/socket is reachable. Before rerunning, require `docker info`, `docker version`, and `docker ps` to each exit 0 against the same endpoint, then schedule all 24 primary/replay executions within the 1,200-second timed section."
+    }
+  ],
+  "verdict": "broken",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 3.0,
+  "error": ""
+}

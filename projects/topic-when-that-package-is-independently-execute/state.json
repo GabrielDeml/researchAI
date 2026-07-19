@@ -1,0 +1,274 @@
+{
+  "slug": "topic-when-that-package-is-independently-execute",
+  "topic": "Topic When that package is independently executed in the locked environment, do the regenerated CSV files reproduce the three stated SHA-256 digests exactly? _(auto-enqueued follow-up from topic-can-a-raw-per-seed-file-be-released-contai)_",
+  "created_at": "2026-07-19T12:27:33+00:00",
+  "updated_at": "2026-07-19T13:20:01+00:00",
+  "stage": "done",
+  "status": "done",
+  "completed_stages": [
+    "intake",
+    "survey",
+    "ideate",
+    "design",
+    "implement",
+    "analyze",
+    "writeup",
+    "review",
+    "archive"
+  ],
+  "survey_path": "survey.md",
+  "citations": [
+    {
+      "title": "Reproducible Cross-border High Performance Computing for Scientific Portals",
+      "authors": [
+        "Kessy Abarenkov",
+        "Anne Fouilloux",
+        "Helmut Neukirchen",
+        "Abdulrahman Azab"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2209.00596v1",
+      "source": "arXiv:2209.00596v1"
+    },
+    {
+      "title": "Reproducible Builds: Increasing the Integrity of Software Supply Chains",
+      "authors": [
+        "Chris Lamb",
+        "Stefano Zacchiroli"
+      ],
+      "year": 2021,
+      "url": "http://arxiv.org/abs/2104.06020v1",
+      "source": "arXiv:2104.06020v1"
+    },
+    {
+      "title": "PyRDM: A Python-based library for automating the management and online publication of scientific software and data",
+      "authors": [
+        "Christian T. Jacobs",
+        "Alexandros Avdis",
+        "Gerard J. Gorman",
+        "Matthew D. Piggott"
+      ],
+      "year": 2014,
+      "url": "http://arxiv.org/abs/1405.7290v2",
+      "source": "arXiv:1405.7290v2"
+    },
+    {
+      "title": "Scientific Workflow Systems for 21st Century e-Science, New Bottle or New Wine?",
+      "authors": [
+        "Yong Zhao",
+        "Ioan Raicu",
+        "Ian Foster"
+      ],
+      "year": 2008,
+      "url": "http://arxiv.org/abs/0808.3545v1",
+      "source": "arXiv:0808.3545v1"
+    },
+    {
+      "title": "Software Engineering Practices for Scientific Software Development: A Systematic Mapping Study",
+      "authors": [
+        "Elvira-Maria Arvanitou",
+        "Apostolos Ampatzoglou",
+        "Alexander Chatzigeorgiou",
+        "Jeffrey C. Carver"
+      ],
+      "year": 2020,
+      "url": "http://arxiv.org/abs/2010.09914v1",
+      "source": "arXiv:2010.09914v1"
+    },
+    {
+      "title": "Instruction sequence expressions for the secure hash algorithm SHA-256",
+      "authors": [
+        "J. A. Bergstra",
+        "C. A. Middelburg"
+      ],
+      "year": 2013,
+      "url": "http://arxiv.org/abs/1308.0219v7",
+      "source": "arXiv:1308.0219v7"
+    },
+    {
+      "title": "SHA-256 Collision Attack with Programmatic SAT",
+      "authors": [
+        "Nahiyan Alamgir",
+        "Saeed Nejati",
+        "Curtis Bright"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2406.20072v1",
+      "source": "arXiv:2406.20072v1"
+    },
+    {
+      "title": "D-VRE: From a Jupyter-enabled Private Research Environment to Decentralized Collaborative Research Ecosystem",
+      "authors": [
+        "Yuandou Wang",
+        "Sheejan Tripathi",
+        "Siamak Farshidi",
+        "Zhiming Zhao"
+      ],
+      "year": 2024,
+      "url": "http://arxiv.org/abs/2405.15392v2",
+      "source": "arXiv:2405.15392v2"
+    },
+    {
+      "title": "R-LAM: Reproducibility-Constrained Large Action Models for Scientific Workflow Automation",
+      "authors": [
+        "Suriya Sureshkumar"
+      ],
+      "year": 2026,
+      "url": "http://arxiv.org/abs/2601.09749v1",
+      "source": "arXiv:2601.09749v1"
+    },
+    {
+      "title": "SEAByTE: A Self-adaptive Micro-service System Artifact for Automating A/B Testing",
+      "authors": [
+        "Federico Quin",
+        "Danny Weyns"
+      ],
+      "year": 2022,
+      "url": "http://arxiv.org/abs/2204.01343v1",
+      "source": "arXiv:2204.01343v1"
+    }
+  ],
+  "hypotheses": [
+    {
+      "id": 1,
+      "statement": "Across four executions in fresh locked environments with the output directory initially absent, syscall tracing will show that each of the three target CSV paths is created after execution begins, is written before any read of that path, and produces its assigned stated SHA-256 digest in every run.",
+      "rationale": "This directly tests the survey's central empirical gap while ruling out accidental reuse of preexisting artifacts, a concern not resolved by digest equality alone. Runtime file-access evidence complements the provenance and workflow bookkeeping recommended in [3] and [4].",
+      "novelty": 9.1,
+      "feasibility": 9.3,
+      "info_gain": 9.8,
+      "chosen": true,
+      "outcome": "broken"
+    },
+    {
+      "id": 2,
+      "statement": "Across 12 clean package copies in which every declared input retains identical bytes but input modification times are deterministically varied from 1980 through 2038 and readable permission modes alternate between 0444 and 0644, all three regenerated CSV files will retain their assigned stated SHA-256 digests.",
+      "rationale": "The survey notes that a locked environment does not itself establish determinism [1]. This experiment isolates leakage of filesystem metadata into ordering, provenance columns, cache decisions, or serialization without changing any scientific input bytes.",
+      "novelty": 8.8,
+      "feasibility": 9.7,
+      "info_gain": 8.8,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 3,
+      "statement": "For ten replicas of the declared input tree constructed with identical paths and bytes but ten deterministic file-creation orders, including lexical, reverse-lexical, and eight seeded permutations, the independently executed package will regenerate the same three stated SHA-256 digests in every replica.",
+      "rationale": "This tests whether unsorted directory iteration or glob expansion affects row order, a byte-level nondeterminism mechanism identified by the survey but not established for this package. It differs from changing checkout paths because only the physical directory-entry order varies.",
+      "novelty": 9.0,
+      "feasibility": 9.6,
+      "info_gain": 9.1,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 4,
+      "statement": "In eight fresh locked-environment runs spanning internal numerical-library thread limits of one, two, four, and eight via OMP_NUM_THREADS, OPENBLAS_NUM_THREADS, MKL_NUM_THREADS, and NUMEXPR_NUM_THREADS, all three CSV files will reproduce their assigned stated SHA-256 digests exactly.",
+      "rationale": "Make-level parallelism does not test nondeterministic reduction order inside numerical libraries. Because [1] warns that platform-level behavior can defeat bitwise reproducibility despite packaging, this isolates a distinct source of floating-point and scheduling variation.",
+      "novelty": 8.7,
+      "feasibility": 9.4,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 5,
+      "statement": "Three paired executions from byte-identical source snapshots—one normal Git checkout, one snapshot with the .git directory removed, and one snapshot produced by git archive—will all complete successfully and regenerate the three assigned stated SHA-256 digests.",
+      "rationale": "This tests whether runtime behavior silently depends on VCS metadata such as commit identifiers, tracked status, or Git-derived timestamps. The literature gap requires an independently executable package, and recomputability principles in [3] imply that undeclared repository metadata should not be necessary.",
+      "novelty": 8.9,
+      "feasibility": 9.6,
+      "info_gain": 9.2,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 6,
+      "statement": "Across four fresh executions with PYTHONPATH pointing to a hostile directory containing sitecustomize.py and usercustomize.py files that write marker files and terminate with exit code 93 if imported, the package will import neither decoy, exit successfully, and regenerate all three stated SHA-256 digests.",
+      "rationale": "This probes contamination from ambient Python configuration rather than executable selection on PATH. A locked dependency set can still be bypassed by user-site or PYTHONPATH injection, so the result would clarify whether the claimed environment is genuinely isolated as required by the survey's gap.",
+      "novelty": 9.3,
+      "feasibility": 9.2,
+      "info_gain": 9.4,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 7,
+      "statement": "In six locked-environment executions covering numeric user IDs 1000 and 2000 crossed with umasks 0022, 0027, and 0077, each run will regenerate all three CSV files with the assigned stated SHA-256 digests, although their ownership or permission metadata may differ.",
+      "rationale": "SHA-256 of file contents should be independent of ownership and creation masks, but software can accidentally serialize user identity, permission-derived state, or inaccessible temporary artifacts. This separates byte reproducibility from irrelevant filesystem metadata in the sense of reproducible builds [2].",
+      "novelty": 8.6,
+      "feasibility": 9.5,
+      "info_gain": 8.6,
+      "chosen": false,
+      "outcome": "pending"
+    },
+    {
+      "id": 8,
+      "statement": "For each of three independently regenerated CSV files, Python hashlib, GNU sha256sum, OpenSSL dgst, and a separately implemented pure-Python SHA-256 routine will compute the same digest, and that unanimous digest will equal the file's preassigned stated value; additionally, all five nonidentity permutations of the filename-to-digest mapping will fail at least two comparisons.",
+      "rationale": "The survey requires direct hashing of generated bytes and a fixed filename-to-digest mapping but reports neither an independent calculation nor the three comparisons. Agreement among independent implementations reduces the chance that apparent success results from a verifier or mapping defect rather than exact artifact identity [6].",
+      "novelty": 8.5,
+      "feasibility": 9.8,
+      "info_gain": 9.0,
+      "chosen": false,
+      "outcome": "pending"
+    }
+  ],
+  "design": {
+    "summary": "Execute the locked package four times in fresh isolated environments while streaming syscall traces, then require all 12 regenerated CSVs to be newly created, written before read, path-safe, and byte-for-byte equal to their stated SHA-256 digests.",
+    "protocol": "1. Require an immutable input file named experiment_spec.json containing: image (a locally available OCI image referenced by repo@sha256 digest), command (an argument-vector template, not a shell string, with the token {output_dir}), output_dir (the absolute directory substituted for that token), and exactly three targets, each with id, path relative to output_dir, and expected_sha256 as 64 lowercase hexadecimal characters. Reject duplicate paths, absolute target paths, paths containing '..', an image not pinned by digest, or a command lacking {output_dir}. Record the image digest and SHA-256 of experiment_spec.json. Do not download, export, copy, or rebuild the image.\n2. Implement one Python driver using only the standard library and the local OCI runner plus strace inside the locked image. If strace is intentionally supplied as a small read-only host binary, record its SHA-256. Network must be disabled for measured executions. If a Python dependency is installed during setup, use pip --no-cache-dir with PIP_NO_CACHE_DIR=1, PIP_DISABLE_PIP_VERSION_CHECK=1, and cache directories under /tmp; however, the preferred implementation uses no added Python packages.\n3. At driver startup, immediately create results.json atomically with flat scalar fields only, including error='experiment_incomplete', decision='inconclusive', expected_observations=12, completed_observations=0, and figure='trace_digest_matrix.png'. Never store lists or nested objects in this file. Update it atomically after parser controls and after every target measurement. Install SIGINT and SIGTERM handlers and a top-level try/except/finally that records a nonempty error message. This precreation ensures results.json remains present even if later execution is terminated.\n4. Keep all large or temporary material outside the workspace in a newly created /tmp directory. Set PIP_CACHE_DIR, XDG_CACHE_HOME, HOME, TMPDIR, and any build-cache variables to subdirectories there. Before setup and before and after every run, measure workspace usage with du and filesystem free space with statvfs. Abort with decision='inconclusive' if workspace usage is at least 1200 MiB, workspace free space is below 400 MiB, or temporary-filesystem free space is below 800 MiB. Record these byte counts in flat results fields. Never place OCI layers, package caches, virtual environments, raw traces, or measured CSVs in the workspace.\n5. Implement a streaming strace parser before running the package. Invoke strace with process following, numeric epoch timestamps, file-descriptor path annotation, successful and failed return values, and tracing of open, openat, openat2, creat, close, read, pread64, readv, write, pwrite64, writev, mmap, dup, dup2, dup3, fcntl duplication, fork/clone/vfork, execve, chdir, fchdir, rename/renameat/renameat2, link/linkat, symlink/symlinkat, unlink, and unlinkat. Parse stderr line by line and discard every line immediately after updating state; retain only counters, first-event timestamps, bounded diagnostic strings, process working directories, descriptor-to-path mappings, and rename/link lineage. Do not create a raw trace file. Redirect package stdout and non-trace diagnostics to bounded 64 KiB ring buffers.\n6. Define events precisely. A target creation is the first successful post-launch operation that makes the initially absent target pathname exist: open/openat/openat2/creat with O_CREAT, or a successful rename/link whose destination is the target. A write is a successful positive-byte write/pwrite/writev through a descriptor mapped to the target or to the source-file lineage later renamed/linked to that target; a writable mmap is conservatively treated as a write event. A read is any successful read/pread/readv attempt, including a zero-byte EOF result, through that lineage; a readable mmap is conservatively treated as a read event. An event is post-launch only when its strace epoch timestamp is not earlier than the launcher's recorded time.time_ns value. If a single mmap is simultaneously the first readable and writable event, classify write-before-read as false. Hashing performed by the driver after traced execution is not part of the traced event sequence.\n7. Run three deterministic parser controls in isolated /tmp directories before measured runs. Control A directly creates an absent file, writes b'abc', closes it, and then reads it; it must report initially_absent=true, created_after_start=true, and write_before_read=true. Control B starts with a preexisting file, reads it, and then overwrites it; it must report initially_absent=false and write_before_read=false. Control C writes b'abc' to an absent temporary file, closes it, atomically renames it to the target, and reads the target; lineage handling must report created_after_start=true and write_before_read=true. Require all expected control fields to match and require SHA-256(b'abc')='ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad'. Any mismatch sets error='parser_control_failed', produces the failure figure and results.json, and ends inconclusively without measured executions.\n8. Perform exactly four sequential measured executions, numbered 1 through 4. For each run create a fresh /tmp/run_N parent and verify with lstat that output_dir and all three target paths are absent. Start a new container from the same pinned image with --rm, --network none, a read-only root filesystem wherever compatible with the package, a fresh tmpfs for /tmp capped at 256 MiB, and only run_N bind-mounted writable at the parent corresponding to output_dir. Do not reuse a container or writable layer. Substitute the in-container output_dir into the command and launch it under the streaming tracer. Record launch time immediately before starting strace.\n9. Give each measured execution a 5-minute timeout. Once per second, compute the host-visible size of run_N without following symlinks; terminate the container if it exceeds 600 MiB. Also terminate if total experiment wall time reaches 27 minutes. Record timeout, exit code, peak run bytes, parsed trace-line count, and the last bounded diagnostic text. A timeout, size-limit breach, nonzero exit, malformed trace, dropped/unparsed target-relevant syscall, or unavailable tracer is an infrastructure error and makes the final decision inconclusive rather than refuted.\n10. After a successful process exit and before any cleanup, evaluate each target. Require that it exists, is a regular file, and is path-safe: lstat every path component under output_dir, reject symlink components, and verify the lexical and resolved path remain beneath output_dir. Compute SHA-256 by streaming the file in 1 MiB blocks and compare the lowercase digest to the assigned expected_sha256. Record file size. Separately record initially_absent, created_after_start, first_creation_time_ns, first_write_time_ns, first_read_time_ns or -1, write_before_read, path_safe, actual_sha256, digest_match, and target_pass. target_pass is true only if initially_absent, created_after_start, write_before_read, path_safe, and digest_match are all true.\n11. Flatten every observation into scalar results.json keys such as run_1_target_1_digest_match, run_1_target_1_actual_sha256, and run_1_target_1_target_pass. Also record completed_runs, completed_observations, creation_pass_count, ordering_pass_count, safety_pass_count, digest_pass_count, joint_pass_count, and joint_pass_rate. There must be 12 completed target observations: four runs times three targets.\n12. Immediately after metrics and hashes have been extracted for a run, recursively delete run_N without following symlinks, remove that container's writable layer via --rm, and verify the run directory is gone. Run garbage collection only for Python objects; do not prune or duplicate the shared OCI image. Proceed to the next run only after the disk-budget check passes.\n13. Generate trace_digest_matrix.png in the workspace using a deterministic standard-library PNG writer based on struct and zlib. Draw a 4-row by 3-column matrix in target order from experiment_spec.json: green for target_pass=true, red for target_pass=false, and gray for missing/infrastructure-error observations. Add four narrow indicator bands within each cell for creation, write-before-read, safety, and digest status, plus fixed bitmap labels for run and target numbers. Use a fixed 800 by 600 pixel canvas and no timestamps or nondeterministic metadata. Generate this figure even on failure, using gray for unavailable measurements.\n14. Decision rule: set decision='supported' and error='' only when parser controls pass, all four executions complete successfully, completed_observations=12, and joint_pass_count=12, equivalently joint_pass_rate=1.0. Set decision='refuted' and error='' when all four executions and all 12 observations are usable but at least one target_pass is false. Set decision='inconclusive' with a nonempty error for any setup, parser-control, tracing, timeout, disk-budget, cleanup, or observation-completeness failure. In the finally block, regenerate the PNG if necessary and atomically write the final flat results.json.",
+    "metrics": [
+      "joint_pass_count: number of the 12 run-target observations for which initially_absent, created_after_start, write_before_read, path_safe, and digest_match are all true",
+      "joint_pass_rate: joint_pass_count divided by 12; the support threshold is exactly 1.0",
+      "creation_pass_count: number of observations whose target was absent immediately before launch and was created by a successful traced syscall after launch; required value is 12",
+      "ordering_pass_count: number of observations whose first write event precedes every read event on the target file lineage; required value is 12",
+      "safety_pass_count: number of observations that end as regular files beneath output_dir with no symlink path components; required value is 12",
+      "digest_pass_count: number of observations whose streamed SHA-256 equals that target's assigned digest; required value is 12",
+      "digest reproducibility by target: number of matching executions out of four for each of the three target paths; each required value is 4",
+      "parser_control_pass_count: count of correctly classified deterministic controls A, B, and C; required value is 3",
+      "resource metrics: peak temporary bytes per run, workspace bytes before and after each run, free bytes, elapsed seconds, trace-line count, and whether timeout or the 600 MiB run limit was reached"
+    ],
+    "time_budget_minutes": 28,
+    "expected_if_true": "All parser controls pass; all four executions yield 12 usable observations; creation_pass_count=12, ordering_pass_count=12, safety_pass_count=12, digest_pass_count=12, joint_pass_count=12, and joint_pass_rate=1.0; each target matches its assigned SHA-256 in 4/4 runs; the figure contains twelve green cells.",
+    "expected_if_false": "With all four executions and 12 observations usable, at least one observation has initially_absent=false, created_after_start=false, write_before_read=false, path_safe=false, or digest_match=false, giving joint_pass_count<12 and joint_pass_rate<1.0; the figure contains at least one red cell. Infrastructure, parser-control, quota, timeout, or missing-observation failures instead produce an inconclusive result with gray cells and a nonempty error."
+  },
+  "iterations": [
+    {
+      "index": 1,
+      "started_at": "2026-07-19T12:30:24+00:00",
+      "finished_at": "2026-07-19T12:42:12+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment was explicitly marked invalid and observed 0 package executions and 0 of 12 expected run-target combinations. The required experiment_manifest.json was missing, and neither Docker nor Podman was available, so the reported 0.0 rates reflect absent measurements rather than evidence against the hypothesis. Although parser unit tests passed, parser controls did not pass.\n\nRevision instructions: Add a valid experiment_manifest.json at the workspace root and validate it before starting. Run on a host with a functioning Linux container engine—start/configure Docker or initialize and start the Podman machine—and add a preflight check that aborts without emitting hypothesis-level rates unless the manifest, container engine, tracing support, and package inputs are available. Then rerun all four fresh locked-environment executions and require observations for all 12 run-target combinations."
+    },
+    {
+      "index": 2,
+      "started_at": "2026-07-19T12:43:55+00:00",
+      "finished_at": "2026-07-19T13:11:24+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment produced no results.json and completed 0 of the required 4 fresh-environment executions and 0 of 12 target observations. Container preflight failed because Podman/Docker could not initialize under the filesystem restrictions, and the fallback Podman setup exceeded the 2048 MB workspace quota, so no hypothesis-level evidence was collected.\n\nRevision instructions: Run the experiment on a host with a prestarted, accessible Linux container runtime and sufficient disk space, or provision a pinned locked image outside the quota-limited workspace. Add an early runtime-and-disk preflight that emits a valid preflight-aborted results.json before attempting large image creation; then perform exactly 4 fresh executions, collect all 12 syscall-traced target observations, validate parser controls, and record creation, write-before-read, safety, and SHA-256 outcomes."
+    },
+    {
+      "index": 3,
+      "started_at": "2026-07-19T13:13:09+00:00",
+      "finished_at": "2026-07-19T13:13:20+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment produced no results.json and therefore reported 0 usable measured observations out of the required 12 across four executions. It was killed after exceeding the 2048 MB workspace quota, so no creation, write-before-read, safety, or SHA-256 measurements can justify support or refutation.\n\nRevision instructions: Reduce disk usage before rerunning: avoid copying container images or package caches into the workspace, disable or clean pip/build caches, stream and summarize syscall traces instead of retaining large raw logs, and delete each run's temporary environment after extracting metrics. Add disk-budget checks and a failure handler that always writes a flat results.json with an error field; then complete parser controls and all four fresh executions within the time and storage limits."
+    },
+    {
+      "index": 4,
+      "started_at": "2026-07-19T13:15:21+00:00",
+      "finished_at": "2026-07-19T13:15:31+00:00",
+      "codex_exit": 0,
+      "timed_out": false,
+      "verdict": "broken",
+      "notes": "The experiment produced no results.json and therefore reported none of the required 12 observations or pass counts. It was killed after exceeding the 2048 MiB workspace quota, so the hypothesis was never actually tested; the wall-clock timeout flag is explicitly false despite the transcript also showing SIGTERM handling.\n\nRevision instructions: Rerun with strict disk controls: inspect workspace usage before setup, exclude large parent directories from recursive searches, keep traces and generated CSVs in a bounded temporary directory outside the workspace, and delete each run's temporary artifacts after extracting metrics. Add an early quota check and ensure that any failure still writes a flat results.json with an error field and prints the required summary."
+    }
+  ],
+  "verdict": "broken",
+  "report_path": "report.md",
+  "review_path": "review.md",
+  "reviewer_score": 4.0,
+  "error": ""
+}

@@ -1,0 +1,29 @@
+# Literature survey: Does weight decay accelerate grokking through parameter norm or logit scale?
+
+Grokking provides a controlled setting for studying delayed generalization: a model first memorizes its training subset and only much later abruptly generalizes to unseen examples. Modular arithmetic is especially useful because datasets are exhaustive, train/test splits are exact, and learned representations can sometimes be characterized analytically. Gromov showed that two-layer fully connected networks trained with vanilla gradient descent and mean-squared error (MSE) can grok several modular-arithmetic tasks without explicit regularization [1]. The resulting solutions implement task-specific feature maps that can be expressed analytically and are also discovered by AdamW. Thus, regularization is not universally necessary for grokking, although it may substantially change its timing. Standard behavioral measurements include train and test loss, train and test accuracy, the memorization step, the generalization or “grokking” step, parameter norms, and gradient norms [1].
+
+Later work connects grokking to structured internal representations. Transformer models trained on modular addition are associated with Fourier features, while experiments on subtraction, multiplication, and modular polynomials reveal operation-dependent Fourier patterns [2]. Furuta et al. introduced Fourier Frequency Density and Fourier Coefficient Ratio as progress measures and found that some factorizable polynomials combine representations seen in elementary operations, whereas difficult non-factorizable cases lack comparably clear patterns [2]. These results support measuring not only accuracy but also representational change. However, they also show that conclusions from modular addition do not automatically transfer to other operations: feature transfer is limited to particular task pairs, and multi-task training can either accelerate co-grokking or fail to find an effective solution [2].
+
+Weight decay is a prominent candidate mechanism for controlling grokking time, but the supplied studies offer different levels of explanation. Verma reports that weight decay separates memorization, developmental grokking, and collapse regimes in transformers, with attention-head cosine similarity and attention-entropy variation serving as inexpensive online diagnostics [3]. Khanh et al. instead model grokking delay under AdamW as a first-passage time of squared parameter norm through an architecture-dependent threshold; this law predicts delay across held-out settings and extends, with some degradation, to MLPs and new tasks [5]. Yet norm crossing is described as necessary rather than sufficient [5]. More generally, weight decay can also produce large late-training gradient norms and poor convergence, motivating explicit gradient-norm monitoring rather than treating stronger decay as uniformly beneficial [7].
+
+A sharper causal account is that, under cross-entropy, parameter norm primarily matters because it controls effective logit scale. Norm-clamping and temperature interventions reportedly move grokking delay across nearly the full norm-induced range, and delay largely collapses onto logit scale; under MSE, however, logit scale is pinned and norm acts through another route [4]. Architectural evidence is consistent with magnitude being important: bounding residual representations and fixing the unembedding temperature greatly reduces grokking delay without weight decay [6]. Nevertheless, these results do not establish one architecture-independent mechanism. Norm-threshold prediction [5], logit-scale mediation [4], and representation-level accounts [1,2] may describe different stages or loss-dependent channels.
+
+## Gap
+
+A concrete open question is whether **AdamW accelerates grokking in a small two-layer MLP under cross-entropy mainly by reducing effective logit scale, while acting through a distinct mechanism under MSE**. This can be tested on modular addition using matched seeds and train splits, crossing loss type with weight decay, parameter-norm clamping, and output-temperature interventions. The key causal test is to fork runs from the same memorized checkpoint and independently manipulate norm and temperature. Measurements should include memorization and grokking times, test loss and accuracy, parameter and gradient norms, logit scale, and Fourier structure of hidden activations. Such an experiment would directly connect the interpretable, regularization-free MLP setting [1] to the competing norm-threshold [5] and logit-mediation [4] explanations using single-machine-scale models.
+
+## References
+
+[1] Andrey Gromov (2023). Grokking modular arithmetic. http://arxiv.org/abs/2301.02679v1
+
+[2] Hiroki Furuta, Gouki Minegishi, Yusuke Iwasawa, Yutaka Matsuo (2024). Towards Empirical Interpretation of Internal Circuits and Properties in Grokked Transformers on Modular Polynomials. http://arxiv.org/abs/2402.16726v4
+
+[3] Lucky Verma (2026). Weight Decay Regimes in Grokking Transformers: Cheap Online Diagnostics. http://arxiv.org/abs/2605.20441v1
+
+[4] Truong Xuan Khanh (2026). What Does the Weight Norm Control in Grokking? Logit-Scale Mediation under Cross-Entropy. http://arxiv.org/abs/2606.18465v1
+
+[5] Truong Xuan Khanh, Truong Quynh Hoa, Luu Duc Trung, Phan Thanh Duc (2026). First-Passage Prediction of Grokking Delay: ACalibrated Law under AdamW with Causal Validation. http://arxiv.org/abs/2605.18845v1
+
+[6] Alper Yıldırım (2026). The Geometric Inductive Bias of Grokking: Bypassing Phase Transitions via Architectural Topology. http://arxiv.org/abs/2603.05228v3
+
+[7] Zeke Xie, Zhiqiang Xu, Jingzhao Zhang, Issei Sato et al. (2020). On the Overlooked Pitfalls of Weight Decay and How to Mitigate Them: A Gradient-Norm Perspective. http://arxiv.org/abs/2011.11152v6

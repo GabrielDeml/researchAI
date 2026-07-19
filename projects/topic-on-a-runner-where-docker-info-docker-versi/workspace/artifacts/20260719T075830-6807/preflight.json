@@ -1,0 +1,69 @@
+{
+  "base_image_id": "",
+  "endpoint": {
+    "actions": [
+      {
+        "command": [
+          "open",
+          "-a",
+          "Docker"
+        ],
+        "end_timestamp": 227649.965594458,
+        "exit_code": 1,
+        "start_timestamp": 227649.889134375,
+        "stderr": "Unable to find application named 'Docker'\n",
+        "stdout": "",
+        "timeout": false
+      }
+    ],
+    "platform": "Darwin",
+    "required_endpoint": "unix:///var/run/docker.sock",
+    "socket_finally_exists": false,
+    "socket_initially_exists": false
+  },
+  "fixture_image_id": "",
+  "gates": {
+    "info": {
+      "command": [
+        "docker",
+        "info"
+      ],
+      "end_timestamp": 227665.246961458,
+      "exit_code": 1,
+      "start_timestamp": 227665.163208625,
+      "stderr": "WARNING: Plugin \"/Users/gdeml/.docker/cli-plugins/docker-dev\" is not valid: failed to fetch metadata: fork/exec /Users/gdeml/.docker/cli-plugins/docker-dev: no such file or directory\nWARNING: Plugin \"/Users/gdeml/.docker/cli-plugins/docker-feedback\" is not valid: failed to fetch metadata: fork/exec /Users/gdeml/.docker/cli-plugins/docker-feedback: no such file or directory\nCannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n",
+      "stdout": "Client:\n Version:    28.3.3\n Context:    default\n Debug Mode: false\n Plugins:\n  ai: Docker AI Agent - Ask Gordon (Docker Inc.)\n    Version:  v1.9.11\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-ai\n  buildx: Docker Buildx (Docker Inc.)\n    Version:  v0.27.0-desktop.1\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-buildx\n  cloud: Docker Cloud (Docker Inc.)\n    Version:  v0.4.21\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-cloud\n  compose: Docker Compose (Docker Inc.)\n    Version:  v2.39.2-desktop.1\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-compose\n  debug: Get a shell into any image or container (Docker Inc.)\n    Version:  0.0.42\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-debug\n  desktop: Docker Desktop commands (Docker Inc.)\n    Version:  v0.2.0\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-desktop\n  extension: Manages Docker extensions (Docker Inc.)\n    Version:  v0.2.31\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-extension\n  init: Creates Docker-related starter files for your project (Docker Inc.)\n    Version:  v1.4.0\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-init\n  mcp: Docker MCP Plugin (Docker Inc.)\n    Version:  v0.16.0\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-mcp\n  model: Docker Model Runner (EXPERIMENTAL) (Docker Inc.)\n    Version:  v0.1.39\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-model\n  sbom: View the packaged-based Software Bill Of Materials (SBOM) for an image (Anchore Inc.)\n    Version:  0.6.0\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-sbom\n  scout: Docker Scout (Docker Inc.)\n    Version:  v1.18.3\n    Path:     /Users/gdeml/.docker/cli-plugins/docker-scout\n\nServer:\n",
+      "timeout": false
+    },
+    "ps": {
+      "command": [
+        "docker",
+        "ps"
+      ],
+      "end_timestamp": 227665.266615375,
+      "exit_code": 1,
+      "start_timestamp": 227665.257552791,
+      "stderr": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n",
+      "stdout": "",
+      "timeout": false
+    },
+    "version": {
+      "command": [
+        "docker",
+        "version"
+      ],
+      "end_timestamp": 227665.25754825,
+      "exit_code": 1,
+      "start_timestamp": 227665.2469665,
+      "stderr": "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?\n",
+      "stdout": "Client:\n Version:           28.3.3\n API version:       1.51\n Go version:        go1.24.5\n Git commit:        980b856\n Built:             Fri Jul 25 11:33:03 2025\n OS/Arch:           darwin/arm64\n Context:           default\n",
+      "timeout": false
+    }
+  },
+  "image_preparation": {},
+  "infrastructure_valid": false,
+  "run_id": "20260719T075830-6807",
+  "runner_non_root": true,
+  "runner_uid": 501,
+  "smoke": {}
+}
