@@ -215,7 +215,9 @@ def _publish_results(cfg: Config, log: logging.Logger) -> None:
         for name in ("projects", "journal", "digests"):
             src = cfg.root / name
             if src.exists():
-                shutil.copytree(src, wt / name, dirs_exist_ok=True, ignore=ignore)
+                dest = wt / name
+                shutil.rmtree(dest, ignore_errors=True)
+                shutil.copytree(src, dest, ignore=ignore)
 
         def _git(*args: str) -> subprocess.CompletedProcess:
             return subprocess.run(
